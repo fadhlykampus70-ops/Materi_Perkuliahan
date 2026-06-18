@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan 12 — Mengurutkan Data (Sorting)</title>
+<style>
+  :root {
+    --blue-dark:#1F4E79;--blue-mid:#2E75B6;--blue-light:#DEEBF7;--blue-pale:#EEF5FC;
+    --green-dark:#1E5C2A;--green-mid:#2E7D32;--green-light:#E8F5E9;
+    --amber-dark:#7B4F00;--amber-mid:#F59E0B;--amber-light:#FEF3C7;
+    --red-dark:#7F1D1D;--red-mid:#EF4444;--red-light:#FEE2E2;
+    --gray-100:#F8F9FA;--gray-200:#E9ECEF;--gray-300:#DEE2E6;--gray-500:#6C757D;--gray-700:#343A40;--gray-900:#111827;
+    --purple-dark:#3C3489;--purple-mid:#6D4AFF;--purple-light:#EEEDFE;
+    --teal-dark:#085041;--teal-mid:#0F9D75;--teal-light:#E1F5EE;
+    --radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:24px;
+    --font-main:'Segoe UI',system-ui,-apple-system,sans-serif;
+    --font-code:'Fira Code','Courier New',monospace;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 4px 16px rgba(0,0,0,.1);
+    --transition:.2s ease;
+    --bg:#F0F4F8;--surface:#FFFFFF;--text-primary:#111827;--text-muted:#6C757D;
+    --border:#DEE2E6;
+  }
+  [data-theme="dark"] {
+    --bg:#0F172A;--surface:#1E293B;--text-primary:#F1F5F9;--text-muted:#94A3B8;
+    --border:#334155;--gray-100:#1E293B;--gray-200:#334155;--gray-300:#475569;
+    --blue-light:#1e3a5f;--blue-pale:#172d44;--green-light:#1a3020;
+    --amber-light:#2d2208;--red-light:#2d1515;--purple-light:#1e1a40;--teal-light:#0a2520;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-main);background:var(--bg);color:var(--text-primary);line-height:1.6;min-height:100vh;transition:background var(--transition),color var(--transition)}
+  a{color:var(--blue-mid);text-decoration:none}
+  code{font-family:var(--font-code)}
+
+  /* NAV */
+  #topnav{background:var(--blue-dark);color:#fff;padding:0;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;height:56px;padding:0 16px}
+  .nav-logo{font-weight:700;font-size:15px;white-space:nowrap;margin-right:8px}
+  .nav-logo span{font-weight:400;opacity:.7;font-size:12px;display:block}
+  .nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{padding:8px 12px;border-radius:20px;font-size:12.5px;color:#fff;opacity:.8;white-space:nowrap;transition:all var(--transition)}
+  .nav-links a:hover{opacity:1;background:rgba(255,255,255,.15)}
+  .btn-icon{background:rgba(255,255,255,.12);border:none;color:#fff;width:36px;height:36px;border-radius:var(--radius-sm);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background var(--transition);flex-shrink:0}
+  .btn-icon:hover{background:rgba(255,255,255,.22)}
+
+  /* LAYOUT */
+  .page{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+  section{padding-top:26px;margin-bottom:8px;scroll-margin-top:64px}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--blue-dark) 0%,#2563EB 100%);color:#fff;padding:36px 32px;position:relative;overflow:hidden;border-radius:0 0 var(--radius-xl) var(--radius-xl)}
+  .hero::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+  .hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04)}
+  .hero-badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:12px}
+  .hero h1{font-size:clamp(20px,4vw,30px);font-weight:700;margin-bottom:8px;position:relative;max-width:760px}
+  .hero p{font-size:14px;opacity:.85;max-width:560px;position:relative}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+  .hero-stat{background:rgba(255,255,255,.15);border-radius:var(--radius-md);padding:10px 16px}
+  .hero-stat-val{font-size:20px;font-weight:700}
+  .hero-stat-lbl{font-size:11px;opacity:.8;margin-top:2px}
+
+  /* SECTION HEADER */
+  .sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .sec-line{flex:1;height:1px;background:var(--border)}
+  .sec-label{font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:.8px;white-space:nowrap}
+  .sec-title{font-size:22px;font-weight:700;margin-bottom:6px}
+  .sec-desc{font-size:14px;color:var(--text-muted);margin-bottom:18px;max-width:760px}
+
+  /* CARDS */
+  .card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px 22px;margin-bottom:16px}
+  .card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .card-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .card-title{font-size:15px;font-weight:600}
+  .card-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+
+  /* GRID */
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:16px}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+
+  /* INFO BOX */
+  .info-box{border-radius:var(--radius-md);padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.7;display:flex;gap:12px}
+  .info-box.info{background:var(--blue-light);border-left:3px solid var(--blue-mid)}
+  .info-box.warning{background:var(--amber-light);border-left:3px solid var(--amber-mid)}
+  .info-box.success{background:var(--green-light);border-left:3px solid var(--green-mid)}
+  .info-box.danger{background:var(--red-light);border-left:3px solid var(--red-mid)}
+  .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  [data-theme="dark"] .info-box.info{color:#93C5FD}
+  [data-theme="dark"] .info-box.warning{color:#FCD34D}
+  [data-theme="dark"] .info-box.success{color:#86EFAC}
+  [data-theme="dark"] .info-box.danger{color:#FCA5A5}
+
+  /* STEPS (proses berurutan / langkah algoritma) */
+  .steps{display:flex;flex-direction:column;gap:0;margin:14px 0}
+  .step-item{display:flex;gap:14px;padding:10px 0}
+  .step-item:not(:last-child){border-bottom:1px solid var(--border)}
+  .step-dot{width:30px;height:30px;border-radius:50%;background:var(--blue-light);color:var(--blue-dark);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:1px}
+  .step-dot.green{background:var(--green-light);color:var(--green-dark)}
+  .step-title{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .step-desc{font-size:13px;color:var(--text-muted)}
+
+  /* CHIPS */
+  .chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px}
+  .chip-blue{background:var(--blue-light);color:var(--blue-dark)}
+  .chip-green{background:var(--green-light);color:var(--green-dark)}
+  .chip-amber{background:var(--amber-light);color:var(--amber-dark)}
+  [data-theme="dark"] .chip-blue{color:#93C5FD}
+  [data-theme="dark"] .chip-green{color:#86EFAC}
+  [data-theme="dark"] .chip-amber{color:#FCD34D}
+
+  /* CODE BLOCK */
+  .code-wrap{background:#0F172A;border-radius:var(--radius-md);overflow:hidden;margin:12px 0}
+  .code-header{background:#1E293B;padding:8px 14px;display:flex;justify-content:space-between;align-items:center}
+  .code-lang{font-size:11px;color:#94A3B8;font-weight:600;letter-spacing:.5px}
+  .code-copy{background:none;border:1px solid #334155;color:#94A3B8;padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all var(--transition)}
+  .code-copy:hover{background:#334155;color:#F1F5F9}
+  .code-body{padding:16px;font-family:var(--font-code);font-size:13px;line-height:1.7;overflow-x:auto;color:#E2E8F0;white-space:pre}
+  .code-body .kw{color:#C084FC}
+  .code-body .fn{color:#60A5FA}
+  .code-body .str{color:#86EFAC}
+  .code-body .cm{color:#64748B;font-style:italic}
+  .code-body .num{color:#FCA5A5}
+  .code-body .op{color:#F9A8D4}
+
+  .thonny-tip{display:flex;align-items:center;gap:8px;background:var(--green-light);color:var(--green-dark);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;margin:10px 0;border-left:3px solid var(--green-mid)}
+  [data-theme="dark"] .thonny-tip{color:#86EFAC}
+
+  /* VISUALIZER */
+  .viz-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin:14px 0}
+  .viz-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+  .viz-btn{background:var(--blue-mid);color:#fff;border:none;padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;transition:background var(--transition);display:flex;align-items:center;gap:6px}
+  .viz-btn:hover{background:var(--blue-dark)}
+  .viz-btn:disabled{background:var(--gray-300);color:var(--text-muted);cursor:not-allowed}
+  .viz-btn.secondary{background:none;border:1px solid var(--border);color:var(--text-primary)}
+  .viz-btn.secondary:hover{background:var(--gray-100)}
+  .viz-speed{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);margin-left:auto}
+  .viz-speed select{padding:5px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-primary);font-size:12px}
+  .viz-bars{display:flex;align-items:flex-end;gap:6px;height:200px;padding:0 4px;margin-bottom:14px;border-bottom:2px solid var(--border)}
+  .viz-bar{flex:1;background:var(--blue-mid);border-radius:4px 4px 0 0;position:relative;display:flex;align-items:flex-end;justify-content:center;transition:height .35s ease,background .25s ease,transform .35s ease;min-width:18px}
+  .viz-bar.compare{background:var(--amber-mid)}
+  .viz-bar.swap{background:var(--red-mid);transform:translateY(-6px)}
+  .viz-bar.sorted{background:var(--green-mid)}
+  .viz-bar.current-min{background:var(--purple-mid)}
+  .viz-bar-val{position:absolute;top:-20px;font-size:11px;font-weight:700;color:var(--text-primary)}
+  .viz-status{background:var(--blue-pale);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;min-height:40px;display:flex;align-items:center;color:var(--blue-dark);font-weight:500;margin-bottom:10px}
+  [data-theme="dark"] .viz-status{color:#93C5FD}
+  .viz-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--text-muted)}
+  .viz-legend span{display:inline-flex;align-items:center;gap:6px}
+  .viz-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .viz-stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--text-muted)}
+  .viz-stats b{color:var(--text-primary);font-size:14px}
+
+  /* COMPARISON TABLE */
+  .cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+  .cmp-table th{background:var(--blue-dark);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:12px}
+  .cmp-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+  .cmp-table tr:nth-child(even) td{background:var(--gray-100)}
+  [data-theme="dark"] .cmp-table tr:nth-child(even) td{background:#1E293B}
+
+  /* BENCHMARK BARS (perbandingan jumlah operasi) */
+  .bench-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .bench-label{width:110px;font-size:12.5px;font-weight:600;flex-shrink:0}
+  .bench-track{flex:1;background:var(--gray-200);border-radius:20px;height:22px;overflow:hidden;position:relative}
+  .bench-fill{height:100%;border-radius:20px;display:flex;align-items:center;padding-left:10px;color:#fff;font-size:11px;font-weight:700;transition:width .6s ease;white-space:nowrap}
+
+  /* ACCORDION (untuk studi kasus / hint) */
+  .acc-item{border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:8px;overflow:hidden}
+  .acc-head{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;background:var(--surface);transition:background var(--transition)}
+  .acc-head:hover{background:var(--gray-100)}
+  [data-theme="dark"] .acc-head:hover{background:#334155}
+  .acc-arrow{font-size:12px;transition:transform var(--transition);color:var(--text-muted)}
+  .acc-body{display:none;padding:16px;border-top:1px solid var(--border);background:var(--surface)}
+  .acc-item.open .acc-body{display:block}
+  .acc-item.open .acc-arrow{transform:rotate(180deg)}
+
+  .footer{text-align:center;font-size:12px;color:var(--text-muted);padding:30px 0 10px}
+
+  @media(max-width:600px){
+    .hero{padding:24px 20px}
+    .nav-links{display:none}
+    .page{padding:16px 12px 50px}
+    .viz-bars{height:160px}
+    .viz-bar{min-width:12px}
+    .cmp-table{font-size:12px}
+    .cmp-table th,.cmp-table td{padding:8px 10px}
+  }
+  @media print{#topnav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV MINI (scroll anchor) ===== -->
+<nav id="topnav">
+  <div class="nav-inner">
+    <div class="nav-logo">Pertemuan 12<span>Pemrograman Dasar — Sorting Data</span></div>
+    <div class="nav-links">
+      <a href="#sec-konsep">Konsep</a>
+      <a href="#sec-bubble">Bubble Sort</a>
+      <a href="#sec-selection">Selection Sort</a>
+      <a href="#sec-banding">Perbandingan</a>
+      <a href="#sec-ui">UI Tkinter</a>
+      <a href="#sec-latihan">Studi Kasus</a>
+    </div>
+    <button class="btn-icon" onclick="toggleTheme()" title="Ganti tema">🌙</button>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-badge">PERTEMUAN 12</div>
+  <h1>Mengurutkan Data — Bubble Sort &amp; Selection Sort</h1>
+  <p>Belajar dua algoritma pengurutan paling dasar, melihat langkah demi langkah cara kerjanya, lalu membandingkan performanya — lengkap dengan kode Python yang bisa langsung dicoba di Thonny.</p>
+  <div class="hero-meta">
+    <div class="hero-stat"><div class="hero-stat-val">2</div><div class="hero-stat-lbl">Algoritma Sorting</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">O(n²)</div><div class="hero-stat-lbl">Kompleksitas Waktu</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">1</div><div class="hero-stat-lbl">Studi Kasus Akhir</div></div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ===== SECTION: KONSEP DASAR ===== -->
+  <section id="sec-konsep">
+    <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">01 — KONSEP DASAR</div><div class="sec-line"></div></div>
+    <div class="sec-title">Apa itu Mengurutkan Data (Sorting)?</div>
+    <div class="sec-desc">Sebelum masuk ke algoritmanya, pahami dulu masalah yang ingin diselesaikan dan kenapa cara mengurutkannya itu penting.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#DEEBF7">📦</div>
+        <div><div class="card-title">Definisi Sederhana</div><div class="card-sub">Mengatur ulang posisi data dalam sebuah list</div></div>
+      </div>
+      <p style="font-size:14px;line-height:1.8;margin-bottom:12px"><strong>Sorting</strong> adalah proses menyusun ulang elemen-elemen dalam sebuah kumpulan data (list/array) agar urutannya sesuai aturan tertentu — biasanya dari yang terkecil ke terbesar (<strong>ascending</strong>) atau dari yang terbesar ke terkecil (<strong>descending</strong>).</p>
+      <div class="info-box info">
+        <span class="info-icon">💡</span>
+        <div>Contoh sehari-hari: nilai mahasiswa diurutkan dari yang tertinggi untuk menentukan ranking, atau daftar harga produk diurutkan dari yang termurah saat kamu belanja online.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#E8F5E9">🤔</div>
+          <div><div class="card-title">Mengapa Sorting Penting?</div></div>
+        </div>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-dot green">1</div>
+            <div class="step-content"><div class="step-title">Memudahkan pencarian data</div><div class="step-desc">Data yang sudah urut bisa dicari lebih cepat (misal dengan binary search).</div></div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot green">2</div>
+            <div class="step-content"><div class="step-title">Memudahkan analisis</div><div class="step-desc">Menentukan nilai terbesar, terkecil, atau ranking jadi lebih mudah dibaca.</div></div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot green">3</div>
+            <div class="step-content"><div class="step-title">Tampilan data lebih rapi</div><div class="step-desc">Laporan, tabel, dan daftar jadi lebih nyaman dibaca pengguna.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#FEF3C7">⚙️</div>
+          <div><div class="card-title">Dua Algoritma yang Kita Bahas</div></div>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Ada banyak algoritma sorting. Hari ini kita fokus ke dua algoritma paling dasar yang cara kerjanya mudah dibayangkan secara manual:</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="chip chip-blue">Bubble Sort</span>
+            <span style="font-size:12.5px;color:var(--text-muted)">Menukar pasangan elemen bersebelahan berulang kali</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="chip chip-green">Selection Sort</span>
+            <span style="font-size:12.5px;color:var(--text-muted)">Mencari elemen terkecil lalu menukarnya ke posisi yang benar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box warning">
+      <span class="info-icon">📌</span>
+      <div>Kedua algoritma ini disebut <strong>algoritma sorting sederhana (simple sorting)</strong>. Mereka mudah dipahami untuk belajar logika dasar, tapi <strong>tidak efisien</strong> untuk data yang sangat besar — itu yang akan kita buktikan di bagian Perbandingan Performa nanti.</div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION: BUBBLE SORT ===== -->
+  <section id="sec-bubble">
+    <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">02 — ALGORITMA #1</div><div class="sec-line"></div></div>
+    <div class="sec-title">🫧 Bubble Sort</div>
+    <div class="sec-desc">Disebut "bubble" (gelembung) karena elemen terbesar perlahan "naik" ke posisi paling akhir, seperti gelembung udara yang naik ke permukaan air.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#DEEBF7">🧠</div>
+        <div><div class="card-title">Cara Kerja Bubble Sort</div><div class="card-sub">Bandingkan dua elemen bersebelahan, tukar jika urutannya salah</div></div>
+      </div>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-dot">1</div>
+          <div class="step-content"><div class="step-title">Bandingkan elemen ke-0 dan ke-1</div><div class="step-desc">Jika elemen kiri lebih besar dari elemen kanan, tukar posisinya.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">2</div>
+          <div class="step-content"><div class="step-title">Lanjut ke pasangan berikutnya</div><div class="step-desc">Geser satu posisi ke kanan, bandingkan lagi, tukar jika perlu. Ulangi sampai akhir list.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">3</div>
+          <div class="step-content"><div class="step-title">Satu "putaran" (pass) selesai</div><div class="step-desc">Setelah satu putaran penuh, elemen terbesar pasti sudah berada di posisi paling akhir.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">4</div>
+          <div class="step-content"><div class="step-title">Ulangi putaran berikutnya</div><div class="step-desc">Lakukan lagi dari awal, tapi area yang sudah pasti urut (di akhir) tidak perlu dicek lagi.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot green">✓</div>
+          <div class="step-content"><div class="step-title">Berhenti saat tidak ada pertukaran lagi</div><div class="step-desc">Jika dalam satu putaran tidak ada penukaran sama sekali, artinya data sudah terurut sepenuhnya.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUALIZER BUBBLE SORT -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#E8F5E9">▶️</div>
+        <div><div class="card-title">Visualisasi Langkah demi Langkah</div><div class="card-sub">Klik "Langkah Berikutnya" untuk melihat proses perbandingan & penukaran secara manual</div></div>
+      </div>
+      <div class="viz-wrap">
+        <div class="viz-controls">
+          <button class="viz-btn" id="bubbleNextBtn" onclick="bubbleStep()">⏭ Langkah Berikutnya</button>
+          <button class="viz-btn secondary" id="bubblePlayBtn" onclick="bubbleAutoPlay()">▶ Putar Otomatis</button>
+          <button class="viz-btn secondary" onclick="bubbleReset()">↺ Acak Ulang</button>
+          <div class="viz-speed">
+            <label for="bubbleSpeed">Kecepatan</label>
+            <select id="bubbleSpeed">
+              <option value="900">Lambat</option>
+              <option value="500" selected>Normal</option>
+              <option value="200">Cepat</option>
+            </select>
+          </div>
+        </div>
+        <div class="viz-status" id="bubbleStatus">Klik "Langkah Berikutnya" untuk mulai mengurutkan data.</div>
+        <div class="viz-bars" id="bubbleBars"></div>
+        <div class="viz-legend">
+          <span><i style="background:var(--blue-mid)"></i> Belum diproses</span>
+          <span><i style="background:var(--amber-mid)"></i> Sedang dibandingkan</span>
+          <span><i style="background:var(--red-mid)"></i> Baru ditukar</span>
+          <span><i style="background:var(--green-mid)"></i> Sudah pada posisi final</span>
+        </div>
+        <div class="viz-stats">
+          <div>Perbandingan: <b id="bubbleCompareCount">0</b></div>
+          <div>Penukaran: <b id="bubbleSwapCount">0</b></div>
+          <div>Putaran (pass): <b id="bubblePassCount">0</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KODE BUBBLE SORT -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#FEF3C7">🐍</div>
+        <div><div class="card-title">Kode Python — Bubble Sort</div><div class="card-sub">Salin kode ini ke Thonny lalu jalankan (F5) untuk mencobanya sendiri</div></div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+        <div class="code-body"><span class="cm"># bubble_sort.py
+# Mengurutkan list angka dari terkecil ke terbesar</span>
+
+<span class="kw">def</span> <span class="fn">bubble_sort</span>(data):
+    n = <span class="fn">len</span>(data)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span>):
+        <span class="cm"># tandai apakah ada penukaran di putaran ini</span>
+        tertukar = <span class="kw">False</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, n - i - <span class="num">1</span>):
+            <span class="cm"># bandingkan dua elemen bersebelahan</span>
+            <span class="kw">if</span> data[j] &gt; data[j + <span class="num">1</span>]:
+                <span class="cm"># tukar posisi</span>
+                data[j], data[j + <span class="num">1</span>] = data[j + <span class="num">1</span>], data[j]
+                tertukar = <span class="kw">True</span>
+        <span class="cm"># jika tidak ada penukaran, data sudah urut → berhenti lebih awal</span>
+        <span class="kw">if</span> <span class="kw">not</span> tertukar:
+            <span class="kw">break</span>
+    <span class="kw">return</span> data
+
+
+<span class="cm"># --- Program utama ---</span>
+angka = [<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>, <span class="num">11</span>, <span class="num">90</span>]
+
+<span class="fn">print</span>(<span class="str">"Data sebelum diurutkan:"</span>, angka)
+hasil = <span class="fn">bubble_sort</span>(angka)
+<span class="fn">print</span>(<span class="str">"Data setelah diurutkan :"</span>, hasil)</div>
+      </div>
+      <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Buat file baru bernama <code>bubble_sort.py</code>, salin kode di atas, lalu tekan <strong>F5</strong> atau klik tombol Run untuk melihat hasilnya di Shell.</div>
+      <div class="info-box info">
+        <span class="info-icon">🔍</span>
+        <div><strong>Coba ubah sendiri:</strong> Tambahkan <code>print(f"Putaran {i+1}: {data}")</code> di akhir loop <code>for i</code> agar kamu bisa melihat isi list berubah setiap putaran — bandingkan dengan visualisasi di atas!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION: SELECTION SORT ===== -->
+  <section id="sec-selection">
+    <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">03 — ALGORITMA #2</div><div class="sec-line"></div></div>
+    <div class="sec-title">🎯 Selection Sort</div>
+    <div class="sec-desc">Strategi yang lebih mirip cara manusia mengurutkan kartu: cari yang paling kecil dulu, lalu letakkan di depan.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#DEEBF7">🧠</div>
+        <div><div class="card-title">Cara Kerja Selection Sort</div><div class="card-sub">Pilih (select) elemen terkecil, lalu tukar ke posisi yang tepat</div></div>
+      </div>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-dot">1</div>
+          <div class="step-content"><div class="step-title">Anggap elemen pertama sebagai "yang terkecil sementara"</div><div class="step-desc">Mulai dari posisi paling kiri yang belum terurut.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">2</div>
+          <div class="step-content"><div class="step-title">Cari elemen yang benar-benar terkecil</div><div class="step-desc">Bandingkan dengan semua elemen sisanya di sebelah kanan, satu per satu.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">3</div>
+          <div class="step-content"><div class="step-title">Tukar elemen terkecil ke posisi awal</div><div class="step-desc">Setelah ditemukan, tukar elemen terkecil itu dengan elemen di posisi yang sedang diproses.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">4</div>
+          <div class="step-content"><div class="step-title">Geser ke posisi berikutnya</div><div class="step-desc">Posisi pertama sudah pasti benar. Ulangi proses untuk posisi kedua, ketiga, dan seterusnya.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot green">✓</div>
+          <div class="step-content"><div class="step-title">Selesai saat hanya 1 elemen tersisa</div><div class="step-desc">Jika tinggal satu elemen di area belum terurut, otomatis itu sudah di posisi yang benar.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUALIZER SELECTION SORT -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#E8F5E9">▶️</div>
+        <div><div class="card-title">Visualisasi Langkah demi Langkah</div><div class="card-sub">Perhatikan bagaimana elemen "calon terkecil" (ungu) berubah saat pencarian berlangsung</div></div>
+      </div>
+      <div class="viz-wrap">
+        <div class="viz-controls">
+          <button class="viz-btn" id="selectNextBtn" onclick="selectStep()">⏭ Langkah Berikutnya</button>
+          <button class="viz-btn secondary" id="selectPlayBtn" onclick="selectAutoPlay()">▶ Putar Otomatis</button>
+          <button class="viz-btn secondary" onclick="selectReset()">↺ Acak Ulang</button>
+          <div class="viz-speed">
+            <label for="selectSpeed">Kecepatan</label>
+            <select id="selectSpeed">
+              <option value="900">Lambat</option>
+              <option value="500" selected>Normal</option>
+              <option value="200">Cepat</option>
+            </select>
+          </div>
+        </div>
+        <div class="viz-status" id="selectStatus">Klik "Langkah Berikutnya" untuk mulai mengurutkan data.</div>
+        <div class="viz-bars" id="selectBars"></div>
+        <div class="viz-legend">
+          <span><i style="background:var(--blue-mid)"></i> Belum diproses</span>
+          <span><i style="background:var(--amber-mid)"></i> Sedang dibandingkan</span>
+          <span><i style="background:var(--purple-mid)"></i> Calon terkecil saat ini</span>
+          <span><i style="background:var(--red-mid)"></i> Baru ditukar</span>
+          <span><i style="background:var(--green-mid)"></i> Sudah pada posisi final</span>
+        </div>
+        <div class="viz-stats">
+          <div>Perbandingan: <b id="selectCompareCount">0</b></div>
+          <div>Penukaran: <b id="selectSwapCount">0</b></div>
+          <div>Posisi terselesaikan: <b id="selectPassCount">0</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KODE SELECTION SORT -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#FEF3C7">🐍</div>
+        <div><div class="card-title">Kode Python — Selection Sort</div><div class="card-sub">Salin kode ini ke Thonny lalu jalankan (F5) untuk mencobanya sendiri</div></div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+        <div class="code-body"><span class="cm"># selection_sort.py
+# Mengurutkan list angka dari terkecil ke terbesar</span>
+
+<span class="kw">def</span> <span class="fn">selection_sort</span>(data):
+    n = <span class="fn">len</span>(data)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span>):
+        <span class="cm"># anggap posisi ke-i sebagai yang terkecil sementara</span>
+        idx_min = i
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i + <span class="num">1</span>, n):
+            <span class="cm"># cari elemen yang lebih kecil dari idx_min</span>
+            <span class="kw">if</span> data[j] &lt; data[idx_min]:
+                idx_min = j
+        <span class="cm"># tukar hanya jika ditemukan yang lebih kecil</span>
+        <span class="kw">if</span> idx_min != i:
+            data[i], data[idx_min] = data[idx_min], data[i]
+    <span class="kw">return</span> data
+
+
+<span class="cm"># --- Program utama ---</span>
+angka = [<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>, <span class="num">11</span>, <span class="num">90</span>]
+
+<span class="fn">print</span>(<span class="str">"Data sebelum diurutkan:"</span>, angka)
+hasil = <span class="fn">selection_sort</span>(angka)
+<span class="fn">print</span>(<span class="str">"Data setelah diurutkan :"</span>, hasil)</div>
+      </div>
+      <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Buat file baru bernama <code>selection_sort.py</code>, salin kode di atas, lalu jalankan dengan <strong>F5</strong>.</div>
+      <div class="info-box info">
+        <span class="info-icon">🔍</span>
+        <div><strong>Perhatikan perbedaannya:</strong> Selection Sort hanya menukar <strong>satu kali per putaran</strong> (di akhir, setelah ketemu yang terkecil), sedangkan Bubble Sort bisa menukar <strong>banyak kali</strong> dalam satu putaran. Ini salah satu alasan jumlah penukarannya berbeda jauh.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION: PERBANDINGAN PERFORMA ===== -->
+  <section id="sec-banding">
+    <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">04 — PERBANDINGAN</div><div class="sec-line"></div></div>
+    <div class="sec-title">Bubble Sort vs Selection Sort — Mana yang Lebih Baik?</div>
+    <div class="sec-desc">Keduanya punya kompleksitas waktu yang sama secara teori, tapi berbeda dalam praktik. Yuk kita bandingkan langsung.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#DEEBF7">⚖️</div>
+        <div><div class="card-title">Tabel Perbandingan</div></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="cmp-table">
+          <tr><th>Aspek</th><th>Bubble Sort</th><th>Selection Sort</th></tr>
+          <tr><td><strong>Cara kerja</strong></td><td>Menukar pasangan elemen bersebelahan berulang kali</td><td>Mencari elemen terkecil, lalu menukarnya ke posisi yang benar</td></tr>
+          <tr><td><strong>Jumlah penukaran</strong></td><td>Bisa banyak (setiap kali urutan salah)</td><td>Sedikit — maksimal n-1 kali (satu kali per posisi)</td></tr>
+          <tr><td><strong>Jumlah perbandingan</strong></td><td>n(n-1)/2 — sama dengan Selection Sort</td><td>n(n-1)/2 — sama dengan Bubble Sort</td></tr>
+          <tr><td><strong>Kompleksitas waktu (rata-rata)</strong></td><td>O(n²)</td><td>O(n²)</td></tr>
+          <tr><td><strong>Kompleksitas waktu (kasus terbaik)</strong></td><td>O(n) — jika sudah urut &amp; pakai flag berhenti awal</td><td>O(n²) — tetap mengecek semua elemen</td></tr>
+          <tr><td><strong>Kelebihan</strong></td><td>Sederhana, bisa berhenti lebih cepat jika data sudah hampir urut</td><td>Jumlah penukaran data lebih sedikit (hemat operasi tukar)</td></tr>
+          <tr><td><strong>Kekurangan</strong></td><td>Banyak operasi tukar jika data sangat tidak urut</td><td>Tetap memproses semua elemen meski data sudah urut</td></tr>
+        </table>
+      </div>
+      <div class="info-box success">
+        <span class="info-icon">✅</span>
+        <div><strong>Kesimpulan singkat:</strong> Secara teori keduanya sama-sama O(n²) dan jumlah <em>perbandingannya</em> identik. Perbedaan nyata ada di jumlah <em>penukaran (swap)</em> — Selection Sort biasanya lebih hemat operasi tukar, sehingga sedikit lebih cepat pada praktiknya untuk data acak berukuran kecil-menengah.</div>
+      </div>
+    </div>
+
+    <!-- BENCHMARK -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#FEF3C7">📊</div>
+        <div><div class="card-title">Coba Sendiri: Bandingkan Jumlah Operasi</div><div class="card-sub">Atur jumlah data, lalu lihat berapa banyak perbandingan & penukaran yang dibutuhkan masing-masing algoritma</div></div>
+      </div>
+      <div class="viz-controls" style="margin-bottom:14px">
+        <label style="font-size:13px;color:var(--text-muted)" for="benchSize">Jumlah data:</label>
+        <select id="benchSize" style="padding:6px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-primary);font-size:13px">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="40">40</option>
+          <option value="80">80</option>
+        </select>
+        <button class="viz-btn" onclick="runBenchmark()">🚀 Jalankan Perbandingan</button>
+      </div>
+      <div id="benchResult">
+        <div class="bench-row">
+          <div class="bench-label">Bubble — Banding</div>
+          <div class="bench-track"><div class="bench-fill" style="width:0%;background:var(--blue-mid)" id="benchBubbleCompare">0</div></div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-label">Bubble — Tukar</div>
+          <div class="bench-track"><div class="bench-fill" style="width:0%;background:#1d4ed8" id="benchBubbleSwap">0</div></div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-label">Selection — Banding</div>
+          <div class="bench-track"><div class="bench-fill" style="width:0%;background:var(--green-mid)" id="benchSelectCompare">0</div></div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-label">Selection — Tukar</div>
+          <div class="bench-track"><div class="bench-fill" style="width:0%;background:#15803d" id="benchSelectSwap">0</div></div>
+        </div>
+      </div>
+      <div class="info-box info" id="benchNote" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION: PENERAPAN DI UI TKINTER ===== -->
+  <section id="sec-ui">
+    <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">05 — PENERAPAN UI</div><div class="sec-line"></div></div>
+    <div class="sec-title">Menerapkan Sorting di UI Tkinter</div>
+    <div class="sec-desc">Pertemuan lalu kita sudah belajar membuat UI dasar dengan Tkinter. Sekarang kita gabungkan dengan Bubble Sort agar pengguna bisa mengurutkan data lewat tampilan grafis, bukan hanya lewat terminal.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#DEEBF7">🖼️</div>
+        <div><div class="card-title">Rancangan Tampilan</div><div class="card-sub">Input angka → tombol Urutkan → hasil ditampilkan di label</div></div>
+      </div>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-dot">1</div>
+          <div class="step-content"><div class="step-title">Entry untuk memasukkan angka</div><div class="step-desc">Pengguna mengetik angka dipisahkan koma, misalnya: 64,34,25,12,22</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">2</div>
+          <div class="step-content"><div class="step-title">Tombol "Urutkan"</div><div class="step-desc">Saat diklik, fungsi <code>bubble_sort()</code> dipanggil untuk memproses data dari Entry.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot green">3</div>
+          <div class="step-content"><div class="step-title">Label hasil</div><div class="step-desc">Menampilkan list yang sudah terurut di bawah tombol.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#FEF3C7">🐍</div>
+        <div><div class="card-title">Kode Python — UI Tkinter + Bubble Sort</div><div class="card-sub">Gabungan fungsi sorting dengan tampilan grafis sederhana</div></div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+        <div class="code-body"><span class="cm"># ui_sorting.py
+# Aplikasi sederhana: input angka, urutkan dengan Bubble Sort</span>
+
+<span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> messagebox
+
+
+<span class="kw">def</span> <span class="fn">bubble_sort</span>(data):
+    n = <span class="fn">len</span>(data)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span>):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, n - i - <span class="num">1</span>):
+            <span class="kw">if</span> data[j] &gt; data[j + <span class="num">1</span>]:
+                data[j], data[j + <span class="num">1</span>] = data[j + <span class="num">1</span>], data[j]
+    <span class="kw">return</span> data
+
+
+<span class="kw">def</span> <span class="fn">urutkan_data</span>():
+    teks = entry_input.<span class="fn">get</span>()
+    <span class="kw">try</span>:
+        <span class="cm"># ubah teks "64,34,25" jadi list angka [64, 34, 25]</span>
+        angka = [<span class="fn">int</span>(x.<span class="fn">strip</span>()) <span class="kw">for</span> x <span class="kw">in</span> teks.<span class="fn">split</span>(<span class="str">","</span>)]
+    <span class="kw">except</span> ValueError:
+        messagebox.<span class="fn">showerror</span>(<span class="str">"Input salah"</span>, <span class="str">"Masukkan angka dipisah koma, contoh: 5,2,8,1"</span>)
+        <span class="kw">return</span>
+
+    hasil = <span class="fn">bubble_sort</span>(angka)
+    label_hasil.<span class="fn">config</span>(text=<span class="str">f"Hasil terurut: <span class="op">{hasil}</span>"</span>)
+
+
+<span class="cm"># --- Membangun jendela utama ---</span>
+window = tk.<span class="fn">Tk</span>()
+window.title(<span class="str">"Aplikasi Bubble Sort"</span>)
+window.geometry(<span class="str">"360x180"</span>)
+
+label_judul = tk.<span class="fn">Label</span>(window, text=<span class="str">"Masukkan angka (pisahkan dengan koma):"</span>)
+label_judul.<span class="fn">pack</span>(pady=<span class="num">10</span>)
+
+entry_input = tk.<span class="fn">Entry</span>(window, width=<span class="num">30</span>)
+entry_input.<span class="fn">pack</span>()
+
+btn_urutkan = tk.<span class="fn">Button</span>(window, text=<span class="str">"Urutkan"</span>, command=urutkan_data)
+btn_urutkan.<span class="fn">pack</span>(pady=<span class="num">10</span>)
+
+label_hasil = tk.<span class="fn">Label</span>(window, text=<span class="str">"Hasil terurut: -"</span>, fg=<span class="str">"darkgreen"</span>)
+label_hasil.<span class="fn">pack</span>(pady=<span class="num">5</span>)
+
+window.<span class="fn">mainloop</span>()</div>
+      </div>
+      <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Simpan sebagai <code>ui_sorting.py</code> lalu jalankan dengan F5. Jendela aplikasi akan muncul — coba masukkan <code>5,2,8,1,9,3</code> lalu klik tombol Urutkan.</div>
+      <div class="info-box warning">
+        <span class="info-icon">⚠️</span>
+        <div>Tkinter sudah termasuk dalam instalasi Python standar (termasuk di Thonny), jadi tidak perlu install tambahan apa pun untuk menjalankan kode ini.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION: STUDI KASUS / LATIHAN ===== -->
+  <section id="sec-latihan">
+    <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">06 — STUDI KASUS</div><div class="sec-line"></div></div>
+    <div class="sec-title">Studi Kasus: Ranking Nilai Mahasiswa</div>
+    <div class="sec-desc">Satu kasus untuk menguji pemahamanmu, menggabungkan sorting dengan tampilan sederhana.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#FEF3C7">📋</div>
+        <div><div class="card-title">Soal</div></div>
+      </div>
+      <p style="font-size:14px;line-height:1.85;margin-bottom:14px">Sebuah dosen memiliki data nilai UTS dari 6 mahasiswa berikut:</p>
+      <div class="code-wrap" style="margin-bottom:14px">
+        <div class="code-header"><span class="code-lang">DATA</span></div>
+        <div class="code-body">nilai = [<span class="num">78</span>, <span class="num">92</span>, <span class="num">65</span>, <span class="num">88</span>, <span class="num">73</span>, <span class="num">95</span>]</div>
+      </div>
+      <p style="font-size:14px;line-height:1.85;margin-bottom:10px">Buat program Python (boleh dijalankan di terminal Thonny biasa, atau ditambahkan tampilan Tkinter seperti contoh sebelumnya) yang:</p>
+      <div class="steps" style="margin-bottom:6px">
+        <div class="step-item">
+          <div class="step-dot">1</div>
+          <div class="step-content"><div class="step-title">Mengurutkan nilai dari TERBESAR ke TERKECIL</div><div class="step-desc">Gunakan salah satu algoritma yang sudah dipelajari (Bubble Sort atau Selection Sort) — boleh dimodifikasi agar urutannya descending.</div></div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">2</div>
+          <div class="step-content"><div class="step-title">Menampilkan hasil ranking</div><div class="step-desc">Cetak peringkat 1 sampai 6 beserta nilainya, contoh: "Ranking 1: 95".</div></div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-head" onclick="toggleAcc(this)">💡 Petunjuk <span class="acc-arrow">▼</span></div>
+        <div class="acc-body">
+          <p style="font-size:13px;line-height:1.8">Untuk mengurutkan dari terbesar ke terkecil (descending), cukup ubah tanda perbandingan di algoritma sorting kamu. Misalnya pada Bubble Sort, ubah <code>if data[j] > data[j+1]</code> menjadi <code>if data[j] &lt; data[j+1]</code>. Setelah list terurut descending, gunakan <code>for i, n in enumerate(nilai, start=1)</code> untuk mencetak nomor ranking bersama nilainya.</p>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-head" onclick="toggleAcc(this)">✅ Contoh Kunci Jawaban <span class="acc-arrow">▼</span></div>
+        <div class="acc-body">
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+            <div class="code-body"><span class="cm"># ranking_nilai.py</span>
+
+<span class="kw">def</span> <span class="fn">bubble_sort_desc</span>(data):
+    n = <span class="fn">len</span>(data)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span>):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, n - i - <span class="num">1</span>):
+            <span class="cm"># tanda dibalik agar urut dari terbesar</span>
+            <span class="kw">if</span> data[j] &lt; data[j + <span class="num">1</span>]:
+                data[j], data[j + <span class="num">1</span>] = data[j + <span class="num">1</span>], data[j]
+    <span class="kw">return</span> data
+
+
+nilai = [<span class="num">78</span>, <span class="num">92</span>, <span class="num">65</span>, <span class="num">88</span>, <span class="num">73</span>, <span class="num">95</span>]
+nilai_urut = <span class="fn">bubble_sort_desc</span>(nilai)
+
+<span class="fn">print</span>(<span class="str">"=== RANKING NILAI UTS ==="</span>)
+<span class="kw">for</span> peringkat, n <span class="kw">in</span> <span class="fn">enumerate</span>(nilai_urut, start=<span class="num">1</span>):
+    <span class="fn">print</span>(<span class="str">f"Ranking <span class="op">{peringkat}</span>: <span class="op">{n}</span>"</span>)
+
+<span class="cm"># Output yang diharapkan:
+# Ranking 1: 95
+# Ranking 2: 92
+# Ranking 3: 88
+# Ranking 4: 78
+# Ranking 5: 73
+# Ranking 6: 65</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Simpan sebagai <code>ranking_nilai.py</code>, jalankan dengan F5, lalu cocokkan hasilnya dengan output yang diharapkan di atas.</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Pertemuan 8 — Materi Sorting (Bubble Sort &amp; Selection Sort) — Disusun untuk pembelajaran D3 Manajemen Informatika</p>
+  </footer>
+
+</main>
+
+<script>
+// ─── UTIL UMUM ──────────────────────────────────────────────────────────
+function toggleTheme() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.querySelector('.btn-icon').textContent = dark ? '🌙' : '☀️';
+  localStorage.setItem('theme_p12', dark ? 'light' : 'dark');
+}
+function loadTheme() {
+  const t = localStorage.getItem('theme_p12') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelector('.btn-icon').textContent = t === 'dark' ? '☀️' : '🌙';
+}
+function copyCode(btn) {
+  const code = btn.closest('.code-wrap').querySelector('.code-body').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Tersalin!';
+    setTimeout(() => btn.textContent = 'Salin', 1800);
+  });
+}
+function toggleAcc(head) {
+  head.parentElement.classList.toggle('open');
+}
+function randomArray(size, min, max) {
+  const arr = [];
+  for (let i = 0; i < size; i++) arr.push(Math.floor(Math.random() * (max - min + 1)) + min);
+  return arr;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadTheme();
+  bubbleInit();
+  selectInit();
+});
+
+// ─── RENDER BAR CHART GENERIK ──────────────────────────────────────────
+function renderBars(containerId, data, classesFn) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  const maxVal = Math.max(...data, 1);
+  data.forEach((val, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'viz-bar ' + (classesFn ? classesFn(i) : '');
+    bar.style.height = Math.max(8, (val / maxVal) * 170) + 'px';
+    bar.innerHTML = `<span class="viz-bar-val">${val}</span>`;
+    c.appendChild(bar);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// BUBBLE SORT — STEP ENGINE
+// ════════════════════════════════════════════════════════════════════════
+let bubbleData = [];
+let bubbleI = 0, bubbleJ = 0, bubbleN = 0;
+let bubbleCompareCount = 0, bubbleSwapCount = 0, bubblePassCount = 0;
+let bubbleSwappedInPass = false;
+let bubbleFinished = false;
+let bubblePlaying = false;
+let bubbleTimer = null;
+
+function bubbleInit() {
+  bubbleData = randomArray(8, 5, 95);
+  bubbleN = bubbleData.length;
+  bubbleI = 0; bubbleJ = 0;
+  bubbleCompareCount = 0; bubbleSwapCount = 0; bubblePassCount = 0;
+  bubbleSwappedInPass = false; bubbleFinished = false;
+  bubblePlaying = false;
+  document.getElementById('bubbleNextBtn').disabled = false;
+  document.getElementById('bubbleNextBtn').textContent = '⏭ Langkah Berikutnya';
+  document.getElementById('bubblePlayBtn').textContent = '▶ Putar Otomatis';
+  document.getElementById('bubbleStatus').textContent = 'Klik "Langkah Berikutnya" untuk mulai mengurutkan data.';
+  updateBubbleStats();
+  renderBars('bubbleBars', bubbleData, () => '');
+}
+
+function updateBubbleStats() {
+  document.getElementById('bubbleCompareCount').textContent = bubbleCompareCount;
+  document.getElementById('bubbleSwapCount').textContent = bubbleSwapCount;
+  document.getElementById('bubblePassCount').textContent = bubblePassCount;
+}
+
+function bubbleReset() {
+  if (bubbleTimer) clearTimeout(bubbleTimer);
+  bubbleInit();
+}
+
+// Mengeksekusi satu langkah perbandingan (dan tukar jika perlu)
+function bubbleStep() {
+  if (bubbleFinished) return;
+
+  if (bubbleI >= bubbleN - 1) {
+    bubbleFinished = true;
+    finishBubble();
+    return;
+  }
+
+  if (bubbleJ > bubbleN - bubbleI - 2) {
+    // akhir satu pass
+    bubblePassCount++;
+    if (!bubbleSwappedInPass) {
+      bubbleFinished = true;
+      finishBubble();
+      return;
+    }
+    bubbleSwappedInPass = false;
+    bubbleI++;
+    bubbleJ = 0;
+    if (bubbleI >= bubbleN - 1) {
+      bubbleFinished = true;
+      finishBubble();
+      return;
+    }
+  }
+
+  const j = bubbleJ;
+  bubbleCompareCount++;
+  const willSwap = bubbleData[j] > bubbleData[j + 1];
+
+  document.getElementById('bubbleStatus').textContent =
+    `Membandingkan posisi ${j} (${bubbleData[j]}) dengan posisi ${j+1} (${bubbleData[j+1]})` +
+    (willSwap ? ' → urutan salah, tukar!' : ' → sudah benar, lanjut.');
+
+  renderBars('bubbleBars', bubbleData, (idx) => {
+    if (idx >= bubbleN - bubbleI) return 'sorted';
+    if (idx === j || idx === j + 1) return willSwap ? 'swap' : 'compare';
+    return '';
+  });
+
+  if (willSwap) {
+    [bubbleData[j], bubbleData[j + 1]] = [bubbleData[j + 1], bubbleData[j]];
+    bubbleSwapCount++;
+    bubbleSwappedInPass = true;
+    setTimeout(() => renderBars('bubbleBars', bubbleData, (idx) => {
+      if (idx >= bubbleN - bubbleI) return 'sorted';
+      if (idx === j || idx === j + 1) return 'swap';
+      return '';
+    }), 50);
+  }
+
+  bubbleJ++;
+  updateBubbleStats();
+}
+
+function finishBubble() {
+  renderBars('bubbleBars', bubbleData, () => 'sorted');
+  document.getElementById('bubbleStatus').textContent =
+    `✅ Selesai! Data sudah terurut sepenuhnya: [${bubbleData.join(', ')}]`;
+  document.getElementById('bubbleNextBtn').disabled = true;
+  bubblePlaying = false;
+  document.getElementById('bubblePlayBtn').textContent = '▶ Putar Otomatis';
+  if (bubbleTimer) clearTimeout(bubbleTimer);
+}
+
+function bubbleAutoPlay() {
+  const btn = document.getElementById('bubblePlayBtn');
+  if (bubblePlaying) {
+    bubblePlaying = false;
+    btn.textContent = '▶ Putar Otomatis';
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    return;
+  }
+  if (bubbleFinished) return;
+  bubblePlaying = true;
+  btn.textContent = '⏸ Pause';
+  const speed = parseInt(document.getElementById('bubbleSpeed').value, 10);
+  const loop = () => {
+    if (!bubblePlaying || bubbleFinished) {
+      bubblePlaying = false;
+      btn.textContent = '▶ Putar Otomatis';
+      return;
+    }
+    bubbleStep();
+    if (!bubbleFinished) bubbleTimer = setTimeout(loop, speed);
+    else { bubblePlaying = false; btn.textContent = '▶ Putar Otomatis'; }
+  };
+  loop();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// SELECTION SORT — STEP ENGINE
+// ════════════════════════════════════════════════════════════════════════
+let selectData = [];
+let selectN = 0, selectI = 0, selectJ = 0, selectMinIdx = 0;
+let selectCompareCount = 0, selectSwapCount = 0, selectPassCount = 0;
+let selectFinished = false;
+let selectPlaying = false;
+let selectTimer = null;
+let selectPhase = 'searching'; // 'searching' | 'swapping'
+
+function selectInit() {
+  selectData = randomArray(8, 5, 95);
+  selectN = selectData.length;
+  selectI = 0; selectJ = 1; selectMinIdx = 0;
+  selectCompareCount = 0; selectSwapCount = 0; selectPassCount = 0;
+  selectFinished = false; selectPlaying = false; selectPhase = 'searching';
+  document.getElementById('selectNextBtn').disabled = false;
+  document.getElementById('selectNextBtn').textContent = '⏭ Langkah Berikutnya';
+  document.getElementById('selectPlayBtn').textContent = '▶ Putar Otomatis';
+  document.getElementById('selectStatus').textContent = 'Klik "Langkah Berikutnya" untuk mulai mengurutkan data.';
+  updateSelectStats();
+  renderBars('selectBars', selectData, () => '');
+}
+
+function updateSelectStats() {
+  document.getElementById('selectCompareCount').textContent = selectCompareCount;
+  document.getElementById('selectSwapCount').textContent = selectSwapCount;
+  document.getElementById('selectPassCount').textContent = selectPassCount;
+}
+
+function selectReset() {
+  if (selectTimer) clearTimeout(selectTimer);
+  selectInit();
+}
+
+function selectRenderState(extra) {
+  renderBars('selectBars', selectData, (idx) => {
+    if (idx < selectI) return 'sorted';
+    if (extra && idx === extra.swapA) return 'swap';
+    if (extra && idx === extra.swapB) return 'swap';
+    if (idx === selectMinIdx) return 'current-min';
+    if (extra && idx === extra.compareIdx) return 'compare';
+    return '';
+  });
+}
+
+function selectStep() {
+  if (selectFinished) return;
+
+  if (selectI >= selectN - 1) {
+    selectFinished = true;
+    finishSelect();
+    return;
+  }
+
+  if (selectPhase === 'searching') {
+    if (selectJ >= selectN) {
+      // pencarian selesai untuk posisi ini → lanjut ke fase tukar
+      selectPhase = 'swapping';
+      selectStep();
+      return;
+    }
+    selectCompareCount++;
+    const isSmaller = selectData[selectJ] < selectData[selectMinIdx];
+    document.getElementById('selectStatus').textContent =
+      `Posisi ${selectI}: membandingkan calon terkecil (${selectData[selectMinIdx]}) dengan posisi ${selectJ} (${selectData[selectJ]})` +
+      (isSmaller ? ' → ditemukan yang lebih kecil!' : ' → tidak lebih kecil, lanjut.');
+    if (isSmaller) selectMinIdx = selectJ;
+    selectRenderState({compareIdx: selectJ});
+    selectJ++;
+    updateSelectStats();
+    return;
+  }
+
+  if (selectPhase === 'swapping') {
+    if (selectMinIdx !== selectI) {
+      [selectData[selectI], selectData[selectMinIdx]] = [selectData[selectMinIdx], selectData[selectI]];
+      selectSwapCount++;
+      document.getElementById('selectStatus').textContent =
+        `Menukar posisi ${selectI} dengan posisi terkecil yang ditemukan → [${selectData.join(', ')}]`;
+      selectRenderState({swapA: selectI, swapB: selectMinIdx});
+    } else {
+      document.getElementById('selectStatus').textContent =
+        `Posisi ${selectI} sudah berisi nilai terkecil dari sisa data, tidak perlu ditukar.`;
+    }
+    selectPassCount++;
+    selectI++;
+    selectJ = selectI + 1;
+    selectMinIdx = selectI;
+    selectPhase = 'searching';
+    updateSelectStats();
+
+    if (selectI >= selectN - 1) {
+      setTimeout(() => { selectFinished = true; finishSelect(); }, 250);
+    }
+  }
+}
+
+function finishSelect() {
+  renderBars('selectBars', selectData, () => 'sorted');
+  document.getElementById('selectStatus').textContent =
+    `✅ Selesai! Data sudah terurut sepenuhnya: [${selectData.join(', ')}]`;
+  document.getElementById('selectNextBtn').disabled = true;
+  selectPlaying = false;
+  document.getElementById('selectPlayBtn').textContent = '▶ Putar Otomatis';
+  if (selectTimer) clearTimeout(selectTimer);
+}
+
+function selectAutoPlay() {
+  const btn = document.getElementById('selectPlayBtn');
+  if (selectPlaying) {
+    selectPlaying = false;
+    btn.textContent = '▶ Putar Otomatis';
+    if (selectTimer) clearTimeout(selectTimer);
+    return;
+  }
+  if (selectFinished) return;
+  selectPlaying = true;
+  btn.textContent = '⏸ Pause';
+  const speed = parseInt(document.getElementById('selectSpeed').value, 10);
+  const loop = () => {
+    if (!selectPlaying || selectFinished) {
+      selectPlaying = false;
+      btn.textContent = '▶ Putar Otomatis';
+      return;
+    }
+    selectStep();
+    if (!selectFinished) selectTimer = setTimeout(loop, speed);
+    else { selectPlaying = false; btn.textContent = '▶ Putar Otomatis'; }
+  };
+  loop();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// BENCHMARK — hitung jumlah operasi (tanpa animasi, langsung dihitung)
+// ════════════════════════════════════════════════════════════════════════
+function bubbleSortCount(arr) {
+  const data = arr.slice();
+  let compare = 0, swap = 0;
+  const n = data.length;
+  for (let i = 0; i < n - 1; i++) {
+    let swapped = false;
+    for (let j = 0; j < n - i - 1; j++) {
+      compare++;
+      if (data[j] > data[j + 1]) {
+        [data[j], data[j + 1]] = [data[j + 1], data[j]];
+        swap++;
+        swapped = true;
+      }
+    }
+    if (!swapped) break;
+  }
+  return { compare, swap };
+}
+
+function selectionSortCount(arr) {
+  const data = arr.slice();
+  let compare = 0, swap = 0;
+  const n = data.length;
+  for (let i = 0; i < n - 1; i++) {
+    let minIdx = i;
+    for (let j = i + 1; j < n; j++) {
+      compare++;
+      if (data[j] < data[minIdx]) minIdx = j;
+    }
+    if (minIdx !== i) {
+      [data[i], data[minIdx]] = [data[minIdx], data[i]];
+      swap++;
+    }
+  }
+  return { compare, swap };
+}
+
+function runBenchmark() {
+  const size = parseInt(document.getElementById('benchSize').value, 10);
+  const arr = randomArray(size, 1, 999);
+
+  const b = bubbleSortCount(arr);
+  const s = selectionSortCount(arr);
+
+  const maxVal = Math.max(b.compare, b.swap, s.compare, s.swap, 1);
+
+  const setBar = (id, value) => {
+    const el = document.getElementById(id);
+    const pct = Math.max(4, Math.round((value / maxVal) * 100));
+    el.style.width = pct + '%';
+    el.textContent = value;
+  };
+
+  setBar('benchBubbleCompare', b.compare);
+  setBar('benchBubbleSwap', b.swap);
+  setBar('benchSelectCompare', s.compare);
+  setBar('benchSelectSwap', s.swap);
+
+  const note = document.getElementById('benchNote');
+  note.style.display = 'flex';
+  note.innerHTML = `<span class="info-icon">📌</span><div>Untuk data acak sebanyak <strong>${size}</strong> elemen: jumlah <em>perbandingan</em> kedua algoritma cenderung sama (≈ ${b.compare} vs ${s.compare}), tapi jumlah <em>penukaran</em> Bubble Sort (${b.swap}) biasanya jauh lebih banyak dibanding Selection Sort (${s.swap}). Coba klik beberapa kali untuk melihat data acak yang berbeda-beda!</div>`;
+}
+</script>
+</body>
+</html>

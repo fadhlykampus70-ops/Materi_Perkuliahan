@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fungsi dalam Pemrograman — Pertemuan 5</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4ff;
+    --surface: #ffffff;
+    --surface2: #e8eeff;
+    --primary: #3457D5;
+    --primary-light: #5a7af7;
+    --primary-xlight: #dde5ff;
+    --accent: #f59e42;
+    --accent2: #22c55e;
+    --danger: #ef4444;
+    --text: #1a2340;
+    --text-muted: #5a6a8a;
+    --text-light: #8898b8;
+    --border: #d0d9f5;
+    --code-bg: #1a2340;
+    --code-text: #e2e8f0;
+    --pseudo-bg: #fff8ee;
+    --pseudo-border: #f59e42;
+    --tip-bg: #eafaf1;
+    --tip-border: #22c55e;
+    --warn-bg: #fff3e0;
+    --warn-border: #f59e42;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(52,87,213,0.08);
+    --shadow-md: 0 8px 40px rgba(52,87,213,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, #1a2340 0%, #2d4bbd 60%, #3457D5 100%);
+    color: #fff;
+    padding: 60px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 220px; height: 220px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #c7d7ff;
+    border-radius: 100px;
+    padding: 5px 18px;
+    font-size: 13px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+  }
+  header h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  header p {
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: #b8caff;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .header-icons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .icon-chip {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #dde8ff;
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+  }
+
+  /* ===== NAV BAR ===== */
+  .nav-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow);
+  }
+  .nav-bar p { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .nav-links a {
+    background: var(--primary-xlight);
+    color: var(--primary);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { background: var(--primary); color: #fff; }
+
+  /* ===== SECTION ===== */
+  section {
+    margin-bottom: 56px;
+    scroll-margin-top: 24px;
+  }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-xlight);
+    color: var(--primary);
+    border-radius: 100px;
+    padding: 5px 16px 5px 10px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .section-num {
+    background: var(--primary);
+    color: #fff;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+  }
+  section h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(20px, 3.5vw, 28px);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  section h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 22px 0 10px;
+  }
+  section p { color: var(--text-muted); margin-bottom: 12px; }
+  section p strong { color: var(--text); }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .card-mini {
+    background: var(--primary-xlight);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .card-mini .emoji { font-size: 32px; margin-bottom: 8px; }
+  .card-mini h4 { font-family: 'Sora', sans-serif; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .card-mini p { font-size: 13px; margin: 0; }
+
+  /* ===== IO FLOW ===== */
+  .io-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 24px 0;
+  }
+  .io-box {
+    background: var(--primary-xlight);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 14px 24px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+    text-align: center;
+    min-width: 110px;
+  }
+  .io-box.process {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    min-width: 140px;
+  }
+  .io-arrow {
+    font-size: 28px;
+    color: var(--primary);
+    font-weight: 900;
+    padding: 0 4px;
+    line-height: 1;
+  }
+
+  /* ===== CODE BOXES — VS Code / Terminal Style ===== */
+  .code-block {
+    background: #1c2333;
+    border-radius: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14.5px;
+    color: #cdd6f4;
+    overflow: hidden;
+    margin: 18px 0;
+    position: relative;
+    border: 1px solid #313a55;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
+  }
+
+  /* macOS-style top bar */
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #161c2d;
+    border-bottom: 1px solid #252e45;
+    user-select: none;
+  }
+  .code-dots {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .code-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .dot-red   { background: #ff5f57; border: 1px solid #e0443c; }
+  .dot-yellow{ background: #febc2e; border: 1px solid #d4a12a; }
+  .dot-green { background: #28c840; border: 1px solid #1fa832; }
+  .code-lang {
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7a94c4;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .copy-btn {
+    background: #252e45;
+    border: 1px solid #3a4870;
+    color: #7a94c4;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 13px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.03em;
+    position: relative;
+    z-index: 1;
+  }
+  .copy-btn:hover { background: #3a4870; color: #a8c0e8; }
+  .copy-btn.copied { background: #0d2a1a; border-color: #28c840; color: #4ade80; }
+
+  /* Code content area */
+  .code-content {
+    padding: 20px 0;
+    overflow-x: auto;
+    line-height: 1.85;
+  }
+
+  /* Line numbers */
+  .code-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .line-num {
+    width: 48px;
+    min-width: 48px;
+    text-align: right;
+    padding: 0 16px 0 20px;
+    color: #384060;
+    font-size: 13px;
+    user-select: none;
+    vertical-align: top;
+    white-space: nowrap;
+    border-right: 1px solid #252e45;
+  }
+  .line-code {
+    padding: 0 24px 0 16px;
+    white-space: pre;
+    vertical-align: top;
+  }
+  tr:hover .line-num { color: #5a6fa0; background: rgba(255,255,255,0.015); }
+  tr:hover .line-code { background: rgba(255,255,255,0.025); }
+
+  /* Syntax highlighting — vivid, matching the reference image */
+  .code-block .kw   { color: #c792ea; font-weight: 600; }   /* purple — keywords like #include, using, return, if */
+  .code-block .fn   { color: #82aaff; }                      /* blue — function names */
+  .code-block .str  { color: #c3e88d; }                      /* green — string literals */
+  .code-block .cm   { color: #546e96; font-style: italic; }  /* muted blue — comments */
+  .code-block .num  { color: #f78c6c; }                      /* orange — numbers */
+  .code-block .type { color: #89ddff; font-weight: 600; }    /* cyan — types like int, float, void */
+  .code-block .op   { color: #89ddff; }
+
+  /* Answer block for exercises — same style */
+  .answer-block {
+    display: none;
+    background: #1c2333;
+    border-radius: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14.5px;
+    color: #cdd6f4;
+    overflow: hidden;
+    margin-top: 14px;
+    border: 1px solid #313a55;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+  }
+  .answer-block.open { display: block; }
+
+  /* Apply same syntax colors to answer-block */
+  .answer-block .kw   { color: #c792ea; font-weight: 600; }
+  .answer-block .fn   { color: #82aaff; }
+  .answer-block .str  { color: #c3e88d; }
+  .answer-block .cm   { color: #546e96; font-style: italic; }
+  .answer-block .num  { color: #f78c6c; }
+  .answer-block .type { color: #89ddff; font-weight: 600; }
+  .answer-block .op   { color: #89ddff; }
+  .answer-block .line-num {
+    width: 48px;
+    min-width: 48px;
+    text-align: right;
+    padding: 0 16px 0 20px;
+    color: #384060;
+    font-size: 13px;
+    user-select: none;
+    vertical-align: top;
+    white-space: nowrap;
+    border-right: 1px solid #252e45;
+  }
+  .answer-block .line-code {
+    padding: 0 24px 0 16px;
+    white-space: pre;
+    vertical-align: top;
+  }
+  .answer-block .code-content {
+    padding: 20px 0;
+    overflow-x: auto;
+    line-height: 1.85;
+  }
+  .answer-block tr:hover .line-num { color: #5a6fa0; background: rgba(255,255,255,0.015); }
+  .answer-block tr:hover .line-code { background: rgba(255,255,255,0.025); }
+
+  .pseudo-block {
+    background: var(--pseudo-bg);
+    border-left: 4px solid var(--pseudo-border);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    color: #7c5c00;
+    line-height: 1.85;
+    margin: 14px 0;
+    overflow-x: auto;
+  }
+  .pseudo-block .label {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tip-box {
+    background: var(--tip-bg);
+    border-left: 4px solid var(--tip-border);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: #145929;
+  }
+  .tip-box strong { color: #166534; }
+
+  .warn-box {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: #7c4500;
+  }
+
+  /* ===== EXPLAIN STEP ===== */
+  .steps {
+    counter-reset: step;
+    margin: 16px 0;
+  }
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+  .step-num {
+    min-width: 30px; height: 30px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; }
+  .step-content strong { color: var(--primary); }
+
+  /* ===== SCOPE TABLE ===== */
+  .scope-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .scope-table th {
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+  }
+  .scope-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .scope-table tr:nth-child(even) td { background: var(--surface2); }
+  .scope-table tr:last-child td { border-bottom: none; }
+
+  /* ===== LATIHAN (EXERCISE) ===== */
+  .exercise-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .exercise-card.easy { border-color: #86efac; }
+  .exercise-card.medium { border-color: #fde68a; }
+  .exercise-card.hard { border-color: #f9a8d4; }
+  .difficulty-badge {
+    display: inline-block;
+    border-radius: 100px;
+    padding: 3px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Sora', sans-serif;
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .easy .difficulty-badge { background: #dcfce7; color: #166534; }
+  .medium .difficulty-badge { background: #fef9c3; color: #854d0e; }
+  .hard .difficulty-badge { background: #fce7f3; color: #9d174d; }
+  .hint-block {
+    background: var(--surface2);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 12px;
+  }
+  .hint-block strong { color: var(--primary); }
+
+  .btn {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    padding: 9px 22px;
+    font-size: 14px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s, transform 0.1s;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--primary-light); transform: translateY(-1px); }
+  .btn.secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+  .btn.secondary:hover { background: var(--primary); color: #fff; }
+  .btn.accent { background: var(--accent); }
+  .btn.accent:hover { background: #e08a2a; }
+
+  /* ===== INTERACTIVE ===== */
+  .interactive-box {
+    background: linear-gradient(135deg, #1a2340 0%, #2d4bbd 100%);
+    border-radius: var(--radius);
+    padding: 32px;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .interactive-box h3 { color: #93c5fd; font-family: 'Sora', sans-serif; margin-bottom: 18px; }
+  .interactive-box label { display: block; font-size: 13px; font-weight: 700; color: #b8caff; margin-bottom: 6px; }
+  .interactive-box input {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+  }
+  .interactive-box input:focus { border-color: #93c5fd; }
+  .interactive-box input::placeholder { color: rgba(255,255,255,0.3); }
+  .result-output {
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: #86efac;
+    margin-top: 14px;
+    min-height: 52px;
+    border: 1px solid rgba(134, 239, 172, 0.2);
+  }
+  .result-output.error { color: #fca5a5; border-color: rgba(252,165,165,0.2); }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .input-row { grid-template-columns: 1fr; }
+  }
+
+  /* ===== SUMMARY ===== */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .summary-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .summary-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .summary-card .icon { font-size: 36px; margin-bottom: 10px; }
+  .summary-card h4 { font-family: 'Sora', sans-serif; font-weight: 800; color: var(--primary); margin-bottom: 6px; font-size: 16px; }
+  .summary-card p { font-size: 13px; margin: 0; color: var(--text-muted); }
+
+  /* ===== DIVIDER ===== */
+  hr.divider {
+    border: none;
+    border-top: 2px dashed var(--border);
+    margin: 36px 0;
+  }
+
+  /* ===== FORMULA BOX ===== */
+  .formula {
+    background: linear-gradient(90deg, #dde5ff, #f0f4ff);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 16px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: center;
+    margin: 16px 0;
+    letter-spacing: 0.02em;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #1a2340;
+    color: #6b7fa3;
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 14px;
+  }
+  footer strong { color: #93c5fd; }
+
+  /* ===== PROGRESS ===== */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-light), var(--accent));
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* ===== SCROLL ===== */
+  html { scroll-behavior: smooth; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header { padding: 40px 16px 36px; }
+    main { padding: 28px 14px 60px; }
+    .card { padding: 18px; }
+    .interactive-box { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="badge">📚 Logika &amp; Algoritma 2 · Pertemuan 5</div>
+  <h1>Fungsi dalam Pemrograman<br><span style="color:#93c5fd;">Modular Programming</span></h1>
+  <p>Function · Parameter · Return Value · Scope · Modularisasi</p>
+  <div class="header-icons">
+    <span class="icon-chip">int fungsi()</span>
+    <span class="icon-chip">return nilai;</span>
+    <span class="icon-chip">#include</span>
+    <span class="icon-chip">void main()</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- NAV -->
+  <div class="nav-bar">
+    <p>🧭 Navigasi Cepat</p>
+    <div class="nav-links">
+      <a href="#pembuka">Pembuka</a>
+      <a href="#apa-fungsi">Apa itu Fungsi?</a>
+      <a href="#struktur">Struktur Fungsi</a>
+      <a href="#param-return">Parameter &amp; Return</a>
+      <a href="#scope">Scope Variabel</a>
+      <a href="#modular">Modularisasi</a>
+      <a href="#studi-kasus">Studi Kasus</a>
+      <a href="#latihan">Latihan</a>
+      <a href="#interaktif">Interaktif</a>
+      <a href="#ringkasan">Ringkasan</a>
+    </div>
+  </div>
+
+  <!-- ===== 1. PEMBUKA ===== -->
+  <section id="pembuka">
+    <div class="section-label"><div class="section-num">1</div>Pembuka</div>
+    <h2>☕ Sebelum Mulai, Coba Bayangkan Ini...</h2>
+    <div class="card">
+      <p>Kamu pagi-pagi disuruh bikin kopi untuk 10 orang tamu. Kalau setiap tamu minta kopi, kamu harus <strong>mengulang langkah yang sama terus-terus</strong>:</p>
+      <div class="pseudo-block">
+        <span class="label">Langkah membuat kopi (berulang 10x?!)</span>
+1. Ambil gelas
+2. Masukkan kopi 1 sendok
+3. Tuang air panas
+4. Aduk rata
+5. Sajikan
+      </div>
+      <p>Sekarang bayangkan kamu programmer. Kalau di dalam program kamu harus menulis 10 blok kode yang <strong>sama persis</strong> hanya karena dipakai 10 kali — itu melelahkan, boros, dan rawan salah ketik!</p>
+
+      <div class="warn-box">
+        🤔 <strong>Pertanyaan Pemantik:</strong> Kenapa kita tidak menulis ulang kode yang sama terus-menerus? Apakah ada cara yang lebih cerdas?
+      </div>
+
+      <p>Jawabannya adalah: <strong>Ya, ada! Namanya Fungsi (Function).</strong></p>
+      <p>Fungsi itu seperti resep kopi tadi — kamu tulis sekali, lalu tinggal "panggil" kapanpun dibutuhkan. Tulis sekali, pakai berkali-kali. Itulah inti dari pemrograman modular.</p>
+
+      <div class="card-grid">
+        <div class="card-mini"><div class="emoji">☕</div><h4>Bikin Kopi</h4><p>Tulis resep 1x, bisa dipakai 10 orang</p></div>
+        <div class="card-mini"><div class="emoji">🧮</div><h4>Hitung Nilai</h4><p>Tulis rumus 1x, pakai untuk banyak mahasiswa</p></div>
+        <div class="card-mini"><div class="emoji">🏦</div><h4>Hitung Diskon</h4><p>Tulis logika 1x, berlaku untuk semua produk</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 2. APA ITU FUNGSI ===== -->
+  <section id="apa-fungsi">
+    <div class="section-label"><div class="section-num">2</div>Konsep Dasar</div>
+    <h2>🔧 Apa Itu Fungsi?</h2>
+    <div class="card">
+      <p><strong>Fungsi</strong> adalah sekumpulan perintah/instruksi yang diberi nama, yang bisa dipanggil kapan saja saat dibutuhkan.</p>
+      <p>Bayangkan fungsi seperti <strong>"mesin kecil"</strong>. Kamu kasih bahan masuk (input), mesin mengolah, lalu mengeluarkan hasil (output).</p>
+
+      <h3>🎯 Mengapa Fungsi Penting?</h3>
+      <div class="card-grid">
+        <div class="card-mini"><div class="emoji">♻️</div><h4>Reusable</h4><p>Tulis sekali, gunakan berkali-kali di mana saja</p></div>
+        <div class="card-mini"><div class="emoji">🧹</div><h4>Kode Lebih Rapi</h4><p>Program jadi terstruktur dan mudah dibaca</p></div>
+        <div class="card-mini"><div class="emoji">🐛</div><h4>Mudah Diperbaiki</h4><p>Kalau ada bug, cukup perbaiki di satu tempat</p></div>
+        <div class="card-mini"><div class="emoji">👥</div><h4>Tim Bisa Kolaborasi</h4><p>Setiap orang bisa garap fungsi berbeda</p></div>
+      </div>
+
+      <h3>📊 Alur Kerja Fungsi</h3>
+      <p>Semua fungsi pada dasarnya bekerja dengan pola yang sama:</p>
+      <div class="io-flow">
+        <div class="io-box">📥 Input<br><small>(Parameter)</small></div>
+        <div class="io-arrow">→</div>
+        <div class="io-box process">⚙️ Proses<br><small>(Isi Fungsi)</small></div>
+        <div class="io-arrow">→</div>
+        <div class="io-box">📤 Output<br><small>(Return Value)</small></div>
+      </div>
+
+      <div class="tip-box">
+        ✅ <strong>Analogi sederhana:</strong> Mesin ATM — kamu masukkan PIN &amp; jumlah uang (INPUT), ATM memproses (PROSES), kamu dapat uang keluar (OUTPUT).
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. STRUKTUR FUNGSI ===== -->
+  <section id="struktur">
+    <div class="section-label"><div class="section-num">3</div>Struktur</div>
+    <h2>📐 Struktur Fungsi dalam C++</h2>
+    <div class="card">
+      <p>Di C++, setiap fungsi punya struktur baku yang wajib kamu pahami:</p>
+
+      <div class="code-block">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">Format Umum</span>
+    <button class="copy-btn" onclick="copyCode(this, `tipe_return nama_fungsi(tipe parameter1, tipe parameter2) {
+    // isi fungsi di sini
+    return hasil;
+}`)" title="Salin kode">
+      📋 Copy
+    </button>
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="type">tipe_return</span> <span class="fn">nama_fungsi</span>(<span class="type">tipe</span> parameter1, <span class="type">tipe</span> parameter2) {</td></tr>
+<tr><td class="line-num">2</td><td class="line-code">    <span class="cm">// isi fungsi di sini</span></td></tr>
+<tr><td class="line-num">3</td><td class="line-code">    <span class="kw">return</span> hasil;</td></tr>
+<tr><td class="line-num">4</td><td class="line-code">}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+      <p>Sekarang kita lihat contoh nyata: <strong>fungsi penjumlahan 2 angka</strong>.</p>
+
+      <h3>📝 Pseudocode</h3>
+      <div class="pseudo-block">
+        <span class="label">Pseudocode — Fungsi Penjumlahan</span>
+FUNGSI tambah(a, b):
+    hasil ← a + b
+    KEMBALIKAN hasil
+AKHIR FUNGSI
+
+PROGRAM UTAMA:
+    x ← 5
+    y ← 3
+    total ← panggil tambah(x, y)
+    TAMPILKAN total   → hasilnya: 8
+      </div>
+
+      <h3>💻 Kode C++</h3>
+      <div class="code-block">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++</span>
+    <button class="copy-btn" onclick="copyCode(this, `// Header
+#include &lt;iostream&gt;
+using namespace std;
+
+// ↓ DEFINISI FUNGSI
+int tambah(int a, int b) {  // ← parameter: a dan b
+    int hasil = a + b;           // ← proses
+    return hasil;                // ← return value
+}
+
+// ↓ PROGRAM UTAMA
+int main() {
+    int x = 5, y = 3;
+    int total = tambah(x, y);    // ← memanggil fungsi
+    cout &lt;&lt; "Hasil: " &lt;&lt; total;   // Output: Hasil: 8
+    return 0;
+}`)" title="Salin kode">
+      📋 Copy
+    </button>
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="cm">// Header</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">3</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">4</td><td class="line-code"></td></tr>
+<tr><td class="line-num">5</td><td class="line-code"><span class="cm">// ↓ DEFINISI FUNGSI</span></td></tr>
+<tr><td class="line-num">6</td><td class="line-code"><span class="type">int</span> <span class="fn">tambah</span>(<span class="type">int</span> a, <span class="type">int</span> b) {  <span class="cm">// ← parameter: a dan b</span></td></tr>
+<tr><td class="line-num">7</td><td class="line-code">    <span class="type">int</span> hasil = a + b;           <span class="cm">// ← proses</span></td></tr>
+<tr><td class="line-num">8</td><td class="line-code">    <span class="kw">return</span> hasil;                <span class="cm">// ← return value</span></td></tr>
+<tr><td class="line-num">9</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">10</td><td class="line-code"></td></tr>
+<tr><td class="line-num">11</td><td class="line-code"><span class="cm">// ↓ PROGRAM UTAMA</span></td></tr>
+<tr><td class="line-num">12</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">13</td><td class="line-code">    <span class="type">int</span> x = <span class="num">5</span>, y = <span class="num">3</span>;</td></tr>
+<tr><td class="line-num">14</td><td class="line-code">    <span class="type">int</span> total = <span class="fn">tambah</span>(x, y);    <span class="cm">// ← memanggil fungsi</span></td></tr>
+<tr><td class="line-num">15</td><td class="line-code">    cout &lt;&lt; <span class="str">"Hasil: "</span> &lt;&lt; total;    <span class="cm">// Output: Hasil: 8</span></td></tr>
+<tr><td class="line-num">16</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">17</td><td class="line-code">}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+      <h3>🔍 Penjelasan Setiap Bagian</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><strong>int</strong> di depan nama fungsi = tipe data yang akan dikembalikan. Di sini kita kembalikan angka bulat (integer).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><strong>tambah</strong> = nama fungsi. Boleh apapun, tapi harus mencerminkan tugasnya. Seperti nama resep.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><strong>(int a, int b)</strong> = parameter, yaitu "bahan" yang dibutuhkan fungsi untuk bekerja. Di sini dua angka integer.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><strong>return hasil;</strong> = perintah untuk mengembalikan hasil ke pemanggil fungsi. Ini nilai "output" dari fungsi.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><strong>tambah(x, y)</strong> di main() = memanggil fungsi. x dan y dikirim ke dalam fungsi sebagai nilai a dan b.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 4. PARAMETER & RETURN ===== -->
+  <section id="param-return">
+    <div class="section-label"><div class="section-num">4</div>Parameter &amp; Return</div>
+    <h2>📦 Parameter &amp; Return Value</h2>
+    <div class="card">
+      <p>Dua konsep ini sering bikin bingung mahasiswa. Coba kita pahami dengan analogi yang santai:</p>
+
+      <div class="card-grid">
+        <div class="card-mini">
+          <div class="emoji">🧃</div>
+          <h4>Parameter = Bahan</h4>
+          <p>Yang kamu kasih ke fungsi sebelum diproses. Seperti bahan masakan yang kamu serahkan ke juru masak.</p>
+        </div>
+        <div class="card-mini">
+          <div class="emoji">🍽️</div>
+          <h4>Return Value = Hasil</h4>
+          <p>Yang dikembalikan fungsi setelah selesai bekerja. Seperti makanan jadi yang keluar dari dapur.</p>
+        </div>
+      </div>
+
+      <h3>📌 Contoh: Fungsi Hitung Luas Persegi Panjang</h3>
+      <div class="formula">luas = panjang × lebar</div>
+
+      <div class="pseudo-block">
+        <span class="label">Pseudocode — Luas Persegi Panjang</span>
+FUNGSI hitungLuas(panjang, lebar):
+    luas ← panjang × lebar
+    KEMBALIKAN luas          ← ini return value-nya
+AKHIR FUNGSI
+
+PROGRAM UTAMA:
+    p ← 8
+    l ← 5
+    hasil ← panggil hitungLuas(p, l)   ← parameter: p dan l
+    TAMPILKAN "Luas = " + hasil         → Luas = 40
+      </div>
+
+      <div class="code-block">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++</span>
+    
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">3</td><td class="line-code"></td></tr>
+<tr><td class="line-num">4</td><td class="line-code"><span class="type">int</span> <span class="fn">hitungLuas</span>(<span class="type">int</span> panjang, <span class="type">int</span> lebar) {</td></tr>
+<tr><td class="line-num">5</td><td class="line-code">    <span class="type">int</span> luas = panjang * lebar;  <span class="cm">// proses perkalian</span></td></tr>
+<tr><td class="line-num">6</td><td class="line-code">    <span class="kw">return</span> luas;                  <span class="cm">// kirim hasil ke pemanggil</span></td></tr>
+<tr><td class="line-num">7</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">8</td><td class="line-code"></td></tr>
+<tr><td class="line-num">9</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">10</td><td class="line-code">    <span class="type">int</span> p = <span class="num">8</span>, l = <span class="num">5</span>;</td></tr>
+<tr><td class="line-num">11</td><td class="line-code">    <span class="type">int</span> hasil = <span class="fn">hitungLuas</span>(p, l); <span class="cm">// kirim p=8, l=5 ke fungsi</span></td></tr>
+<tr><td class="line-num">12</td><td class="line-code">    cout &lt;&lt; <span class="str">"Luas = "</span> &lt;&lt; hasil;        <span class="cm">// Output: Luas = 40</span></td></tr>
+<tr><td class="line-num">13</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">14</td><td class="line-code">}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+      <h3>🔍 Penjelasan Langkah demi Langkah</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Di <code>main()</code>, kita punya variabel <strong>p = 8</strong> dan <strong>l = 5</strong>.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Kita <strong>memanggil fungsi</strong> <code>hitungLuas(p, l)</code>. Nilai p dan l dikirim ke parameter fungsi.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Di dalam fungsi, <strong>panjang = 8</strong> dan <strong>lebar = 5</strong> (parameter menerima nilai dari pemanggil).</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Fungsi menghitung <strong>8 × 5 = 40</strong>, disimpan di variabel lokal <code>luas</code>.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><code>return luas</code> mengirim nilai 40 kembali ke tempat pemanggil.</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-content">Nilai 40 tersimpan di <code>hasil</code> di dalam <code>main()</code>, lalu ditampilkan ke layar.</div></div>
+      </div>
+
+      <div class="tip-box">
+        ✅ <strong>Ingat:</strong> Tipe data parameter dan return value harus sesuai. Kalau fungsi return <code>int</code>, variabel penampungnya juga harus <code>int</code>.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5. SCOPE ===== -->
+  <section id="scope">
+    <div class="section-label"><div class="section-num">5</div>Scope</div>
+    <h2>🔒 Scope Variabel: Lokal vs Global</h2>
+    <div class="card">
+      <p>Scope adalah <strong>"wilayah berlaku"</strong> suatu variabel. Ini sering jadi sumber bug yang membingungkan!</p>
+
+      <div class="warn-box">
+        🏫 <strong>Analogi Kampus:</strong> Bayangkan variabel seperti benda milik seseorang.
+        <br>Variabel <strong>lokal</strong> = buku yang ada di dalam kelas → hanya bisa dipakai di dalam kelas itu saja.
+        <br>Variabel <strong>global</strong> = mading di depan kampus → bisa dilihat semua orang dari mana saja.
+      </div>
+
+      <table class="scope-table">
+        <tr>
+          <th>Jenis</th>
+          <th>Lokasi Deklarasi</th>
+          <th>Bisa Diakses Di</th>
+          <th>Contoh</th>
+        </tr>
+        <tr>
+          <td>🏠 Lokal</td>
+          <td>Di dalam fungsi/blok</td>
+          <td>Hanya dalam fungsi itu</td>
+          <td><code>int x = 5;</code> di dalam fungsi</td>
+        </tr>
+        <tr>
+          <td>🌐 Global</td>
+          <td>Di luar semua fungsi</td>
+          <td>Semua fungsi dalam file</td>
+          <td><code>int x = 5;</code> sebelum main()</td>
+        </tr>
+      </table>
+
+      <div class="code-block">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++ — Scope</span>
+    
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">3</td><td class="line-code"></td></tr>
+<tr><td class="line-num">4</td><td class="line-code"><span class="type">int</span> nilaiGlobal = <span class="num">100</span>;  <span class="cm">// ← GLOBAL: bisa diakses semua fungsi</span></td></tr>
+<tr><td class="line-num">5</td><td class="line-code"></td></tr>
+<tr><td class="line-num">6</td><td class="line-code"><span class="type">void</span> <span class="fn">contohFungsi</span>() {</td></tr>
+<tr><td class="line-num">7</td><td class="line-code">    <span class="type">int</span> nilaiLokal = <span class="num">50</span>;      <span class="cm">// ← LOKAL: hanya ada di sini</span></td></tr>
+<tr><td class="line-num">8</td><td class="line-code">    cout &lt;&lt; nilaiGlobal;       <span class="cm">// ✅ boleh, global bisa diakses di sini</span></td></tr>
+<tr><td class="line-num">9</td><td class="line-code">    cout &lt;&lt; nilaiLokal;        <span class="cm">// ✅ boleh, ini tempatnya</span></td></tr>
+<tr><td class="line-num">10</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">11</td><td class="line-code"></td></tr>
+<tr><td class="line-num">12</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">13</td><td class="line-code">    cout &lt;&lt; nilaiGlobal;       <span class="cm">// ✅ boleh</span></td></tr>
+<tr><td class="line-num">14</td><td class="line-code">    <span class="cm">// cout &lt;&lt; nilaiLokal;    // ❌ ERROR! nilaiLokal tidak dikenal di sini</span></td></tr>
+<tr><td class="line-num">15</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">16</td><td class="line-code">}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+      <div class="tip-box">
+        ✅ <strong>Tips:</strong> Sebaiknya hindari terlalu banyak variabel global. Lebih aman dan rapi menggunakan parameter untuk mengirim data antar fungsi.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 6. MODULARISASI ===== -->
+  <section id="modular">
+    <div class="section-label"><div class="section-num">6</div>Modularisasi</div>
+    <h2>🏗️ Modularisasi: Pecah Program Jadi Fungsi Kecil</h2>
+    <div class="card">
+      <p>Modularisasi adalah teknik <strong>memecah program besar</strong> menjadi fungsi-fungsi kecil yang masing-masing punya tugas spesifik.</p>
+
+      <div class="warn-box">
+        🏠 <strong>Analogi Membangun Rumah:</strong> Kalau mau bangun rumah, kamu tidak menyuruh satu tukang ngerjain segalanya. Ada tukang bata, tukang listrik, tukang plumber. Masing-masing ahli di bidangnya. Hasilnya? Lebih cepat, lebih bagus, lebih mudah diperbaiki.
+      </div>
+
+      <p>Program juga sama. Daripada satu fungsi <code>main()</code> yang isinya ratusan baris, lebih baik dibagi menjadi beberapa fungsi:</p>
+
+      <div class="card-grid">
+        <div class="card-mini"><div class="emoji">📥</div><h4>inputData()</h4><p>Khusus menerima input dari user</p></div>
+        <div class="card-mini"><div class="emoji">🧮</div><h4>hitungData()</h4><p>Khusus melakukan perhitungan</p></div>
+        <div class="card-mini"><div class="emoji">📊</div><h4>tampilHasil()</h4><p>Khusus menampilkan output</p></div>
+      </div>
+
+      <h3>💡 Contoh: Program Nilai Mahasiswa (Termodular)</h3>
+      <div class="code-block">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++</span>
+    
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">3</td><td class="line-code"></td></tr>
+<tr><td class="line-num">4</td><td class="line-code"><span class="cm">// Modul 1: Input</span></td></tr>
+<tr><td class="line-num">5</td><td class="line-code"><span class="type">float</span> <span class="fn">inputNilai</span>() {</td></tr>
+<tr><td class="line-num">6</td><td class="line-code">    <span class="type">float</span> nilai;</td></tr>
+<tr><td class="line-num">7</td><td class="line-code">    cout &lt;&lt; <span class="str">"Masukkan nilai: "</span>;</td></tr>
+<tr><td class="line-num">8</td><td class="line-code">    cin &gt;&gt; nilai;</td></tr>
+<tr><td class="line-num">9</td><td class="line-code">    <span class="kw">return</span> nilai;</td></tr>
+<tr><td class="line-num">10</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">11</td><td class="line-code"></td></tr>
+<tr><td class="line-num">12</td><td class="line-code"><span class="cm">// Modul 2: Hitung rata-rata</span></td></tr>
+<tr><td class="line-num">13</td><td class="line-code"><span class="type">float</span> <span class="fn">hitungRata</span>(<span class="type">float</span> a, <span class="type">float</span> b, <span class="type">float</span> c) {</td></tr>
+<tr><td class="line-num">14</td><td class="line-code">    <span class="kw">return</span> (a + b + c) / <span class="num">3</span>;</td></tr>
+<tr><td class="line-num">15</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">16</td><td class="line-code"></td></tr>
+<tr><td class="line-num">17</td><td class="line-code"><span class="cm">// Modul 3: Tampilkan hasil</span></td></tr>
+<tr><td class="line-num">18</td><td class="line-code"><span class="type">void</span> <span class="fn">tampilHasil</span>(<span class="type">float</span> rata) {</td></tr>
+<tr><td class="line-num">19</td><td class="line-code">    cout &lt;&lt; <span class="str">"Nilai Akhir: "</span> &lt;&lt; rata &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">20</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">21</td><td class="line-code"></td></tr>
+<tr><td class="line-num">22</td><td class="line-code"><span class="cm">// Program Utama — bersih dan ringkas!</span></td></tr>
+<tr><td class="line-num">23</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">24</td><td class="line-code">    <span class="type">float</span> t = <span class="fn">inputNilai</span>();</td></tr>
+<tr><td class="line-num">25</td><td class="line-code">    <span class="type">float</span> u = <span class="fn">inputNilai</span>();</td></tr>
+<tr><td class="line-num">26</td><td class="line-code">    <span class="type">float</span> s = <span class="fn">inputNilai</span>();</td></tr>
+<tr><td class="line-num">27</td><td class="line-code">    <span class="type">float</span> akhir = <span class="fn">hitungRata</span>(t, u, s);</td></tr>
+<tr><td class="line-num">28</td><td class="line-code">    <span class="fn">tampilHasil</span>(akhir);</td></tr>
+<tr><td class="line-num">29</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">30</td><td class="line-code">}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+      <div class="tip-box">✅ Lihat betapa bersihnya <code>main()</code>! Hanya berisi "alur cerita" program, tanpa detail teknis yang berdesakan.</div>
+    </div>
+  </section>
+
+  <!-- ===== 7. STUDI KASUS ===== -->
+  <section id="studi-kasus">
+    <div class="section-label"><div class="section-num">7</div>Studi Kasus</div>
+    <h2>📚 Studi Kasus: Nilai Akhir Mahasiswa</h2>
+    <div class="card">
+
+      <h3>🔍 1. Analisis Masalah</h3>
+      <p>Dosen minta program untuk menghitung nilai akhir mahasiswa berdasarkan 3 komponen penilaian:</p>
+      <div class="formula">nilai_akhir = (tugas + uts + uas) / 3</div>
+      <p>Program harus bisa dipakai berulang untuk banyak mahasiswa, dan mudah dimodifikasi kalau rumusnya berubah.</p>
+
+      <h3>📦 2. Pembagian Fungsi</h3>
+      <div class="card-grid">
+        <div class="card-mini"><div class="emoji">📥</div><h4>inputNilai()</h4><p>Terima input tugas, UTS, UAS dari user</p></div>
+        <div class="card-mini"><div class="emoji">🧮</div><h4>hitungNilaiAkhir()</h4><p>Hitung rata-rata dari 3 nilai</p></div>
+        <div class="card-mini"><div class="emoji">🔤</div><h4>tentukanGrade()</h4><p>Tentukan grade A/B/C/D/E</p></div>
+        <div class="card-mini"><div class="emoji">📊</div><h4>tampilHasil()</h4><p>Cetak semua hasil ke layar</p></div>
+      </div>
+
+      <h3>📝 3. Pseudocode Lengkap</h3>
+      <div class="pseudo-block">
+        <span class="label">Pseudocode — Sistem Nilai Mahasiswa</span>
+FUNGSI inputNilai():
+    INPUT tugas, uts, uas
+    KEMBALIKAN tugas, uts, uas
+
+FUNGSI hitungNilaiAkhir(tugas, uts, uas):
+    nilai_akhir ← (tugas + uts + uas) / 3
+    KEMBALIKAN nilai_akhir
+
+FUNGSI tentukanGrade(nilai):
+    JIKA nilai >= 80 MAKA grade ← 'A'
+    JIKA nilai >= 70 MAKA grade ← 'B'
+    JIKA nilai >= 60 MAKA grade ← 'C'
+    JIKA nilai >= 50 MAKA grade ← 'D'
+    SELAINNYA         grade ← 'E'
+    KEMBALIKAN grade
+
+FUNGSI tampilHasil(nama, nilai, grade):
+    TAMPILKAN "Nama       : " + nama
+    TAMPILKAN "Nilai Akhir: " + nilai
+    TAMPILKAN "Grade      : " + grade
+
+PROGRAM UTAMA:
+    INPUT nama mahasiswa
+    tugas, uts, uas ← panggil inputNilai()
+    nilai ← panggil hitungNilaiAkhir(tugas, uts, uas)
+    grade ← panggil tentukanGrade(nilai)
+    panggil tampilHasil(nama, nilai, grade)
+      </div>
+
+      <h3>🔁 4. Penjelasan Logika Langkah demi Langkah</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Program dimulai dari <strong>main()</strong>. Input nama mahasiswa diterima.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><strong>inputNilai()</strong> dipanggil — fungsi ini meminta user mengetik 3 nilai, lalu mengembalikannya.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Nilai tugas, UTS, UAS dikirim ke <strong>hitungNilaiAkhir()</strong> sebagai parameter → fungsi menghitung rata-rata.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Nilai rata-rata dikirim ke <strong>tentukanGrade()</strong> → fungsi mengembalikan karakter grade (A/B/C/D/E).</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><strong>tampilHasil()</strong> menerima nama, nilai akhir, dan grade, lalu mencetak semua ke layar dengan rapi.</div></div>
+      </div>
+
+      <h3>💻 5. Kode C++ Lengkap</h3>
+      <div class="code-block">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++</span>
+    
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;string&gt;</span></td></tr>
+<tr><td class="line-num">3</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">4</td><td class="line-code"></td></tr>
+<tr><td class="line-num">5</td><td class="line-code"><span class="cm">// ===== FUNGSI 1: Input Nilai =====</span></td></tr>
+<tr><td class="line-num">6</td><td class="line-code"><span class="type">void</span> <span class="fn">inputNilai</span>(<span class="type">float</span> &amp;tugas, <span class="type">float</span> &amp;uts, <span class="type">float</span> &amp;uas) {</td></tr>
+<tr><td class="line-num">7</td><td class="line-code">    cout &lt;&lt; <span class="str">"Nilai Tugas : "</span>; cin &gt;&gt; tugas;</td></tr>
+<tr><td class="line-num">8</td><td class="line-code">    cout &lt;&lt; <span class="str">"Nilai UTS   : "</span>; cin &gt;&gt; uts;</td></tr>
+<tr><td class="line-num">9</td><td class="line-code">    cout &lt;&lt; <span class="str">"Nilai UAS   : "</span>; cin &gt;&gt; uas;</td></tr>
+<tr><td class="line-num">10</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">11</td><td class="line-code"></td></tr>
+<tr><td class="line-num">12</td><td class="line-code"><span class="cm">// ===== FUNGSI 2: Hitung Nilai Akhir =====</span></td></tr>
+<tr><td class="line-num">13</td><td class="line-code"><span class="type">float</span> <span class="fn">hitungNilaiAkhir</span>(<span class="type">float</span> tugas, <span class="type">float</span> uts, <span class="type">float</span> uas) {</td></tr>
+<tr><td class="line-num">14</td><td class="line-code">    <span class="kw">return</span> (tugas + uts + uas) / <span class="num">3.0</span>;</td></tr>
+<tr><td class="line-num">15</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">16</td><td class="line-code"></td></tr>
+<tr><td class="line-num">17</td><td class="line-code"><span class="cm">// ===== FUNGSI 3: Tentukan Grade =====</span></td></tr>
+<tr><td class="line-num">18</td><td class="line-code"><span class="type">char</span> <span class="fn">tentukanGrade</span>(<span class="type">float</span> nilai) {</td></tr>
+<tr><td class="line-num">19</td><td class="line-code">    <span class="kw">if</span> (nilai >= <span class="num">80</span>) <span class="kw">return</span> <span class="str">'A'</span>;</td></tr>
+<tr><td class="line-num">20</td><td class="line-code">    <span class="kw">if</span> (nilai >= <span class="num">70</span>) <span class="kw">return</span> <span class="str">'B'</span>;</td></tr>
+<tr><td class="line-num">21</td><td class="line-code">    <span class="kw">if</span> (nilai >= <span class="num">60</span>) <span class="kw">return</span> <span class="str">'C'</span>;</td></tr>
+<tr><td class="line-num">22</td><td class="line-code">    <span class="kw">if</span> (nilai >= <span class="num">50</span>) <span class="kw">return</span> <span class="str">'D'</span>;</td></tr>
+<tr><td class="line-num">23</td><td class="line-code">    <span class="kw">return</span> <span class="str">'E'</span>;</td></tr>
+<tr><td class="line-num">24</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">25</td><td class="line-code"></td></tr>
+<tr><td class="line-num">26</td><td class="line-code"><span class="cm">// ===== FUNGSI 4: Tampilkan Hasil =====</span></td></tr>
+<tr><td class="line-num">27</td><td class="line-code"><span class="type">void</span> <span class="fn">tampilHasil</span>(<span class="type">string</span> nama, <span class="type">float</span> nilai, <span class="type">char</span> grade) {</td></tr>
+<tr><td class="line-num">28</td><td class="line-code">    cout &lt;&lt; <span class="str">"\n========== HASIL =========="</span> &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">29</td><td class="line-code">    cout &lt;&lt; <span class="str">"Nama        : "</span> &lt;&lt; nama  &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">30</td><td class="line-code">    cout &lt;&lt; <span class="str">"Nilai Akhir : "</span> &lt;&lt; nilai &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">31</td><td class="line-code">    cout &lt;&lt; <span class="str">"Grade       : "</span> &lt;&lt; grade &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">32</td><td class="line-code">    cout &lt;&lt; <span class="str">"=========================="</span> &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">33</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">34</td><td class="line-code"></td></tr>
+<tr><td class="line-num">35</td><td class="line-code"><span class="cm">// ===== PROGRAM UTAMA =====</span></td></tr>
+<tr><td class="line-num">36</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">37</td><td class="line-code">    <span class="type">string</span> nama;</td></tr>
+<tr><td class="line-num">38</td><td class="line-code">    <span class="type">float</span> tugas, uts, uas;</td></tr>
+<tr><td class="line-num">39</td><td class="line-code"></td></tr>
+<tr><td class="line-num">40</td><td class="line-code">    cout &lt;&lt; <span class="str">"=== Program Nilai Mahasiswa ==="</span> &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">41</td><td class="line-code">    cout &lt;&lt; <span class="str">"Nama Mahasiswa: "</span>; cin &gt;&gt; nama;</td></tr>
+<tr><td class="line-num">42</td><td class="line-code"></td></tr>
+<tr><td class="line-num">43</td><td class="line-code">    <span class="fn">inputNilai</span>(tugas, uts, uas);</td></tr>
+<tr><td class="line-num">44</td><td class="line-code"></td></tr>
+<tr><td class="line-num">45</td><td class="line-code">    <span class="type">float</span> nilaiAkhir = <span class="fn">hitungNilaiAkhir</span>(tugas, uts, uas);</td></tr>
+<tr><td class="line-num">46</td><td class="line-code">    <span class="type">char</span> grade = <span class="fn">tentukanGrade</span>(nilaiAkhir);</td></tr>
+<tr><td class="line-num">47</td><td class="line-code"></td></tr>
+<tr><td class="line-num">48</td><td class="line-code">    <span class="fn">tampilHasil</span>(nama, nilaiAkhir, grade);</td></tr>
+<tr><td class="line-num">49</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">50</td><td class="line-code">}</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+      <h3>🔬 6. Penjelasan Setiap Fungsi</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">F1</div><div class="step-content"><strong>inputNilai()</strong> — return type <code>void</code> karena tidak mengembalikan nilai langsung. Gunakan referensi (&amp;) agar nilai bisa diubah langsung dari luar fungsi.</div></div>
+        <div class="step"><div class="step-num">F2</div><div class="step-content"><strong>hitungNilaiAkhir()</strong> — menerima 3 float, langsung menghitung dan me-return hasilnya. Singkat, padat, satu tugas.</div></div>
+        <div class="step"><div class="step-num">F3</div><div class="step-content"><strong>tentukanGrade()</strong> — menerima nilai float, mengembalikan char. Gunakan if berjenjang — cukup return langsung tanpa else.</div></div>
+        <div class="step"><div class="step-num">F4</div><div class="step-content"><strong>tampilHasil()</strong> — hanya bertugas menampilkan. Return void karena tugasnya output, bukan menghitung.</div></div>
+        <div class="step"><div class="step-num">M</div><div class="step-content"><strong>main()</strong> — bersih! Hanya mengkoordinasikan pemanggilan fungsi. Seperti manager yang mendelegasikan tugas ke timnya.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 8. LATIHAN ===== -->
+  <section id="latihan">
+    <div class="section-label"><div class="section-num">8</div>Latihan</div>
+    <h2>✏️ Latihan Mahasiswa</h2>
+    <p style="color:var(--text-muted); margin-bottom:24px;">Coba kerjakan dulu tanpa langsung lihat jawaban. Proses berpikir lebih penting dari hasil! 💪</p>
+
+    <!-- Soal 1 -->
+    <div class="exercise-card easy">
+      <div class="difficulty-badge">⭐ Mudah</div>
+      <h3>Soal 1: Fungsi Penjumlahan Tiga Angka</h3>
+      <p><strong>Deskripsi:</strong> Buat sebuah fungsi bernama <code>jumlahTiga</code> yang menerima 3 bilangan bulat sebagai parameter, lalu mengembalikan hasil penjumlahannya. Panggil fungsi tersebut dari <code>main()</code> dan tampilkan hasilnya.</p>
+      <p><strong>Contoh:</strong> Input 10, 20, 30 → Output: <code>Jumlah = 60</code></p>
+      <div class="hint-block">
+        <strong>💡 Petunjuk Logika:</strong><br>
+        1. Tipe return apa yang cocok? (Jawab: <em>int</em>)<br>
+        2. Berapa parameter yang dibutuhkan? (Jawab: <em>3 int</em>)<br>
+        3. Di dalam fungsi, tambahkan ketiganya, simpan ke variabel, lalu return.<br>
+        4. Di main(), panggil fungsi dan simpan hasilnya ke variabel.
+      </div>
+      <!--<button class="btn" onclick="toggleAnswer('jawaban1')">💡 Tampilkan Jawaban</button>
+      <div class="answer-block" id="jawaban1">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++ — Jawaban</span>
+    
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">3</td><td class="line-code"></td></tr>
+<tr><td class="line-num">4</td><td class="line-code"><span class="type">int</span> <span class="fn">jumlahTiga</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c) {</td></tr>
+<tr><td class="line-num">5</td><td class="line-code">    <span class="type">int</span> hasil = a + b + c;</td></tr>
+<tr><td class="line-num">6</td><td class="line-code">    <span class="kw">return</span> hasil;</td></tr>
+<tr><td class="line-num">7</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">8</td><td class="line-code"></td></tr>
+<tr><td class="line-num">9</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">10</td><td class="line-code">    <span class="type">int</span> x = <span class="num">10</span>, y = <span class="num">20</span>, z = <span class="num">30</span>;</td></tr>
+<tr><td class="line-num">11</td><td class="line-code">    <span class="type">int</span> total = <span class="fn">jumlahTiga</span>(x, y, z);</td></tr>
+<tr><td class="line-num">12</td><td class="line-code">    cout &lt;&lt; <span class="str">"Jumlah = "</span> &lt;&lt; total;  <span class="cm">// Output: Jumlah = 60</span></td></tr>
+<tr><td class="line-num">13</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">14</td><td class="line-code">}</td></tr>
+    </tbody></table>
+  </div>
+</div>-->
+    </div>
+    <!-- Soal 2 -->
+    <div class="exercise-card medium">
+      <div class="difficulty-badge">⭐⭐ Sedang</div>
+      <h3>Soal 2: Fungsi Cek Genap atau Ganjil</h3>
+      <p><strong>Deskripsi:</strong> Buat fungsi <code>cekGenap</code> yang menerima 1 bilangan bulat. Fungsi mengembalikan nilai <code>true</code> jika bilangan genap, dan <code>false</code> jika ganjil. Di <code>main()</code>, tampilkan "Genap" atau "Ganjil" berdasarkan hasil fungsi.</p>
+      <p><strong>Contoh:</strong> Input 7 → Output: <code>7 adalah bilangan Ganjil</code></p>
+      <div class="hint-block">
+        <strong>💡 Petunjuk Logika:</strong><br>
+        1. Tipe return yang cocok: <em>bool</em> (true/false)<br>
+        2. Gunakan operator modulo (<code>%</code>): bilangan genap jika <code>angka % 2 == 0</code><br>
+        3. Di main(), gunakan if-else untuk mencetak "Genap" atau "Ganjil" berdasarkan nilai bool.<br>
+        4. Cobalah dengan beberapa angka berbeda untuk memastikan hasilnya benar.
+      </div>
+      <!--<button class="btn" onclick="toggleAnswer('jawaban2')">💡 Tampilkan Jawaban</button>
+      <div class="answer-block" id="jawaban2">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++ — Jawaban</span>
+    
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">3</td><td class="line-code"></td></tr>
+<tr><td class="line-num">4</td><td class="line-code"><span class="type">bool</span> <span class="fn">cekGenap</span>(<span class="type">int</span> angka) {</td></tr>
+<tr><td class="line-num">5</td><td class="line-code">    <span class="kw">return</span> (angka % <span class="num">2</span> == <span class="num">0</span>);  <span class="cm">// true jika genap</span></td></tr>
+<tr><td class="line-num">6</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">7</td><td class="line-code"></td></tr>
+<tr><td class="line-num">8</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">9</td><td class="line-code">    <span class="type">int</span> n = <span class="num">7</span>;</td></tr>
+<tr><td class="line-num">10</td><td class="line-code">    <span class="kw">if</span> (<span class="fn">cekGenap</span>(n)) {</td></tr>
+<tr><td class="line-num">11</td><td class="line-code">        cout &lt;&lt; n &lt;&lt; <span class="str">" adalah bilangan Genap"</span>;</td></tr>
+<tr><td class="line-num">12</td><td class="line-code">    } <span class="kw">else</span> {</td></tr>
+<tr><td class="line-num">13</td><td class="line-code">        cout &lt;&lt; n &lt;&lt; <span class="str">" adalah bilangan Ganjil"</span>;</td></tr>
+<tr><td class="line-num">14</td><td class="line-code">    }</td></tr>
+<tr><td class="line-num">15</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">16</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">17</td><td class="line-code"><span class="cm">// Output: 7 adalah bilangan Ganjil</span></td></tr>
+    </tbody></table>
+  </div>
+</div>-->
+    </div>
+
+    <!-- Soal 3 -->
+    <div class="exercise-card hard">
+      <div class="difficulty-badge">⭐⭐⭐ Agak Sulit</div>
+      <h3>Soal 3: Fungsi Hitung Diskon</h3>
+      <p><strong>Deskripsi:</strong> Sebuah toko memberi diskon berdasarkan total belanja: jika di atas Rp 500.000 → diskon 20%; jika di atas Rp 200.000 → diskon 10%; selainnya → tidak ada diskon. Buat fungsi <code>hitungDiskon</code> yang menerima total belanja dan mengembalikan harga setelah diskon. Tampilkan juga besaran diskon yang diterima.</p>
+      <p><strong>Contoh:</strong> Input 600000 → Diskon: Rp 120.000 → Bayar: Rp 480.000</p>
+      <div class="hint-block">
+        <strong>💡 Petunjuk Logika:</strong><br>
+        1. Buat 2 fungsi: <code>persenDiskon(harga)</code> untuk dapat persen diskon, dan <code>hitungDiskon(harga)</code> untuk hitung harga akhir.<br>
+        2. Gunakan if-else if-else untuk menentukan persen diskon.<br>
+        3. Rumus: <code>diskon = harga * persen / 100</code>, lalu <code>harga_akhir = harga - diskon</code><br>
+        4. Di main(), tampilkan harga awal, jumlah diskon, dan harga yang harus dibayar.
+      </div>
+      <!--<button class="btn" onclick="toggleAnswer('jawaban3')">💡 Tampilkan Jawaban</button>
+      <div class="answer-block" id="jawaban3">
+  <div class="code-header">
+    <div class="code-dots">
+      <div class="code-dot dot-red"></div>
+      <div class="code-dot dot-yellow"></div>
+      <div class="code-dot dot-green"></div>
+    </div>
+    <span class="code-lang">C++ — Jawaban</span>
+    
+  </div>
+  <div class="code-content">
+    <table class="code-table"><tbody>
+<tr><td class="line-num">1</td><td class="line-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></td></tr>
+<tr><td class="line-num">2</td><td class="line-code"><span class="kw">using namespace</span> std;</td></tr>
+<tr><td class="line-num">3</td><td class="line-code"></td></tr>
+<tr><td class="line-num">4</td><td class="line-code"><span class="cm">// Fungsi 1: Tentukan persen diskon</span></td></tr>
+<tr><td class="line-num">5</td><td class="line-code"><span class="type">int</span> <span class="fn">persenDiskon</span>(<span class="type">float</span> harga) {</td></tr>
+<tr><td class="line-num">6</td><td class="line-code">    <span class="kw">if</span> (harga > <span class="num">500000</span>) <span class="kw">return</span> <span class="num">20</span>;</td></tr>
+<tr><td class="line-num">7</td><td class="line-code">    <span class="kw">if</span> (harga > <span class="num">200000</span>) <span class="kw">return</span> <span class="num">10</span>;</td></tr>
+<tr><td class="line-num">8</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">9</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">10</td><td class="line-code"></td></tr>
+<tr><td class="line-num">11</td><td class="line-code"><span class="cm">// Fungsi 2: Hitung harga setelah diskon</span></td></tr>
+<tr><td class="line-num">12</td><td class="line-code"><span class="type">float</span> <span class="fn">hitungDiskon</span>(<span class="type">float</span> harga) {</td></tr>
+<tr><td class="line-num">13</td><td class="line-code">    <span class="type">int</span> persen = <span class="fn">persenDiskon</span>(harga);</td></tr>
+<tr><td class="line-num">14</td><td class="line-code">    <span class="type">float</span> diskon = harga * persen / <span class="num">100</span>;</td></tr>
+<tr><td class="line-num">15</td><td class="line-code">    <span class="kw">return</span> harga - diskon;</td></tr>
+<tr><td class="line-num">16</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">17</td><td class="line-code"></td></tr>
+<tr><td class="line-num">18</td><td class="line-code"><span class="type">int</span> <span class="fn">main</span>() {</td></tr>
+<tr><td class="line-num">19</td><td class="line-code">    <span class="type">float</span> harga = <span class="num">600000</span>;</td></tr>
+<tr><td class="line-num">20</td><td class="line-code">    <span class="type">int</span> persen = <span class="fn">persenDiskon</span>(harga);</td></tr>
+<tr><td class="line-num">21</td><td class="line-code">    <span class="type">float</span> hargaAkhir = <span class="fn">hitungDiskon</span>(harga);</td></tr>
+<tr><td class="line-num">22</td><td class="line-code">    <span class="type">float</span> jumlahDiskon = harga - hargaAkhir;</td></tr>
+<tr><td class="line-num">23</td><td class="line-code"></td></tr>
+<tr><td class="line-num">24</td><td class="line-code">    cout &lt;&lt; <span class="str">"Harga Awal : Rp "</span> &lt;&lt; harga &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">25</td><td class="line-code">    cout &lt;&lt; <span class="str">"Diskon     : "</span> &lt;&lt; persen &lt;&lt; <span class="str">"% = Rp "</span> &lt;&lt; jumlahDiskon &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">26</td><td class="line-code">    cout &lt;&lt; <span class="str">"Harga Bayar: Rp "</span> &lt;&lt; hargaAkhir &lt;&lt; endl;</td></tr>
+<tr><td class="line-num">27</td><td class="line-code">    <span class="kw">return</span> <span class="num">0</span>;</td></tr>
+<tr><td class="line-num">28</td><td class="line-code">}</td></tr>
+<tr><td class="line-num">29</td><td class="line-code"><span class="cm">// Output:</span></td></tr>
+<tr><td class="line-num">30</td><td class="line-code"><span class="cm">// Harga Awal : Rp 600000</span></td></tr>
+<tr><td class="line-num">31</td><td class="line-code"><span class="cm">// Diskon     : 20% = Rp 120000</span></td></tr>
+<tr><td class="line-num">32</td><td class="line-code"><span class="cm">// Harga Bayar: Rp 480000</span></td></tr>
+    </tbody></table>
+  </div>
+</div>-->
+    </div>
+  </section>
+
+  <!-- ===== 9. INTERAKTIF ===== -->
+  <section id="interaktif">
+    <div class="section-label"><div class="section-num">9</div>Interaktif</div>
+    <h2>🎮 Coba Simulasi Langsung!</h2>
+
+    <!-- Kalkulator Nilai -->
+    <div class="interactive-box">
+      <h3>🎓 Simulasi: Kalkulator Nilai Mahasiswa</h3>
+      <p style="color:#b8caff; font-size:14px; margin-bottom:20px;">Masukkan nilai untuk melihat cara fungsi bekerja secara nyata!</p>
+      <div class="input-row">
+        <div>
+          <label>📝 Nilai Tugas (0–100)</label>
+          <input type="number" id="inp_tugas" placeholder="contoh: 80" min="0" max="100">
+        </div>
+        <div>
+          <label>📋 Nilai UTS (0–100)</label>
+          <input type="number" id="inp_uts" placeholder="contoh: 75" min="0" max="100">
+        </div>
+        <div>
+          <label>📄 Nilai UAS (0–100)</label>
+          <input type="number" id="inp_uas" placeholder="contoh: 90" min="0" max="100">
+        </div>
+      </div>
+      <button class="btn accent" onclick="hitungNilai()">⚙️ Jalankan Fungsi hitungNilaiAkhir()</button>
+      <div class="result-output" id="result_nilai">← Hasil akan muncul di sini setelah kamu klik tombol 🎯</div>
+    </div>
+
+    <!-- Kalkulator Diskon -->
+    <div class="interactive-box">
+      <h3>🛒 Simulasi: Kalkulator Diskon Toko</h3>
+      <p style="color:#b8caff; font-size:14px; margin-bottom:20px;">Simulasi fungsi <code>hitungDiskon()</code> yang sudah kita bahas:</p>
+      <label>💰 Total Belanja (Rupiah)</label>
+      <input type="number" id="inp_harga" placeholder="contoh: 600000" min="0">
+      <button class="btn accent" onclick="hitungDiskonUI()">⚙️ Jalankan Fungsi hitungDiskon()</button>
+      <div class="result-output" id="result_diskon">← Masukkan total belanja dan klik tombol 🛍️</div>
+    </div>
+
+    <!-- Cek Genap Ganjil -->
+    <div class="interactive-box">
+      <h3>🔢 Simulasi: Cek Genap atau Ganjil</h3>
+      <p style="color:#b8caff; font-size:14px; margin-bottom:20px;">Simulasi fungsi <code>cekGenap(angka)</code>:</p>
+      <label>🔢 Masukkan sebuah bilangan bulat</label>
+      <input type="number" id="inp_angka" placeholder="contoh: 42">
+      <button class="btn accent" onclick="cekGenapUI()">⚙️ Jalankan Fungsi cekGenap()</button>
+      <div class="result-output" id="result_genap">← Masukkan angka dan klik tombol 🎯</div>
+    </div>
+  </section>
+
+  <!-- ===== 10. RINGKASAN ===== -->
+  <section id="ringkasan">
+    <div class="section-label"><div class="section-num">10</div>Ringkasan</div>
+    <h2>📌 Ringkasan Materi Pertemuan 5</h2>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="icon">🔧</div>
+        <h4>Fungsi</h4>
+        <p>Kumpulan perintah yang diberi nama. Tulis sekali, panggil berkali-kali.</p>
+      </div>
+      <div class="summary-card">
+        <div class="icon">📥</div>
+        <h4>Parameter</h4>
+        <p>Input/bahan yang dikirim ke dalam fungsi agar bisa diproses.</p>
+      </div>
+      <div class="summary-card">
+        <div class="icon">📤</div>
+        <h4>Return Value</h4>
+        <p>Nilai yang dikembalikan fungsi setelah selesai bekerja.</p>
+      </div>
+      <div class="summary-card">
+        <div class="icon">🔒</div>
+        <h4>Scope</h4>
+        <p>Batas wilayah berlaku variabel. Lokal hanya dalam fungsinya sendiri.</p>
+      </div>
+      <div class="summary-card">
+        <div class="icon">🧩</div>
+        <h4>Modularisasi</h4>
+        <p>Memecah program besar menjadi fungsi-fungsi kecil yang spesifik.</p>
+      </div>
+      <div class="summary-card">
+        <div class="icon">🎯</div>
+        <h4>void vs return</h4>
+        <p><code>void</code> jika tidak perlu kembalikan nilai. <code>int/float</code> jika ada output.</p>
+      </div>
+    </div>
+
+    <div class="card" style="background: linear-gradient(135deg, #1a2340, #2d4bbd); color: #fff; border: none;">
+      <h3 style="color:#93c5fd; margin-bottom:14px;">🚀 Key Takeaway</h3>
+      <p style="color:#b8caff;">Fungsi bukan sekadar sintaks — ini adalah <strong style="color:#fff;">cara berpikir</strong>. Setiap kali kamu punya tugas yang <em>berulang</em> atau punya <em>tanggung jawab spesifik</em>, pertimbangkan untuk menjadikannya fungsi tersendiri.</p>
+      <p style="color:#b8caff; margin-top:10px;">Program yang baik dibaca seperti <strong style="color:#fff;">buku cerita</strong> — <code style="color:#86efac;">main()</code> yang bersih menceritakan alur umum, sedangkan fungsi-fungsi lain menyimpan detail implementasinya.</p>
+    </div>
+
+    <div class="tip-box" style="margin-top:0;">
+      ✅ <strong>Selamat!</strong> Kamu sudah menyelesaikan materi Fungsi (Modular Programming). Kerjakan latihan, eksplorasi kode, dan jangan takut salah — error adalah bagian dari belajar pemrograman! 💪
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <strong>Logika &amp; Algoritma 2 — Pertemuan 5</strong><br>
+  Fungsi Modular (Function) · D3 Semester 2<br>
+  <span style="font-size:12px; margin-top:8px; display:block;">Dibuat untuk keperluan pendidikan · Semangat belajar! 🚀</span>
+</footer>
+
+<script>
+  // ===== COPY CODE FUNCTION =====
+  function copyCode(btn, code) {
+    navigator.clipboard.writeText(code).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = '✅ Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '📋 Copy';
+      }, 2000);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.classList.add('copied');
+      btn.innerHTML = '✅ Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '📋 Copy';
+      }, 2000);
+    });
+  }
+
+  // Progress bar
+  window.addEventListener('scroll', function() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+  });
+
+  // Toggle jawaban latihan
+  function toggleAnswer(id) {
+    const el = document.getElementById(id);
+    const btn = el.previousElementSibling;
+    if (el.classList.contains('open')) {
+      el.classList.remove('open');
+      btn.textContent = '💡 Tampilkan Jawaban';
+    } else {
+      el.classList.add('open');
+      btn.textContent = '🙈 Sembunyikan Jawaban';
+    }
+  }
+
+  // ===== SIMULASI FUNGSI JAVASCRIPT =====
+
+  // Fungsi: Tentukan Grade
+  function tentukanGrade(nilai) {
+    if (nilai >= 80) return 'A';
+    if (nilai >= 70) return 'B';
+    if (nilai >= 60) return 'C';
+    if (nilai >= 50) return 'D';
+    return 'E';
+  }
+
+  // Simulasi: Hitung Nilai Mahasiswa
+  function hitungNilai() {
+    const tugas = parseFloat(document.getElementById('inp_tugas').value);
+    const uts   = parseFloat(document.getElementById('inp_uts').value);
+    const uas   = parseFloat(document.getElementById('inp_uas').value);
+    const el    = document.getElementById('result_nilai');
+
+    if (isNaN(tugas) || isNaN(uts) || isNaN(uas)) {
+      el.className = 'result-output error';
+      el.textContent = '❌ Error: Semua field harus diisi dengan angka!';
+      return;
+    }
+    if (tugas < 0 || tugas > 100 || uts < 0 || uts > 100 || uas < 0 || uas > 100) {
+      el.className = 'result-output error';
+      el.textContent = '❌ Error: Nilai harus antara 0 – 100!';
+      return;
+    }
+
+    // Simulasi fungsi hitungNilaiAkhir(tugas, uts, uas)
+    const nilaiAkhir = (tugas + uts + uas) / 3;
+    const grade = tentukanGrade(nilaiAkhir);
+    const gradeEmoji = { A: '🏆', B: '⭐', C: '👍', D: '⚠️', E: '❌' };
+
+    el.className = 'result-output';
+    el.innerHTML =
+      `⚙️ hitungNilaiAkhir(${tugas}, ${uts}, ${uas}) dipanggil...\n` +
+      `📊 Proses: (${tugas} + ${uts} + ${uas}) / 3 = ${nilaiAkhir.toFixed(2)}\n` +
+      `🔤 tentukanGrade(${nilaiAkhir.toFixed(2)}) → Grade: ${grade} ${gradeEmoji[grade] || ''}\n` +
+      `✅ Return: nilai_akhir = ${nilaiAkhir.toFixed(2)}, grade = '${grade}'`;
+  }
+
+  // Simulasi: Hitung Diskon
+  function hitungDiskonUI() {
+    const harga = parseFloat(document.getElementById('inp_harga').value);
+    const el    = document.getElementById('result_diskon');
+
+    if (isNaN(harga) || harga < 0) {
+      el.className = 'result-output error';
+      el.textContent = '❌ Error: Masukkan nominal belanja yang valid!';
+      return;
+    }
+
+    // Simulasi fungsi persenDiskon & hitungDiskon
+    let persen = 0;
+    if (harga > 500000) persen = 20;
+    else if (harga > 200000) persen = 10;
+
+    const jumlahDiskon = harga * persen / 100;
+    const hargaAkhir   = harga - jumlahDiskon;
+
+    const fmt = (n) => 'Rp ' + n.toLocaleString('id-ID');
+
+    el.className = 'result-output';
+    el.innerHTML =
+      `⚙️ persenDiskon(${fmt(harga)}) → Diskon: ${persen}%\n` +
+      `⚙️ hitungDiskon(${fmt(harga)}) dipanggil...\n` +
+      `📊 Jumlah Diskon : ${fmt(jumlahDiskon)}\n` +
+      `✅ Harga yang Dibayar: ${fmt(hargaAkhir)}`;
+  }
+
+  // Simulasi: Cek Genap Ganjil
+  function cekGenapUI() {
+    const angka = parseInt(document.getElementById('inp_angka').value);
+    const el    = document.getElementById('result_genap');
+
+    if (isNaN(angka)) {
+      el.className = 'result-output error';
+      el.textContent = '❌ Error: Masukkan bilangan bulat yang valid!';
+      return;
+    }
+
+    const genap = angka % 2 === 0;
+    el.className = 'result-output';
+    el.innerHTML =
+      `⚙️ cekGenap(${angka}) dipanggil...\n` +
+      `📊 Proses: ${angka} % 2 = ${angka % 2}\n` +
+      `🔍 Kondisi: ${angka} % 2 == 0 → ${genap}\n` +
+      `✅ Return: ${genap} → ${angka} adalah bilangan ${genap ? '✅ GENAP' : '⭕ GANJIL'}`;
+  }
+
+  // Enter key support
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const active = document.activeElement;
+      if (active && active.id) {
+        if (['inp_tugas','inp_uts','inp_uas'].includes(active.id)) hitungNilai();
+        if (active.id === 'inp_harga') hitungDiskonUI();
+        if (active.id === 'inp_angka') cekGenapUI();
+      }
+    }
+  });
+</script>
+</body>
+</html>

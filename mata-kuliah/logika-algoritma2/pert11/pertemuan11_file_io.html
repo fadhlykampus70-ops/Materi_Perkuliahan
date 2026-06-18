@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan 11 – File I/O Python</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg:        #0f1117;
+    --surface:   #181c27;
+    --card:      #1e2333;
+    --border:    #2a3047;
+    --accent:    #5b7fff;
+    --accent2:   #38e2a6;
+    --warn:      #f6a623;
+    --danger:    #ff5f5f;
+    --text:      #dce3f5;
+    --muted:     #7a87a8;
+    --code-bg:   #131720;
+    --code-line: #1a2035;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 250px;
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 24px 0 40px;
+    z-index: 100;
+  }
+  .sidebar-brand {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .sidebar-brand .course-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .sidebar-brand h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 20px 4px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all .15s;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--text);
+    background: rgba(91,127,255,.08);
+    border-left-color: var(--accent);
+  }
+  .nav-link .icon { font-size: 15px; flex-shrink: 0; }
+
+  /* ── MAIN ── */
+  #main {
+    margin-left: 250px;
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0f1117 0%, #141926 40%, #0e1a2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 60px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(91,127,255,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero-desc {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 28px;
+  }
+  .hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill {
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .pill-blue  { color: var(--accent); border-color: rgba(91,127,255,.4); background: rgba(91,127,255,.08); }
+  .pill-green { color: var(--accent2); border-color: rgba(56,226,166,.4); background: rgba(56,226,166,.08); }
+  .pill-warn  { color: var(--warn);  border-color: rgba(246,166,35,.4);  background: rgba(246,166,35,.08); }
+
+  /* Content area */
+  .content { padding: 48px 60px; max-width: 900px; }
+
+  /* Section */
+  .section { margin-bottom: 60px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .section-num {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-num.green { background: var(--accent2); color: #0a1a12; }
+  .section-num.warn  { background: var(--warn); color: #1a0e00; }
+  .section-num.red   { background: var(--danger); color: #fff; }
+  .section h2 { font-size: 20px; font-weight: 700; color: var(--text); }
+
+  p { color: var(--muted); margin-bottom: 14px; }
+  p strong { color: var(--text); font-weight: 600; }
+
+  /* Info boxes */
+  .box {
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+    border-left: 4px solid;
+    font-size: 14px;
+  }
+  .box-blue  { background: rgba(91,127,255,.07); border-color: var(--accent); }
+  .box-green { background: rgba(56,226,166,.07); border-color: var(--accent2); }
+  .box-warn  { background: rgba(246,166,35,.07);  border-color: var(--warn); }
+  .box-red   { background: rgba(255,95,95,.07);   border-color: var(--danger); }
+  .box .box-title {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .box-blue  .box-title { color: var(--accent); }
+  .box-green .box-title { color: var(--accent2); }
+  .box-warn  .box-title { color: var(--warn); }
+  .box-red   .box-title { color: var(--danger); }
+  .box p { margin: 0; font-size: 14px; }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13.5px;
+  }
+  th {
+    background: var(--card);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    vertical-align: top;
+  }
+  td:first-child { color: var(--accent2); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 18px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .code-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .code-title .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .code-label {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .copy-btn {
+    background: rgba(91,127,255,.15);
+    color: var(--accent);
+    border: 1px solid rgba(91,127,255,.3);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .copy-btn:hover { background: rgba(91,127,255,.3); }
+  .copy-btn.copied { color: var(--accent2); border-color: var(--accent2); background: rgba(56,226,166,.15); }
+
+  pre {
+    padding: 20px 22px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.65;
+    tab-size: 4;
+  }
+  /* Syntax colors */
+  .kw  { color: #a78bfa; }  /* keyword */
+  .fn  { color: #5b7fff; }  /* function */
+  .st  { color: #38e2a6; }  /* string */
+  .cm  { color: #4b5e80; font-style: italic; } /* comment */
+  .nu  { color: #f6a623; }  /* number */
+  .cl  { color: #fb923c; }  /* class */
+  .va  { color: #dce3f5; }  /* variable */
+  .op  { color: #7a87a8; }  /* operator */
+
+  /* Steps */
+  .steps { counter-reset: step; margin-bottom: 20px; }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .step-n {
+    counter-increment: step;
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body { font-size: 14px; color: var(--muted); }
+  .step-body strong { color: var(--text); }
+
+  /* Mini chip */
+  code {
+    background: rgba(91,127,255,.12);
+    color: var(--accent);
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+  .flow-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    min-width: 110px;
+  }
+  .flow-box.blue  { border-color: var(--accent);  color: var(--accent); }
+  .flow-box.green { border-color: var(--accent2); color: var(--accent2); }
+  .flow-arr {
+    color: var(--muted);
+    font-size: 20px;
+    padding: 0 8px;
+  }
+
+  /* Mode grid */
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .mode-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .mode-card .mode-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  .mode-card .mode-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .mode-card .mode-desc { font-size: 12px; color: var(--muted); }
+
+  /* Try badge */
+  .try-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(56,226,166,.1);
+    color: var(--accent2);
+    border: 1px solid rgba(56,226,166,.3);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    margin-bottom: 10px;
+  }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* Summary cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px,1fr));
+    gap: 14px;
+  }
+  .summary-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .summary-card .sc-icon { font-size: 28px; margin-bottom: 10px; }
+  .summary-card .sc-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .summary-card .sc-desc { font-size: 13px; color: var(--muted); }
+
+  /* Responsive */
+  @media (max-width: 780px) {
+    #sidebar { display: none; }
+    #main { margin-left: 0; }
+    .hero, .content { padding: 32px 22px; }
+    .hero h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <div class="course-tag">Pertemuan 11</div>
+    <h2>File I/O<br>Python</h2>
+  </div>
+
+  <div class="nav-section-label">Materi</div>
+  <a href="#konsep"   class="nav-link active"><span class="icon">📂</span> Apa itu File I/O?</a>
+  <a href="#mode"     class="nav-link"><span class="icon">🔑</span> Mode Buka File</a>
+  <a href="#menulis"  class="nav-link"><span class="icon">✍️</span> Menulis File</a>
+  <a href="#membaca"  class="nav-link"><span class="icon">📖</span> Membaca File</a>
+  <a href="#append"   class="nav-link"><span class="icon">➕</span> Menambah Data</a>
+  <a href="#with"     class="nav-link"><span class="icon">🛡️</span> Pakai <code>with</code></a>
+  <a href="#ui"       class="nav-link"><span class="icon">🖥️</span> Integrasi UI (Tkinter)</a>
+  <a href="#latihan"  class="nav-link"><span class="icon">🧪</span> Latihan Mandiri</a>
+  <a href="#ringkasan" class="nav-link"><span class="icon">📋</span> Ringkasan</a>
+</nav>
+
+<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+<main id="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">📁 Pertemuan 11 · Pemrograman Python</div>
+    <h1>Membaca &amp; Menulis <span>File</span></h1>
+    <p class="hero-desc">
+      Belajar cara Python menyimpan dan membaca data dari file teks (.txt),
+      serta menerapkannya bersama antarmuka GUI Tkinter yang sudah kamu pelajari.
+    </p>
+    <div class="hero-pills">
+      <span class="pill pill-blue">📖 Membaca File</span>
+      <span class="pill pill-green">✍️ Menulis File</span>
+      <span class="pill pill-warn">🖥️ Integrasi Tkinter UI</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 1 · KONSEP DASAR
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="konsep">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>Apa itu File I/O?</h2>
+      </div>
+
+      <p>
+        Selama ini program kita hanya menyimpan data <strong>di dalam memori RAM</strong> —
+        begitu program ditutup, semua data hilang. Dengan <strong>File I/O</strong>
+        (Input/Output), kita bisa menyimpan data ke dalam file di harddisk supaya
+        bisa dibaca kembali kapan saja.
+      </p>
+
+      <div class="flow">
+        <div class="flow-box blue">Program Python</div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box">Buka File</div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box green">Baca / Tulis</div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box">Tutup File</div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box blue">Data Tersimpan</div>
+      </div>
+
+      <div class="box box-blue">
+        <div class="box-title">💡 Analogi Sederhana</div>
+        <p>Bayangkan file seperti <strong>buku catatan</strong>. Kamu bisa membukanya,
+        menulis di dalamnya, membaca isinya, lalu menutupnya kembali. Python punya
+        fungsi bawaan untuk melakukan semua itu.</p>
+      </div>
+
+      <p>Fungsi utama yang akan kita pakai adalah <code>open()</code> bawaan Python:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; Sintaks dasar open()
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">PYTHON</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># Sintaks:</span>
+<span class="va">file</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"nama_file.txt"</span>, <span class="st">"mode"</span>)
+
+<span class="cm"># Contoh membuka file untuk ditulis:</span>
+<span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"catatan.txt"</span>, <span class="st">"w"</span>)
+<span class="va">f</span>.<span class="fn">write</span>(<span class="st">"Halo, ini file pertamaku!"</span>)
+<span class="va">f</span>.<span class="fn">close</span>()  <span class="cm"># Jangan lupa tutup!</span></pre>
+      </div>
+
+      <div class="box box-warn">
+        <div class="box-title">⚠️ Perhatian Penting</div>
+        <p>Setiap kali membuka file dengan <code>open()</code>, kamu <strong>wajib menutupnya</strong>
+        dengan <code>.close()</code>. Jika tidak, file bisa rusak atau data tidak tersimpan sempurna.
+        Kita akan belajar cara yang lebih aman menggunakan <code>with</code> nanti.</p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 2 · MODE
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="mode">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>Mode Membuka File</h2>
+      </div>
+
+      <p>Parameter kedua di <code>open()</code> adalah <strong>mode</strong> — menentukan
+      apa yang mau kamu lakukan dengan file itu.</p>
+
+      <div class="mode-grid">
+        <div class="mode-card">
+          <div class="mode-key">"r"</div>
+          <div class="mode-name">Read (Baca)</div>
+          <div class="mode-desc">Hanya membaca isi file. File harus sudah ada, kalau tidak error.</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-key">"w"</div>
+          <div class="mode-name">Write (Tulis)</div>
+          <div class="mode-desc">Menulis ke file. Jika file sudah ada, <strong>isinya dihapus dulu</strong>!</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-key">"a"</div>
+          <div class="mode-name">Append (Tambah)</div>
+          <div class="mode-desc">Menambah tulisan di akhir file tanpa menghapus isi sebelumnya.</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-key">"x"</div>
+          <div class="mode-name">Create (Buat Baru)</div>
+          <div class="mode-desc">Membuat file baru. Error jika file sudah ada.</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-key">"r+"</div>
+          <div class="mode-name">Read + Write</div>
+          <div class="mode-desc">Bisa baca dan tulis sekaligus. File harus sudah ada.</div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Mode</th><th>File Ada?</th><th>File Baru?</th><th>Hapus Isi?</th><th>Kapan Dipakai</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>"r"</td><td>✅ Perlu</td><td>❌ Tidak</td><td>❌ Tidak</td><td>Membaca data yang sudah ada</td></tr>
+          <tr><td>"w"</td><td>Optional</td><td>✅ Ya</td><td>✅ Ya!</td><td>Menyimpan ulang seluruh data</td></tr>
+          <tr><td>"a"</td><td>Optional</td><td>✅ Ya</td><td>❌ Tidak</td><td>Menambah catatan/log baru</td></tr>
+          <tr><td>"x"</td><td>❌ Error</td><td>✅ Ya</td><td>—</td><td>Pastikan file belum ada</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 3 · MENULIS FILE
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="menulis">
+      <div class="section-header">
+        <div class="section-num green">3</div>
+        <h2>Menulis ke File</h2>
+      </div>
+
+      <p>Gunakan method <code>.write()</code> untuk menulis teks ke file.
+      Jika ingin pindah baris, tambahkan karakter <code>\n</code>.</p>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; contoh_tulis.py
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">THONNY</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># ===== MENULIS FILE =====</span>
+<span class="cm"># File akan dibuat di folder yang sama dengan script ini</span>
+
+<span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"biodata.txt"</span>, <span class="st">"w"</span>)
+
+<span class="va">f</span>.<span class="fn">write</span>(<span class="st">"Nama : Budi Santoso\n"</span>)
+<span class="va">f</span>.<span class="fn">write</span>(<span class="st">"Usia : 20 tahun\n"</span>)
+<span class="va">f</span>.<span class="fn">write</span>(<span class="st">"Kota : Pekanbaru\n"</span>)
+
+<span class="va">f</span>.<span class="fn">close</span>()
+
+<span class="fn">print</span>(<span class="st">"✅ File berhasil dibuat!"</span>)</pre>
+      </div>
+
+      <div class="box box-green">
+        <div class="box-title">✅ Hasil yang Diharapkan</div>
+        <p>Setelah program dijalankan, file <strong>biodata.txt</strong> akan muncul di folder
+        yang sama dengan file Python-mu. Buka file tersebut, isinya akan berisi tiga baris biodata.</p>
+      </div>
+
+      <p>Bisa juga menulis banyak baris sekaligus menggunakan <code>.writelines()</code> dengan list:</p>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; writelines_contoh.py
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">THONNY</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># Tulis banyak baris sekaligus dengan writelines()</span>
+
+<span class="va">daftar_buah</span> <span class="op">=</span> [
+    <span class="st">"Mangga\n"</span>,
+    <span class="st">"Jeruk\n"</span>,
+    <span class="st">"Durian\n"</span>,
+    <span class="st">"Rambutan\n"</span>
+]
+
+<span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"buah.txt"</span>, <span class="st">"w"</span>)
+<span class="va">f</span>.<span class="fn">writelines</span>(<span class="va">daftar_buah</span>)
+<span class="va">f</span>.<span class="fn">close</span>()
+
+<span class="fn">print</span>(<span class="st">"✅ Daftar buah tersimpan!"</span>)</pre>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 4 · MEMBACA FILE
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="membaca">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <h2>Membaca Isi File</h2>
+      </div>
+
+      <p>Ada <strong>3 cara</strong> membaca file di Python, masing-masing cocok untuk situasi berbeda:</p>
+
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Membaca</th><th>Hasil</th><th>Kapan Dipakai</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>.read()</td><td>Seluruh isi file</td><td>String panjang</td><td>File kecil, baca sekaligus</td></tr>
+          <tr><td>.readline()</td><td>Satu baris saja</td><td>String satu baris</td><td>Baca baris per baris manual</td></tr>
+          <tr><td>.readlines()</td><td>Semua baris</td><td>List of strings</td><td>Perlu diproses per-baris</td></tr>
+        </tbody>
+      </table>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; baca_read.py — cara 1: .read()
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">THONNY</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># Pastikan biodata.txt sudah dibuat dari contoh sebelumnya!</span>
+<span class="cm"># .read() → baca seluruh isi file sekaligus</span>
+
+<span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"biodata.txt"</span>, <span class="st">"r"</span>)
+<span class="va">isi</span> <span class="op">=</span> <span class="va">f</span>.<span class="fn">read</span>()
+<span class="va">f</span>.<span class="fn">close</span>()
+
+<span class="fn">print</span>(<span class="st">"Isi file:"</span>)
+<span class="fn">print</span>(<span class="va">isi</span>)</pre>
+      </div>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; baca_readlines.py — cara 3: .readlines()
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">THONNY</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># .readlines() → hasilnya LIST, tiap baris jadi satu elemen</span>
+
+<span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"buah.txt"</span>, <span class="st">"r"</span>)
+<span class="va">baris</span> <span class="op">=</span> <span class="va">f</span>.<span class="fn">readlines</span>()
+<span class="va">f</span>.<span class="fn">close</span>()
+
+<span class="fn">print</span>(<span class="st">"Daftar buah:"</span>)
+<span class="kw">for</span> <span class="va">i</span>, <span class="va">buah</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="va">baris</span>, <span class="nu">1</span>):
+    <span class="cm"># .strip() untuk hapus \n di akhir baris</span>
+    <span class="fn">print</span>(<span class="st">f"  </span><span class="nu">{i}</span><span class="st">. </span><span class="nu">{buah.strip()}</span><span class="st">"</span>)</pre>
+      </div>
+
+      <div class="box box-blue">
+        <div class="box-title">💡 Tips: .strip()</div>
+        <p>Saat membaca file, setiap baris biasanya diakhiri dengan karakter <code>\n</code> (newline).
+        Gunakan <code>.strip()</code> untuk menghapusnya supaya tampilan lebih bersih.</p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 5 · APPEND
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="append">
+      <div class="section-header">
+        <div class="section-num warn">5</div>
+        <h2>Menambah Data ke File (Append)</h2>
+      </div>
+
+      <p>Mode <code>"a"</code> menambahkan tulisan di <strong>akhir file</strong> tanpa
+      menghapus isi yang sudah ada. Sangat berguna untuk membuat log atau catatan harian.</p>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; append_contoh.py
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">THONNY</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># Jalankan beberapa kali — perhatikan data terus BERTAMBAH!</span>
+
+<span class="kw">import</span> <span class="cl">datetime</span>
+
+<span class="va">waktu_sekarang</span> <span class="op">=</span> <span class="cl">datetime</span>.<span class="cl">datetime</span>.<span class="fn">now</span>().<span class="fn">strftime</span>(<span class="st">"%Y-%m-%d %H:%M:%S"</span>)
+
+<span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"log_akses.txt"</span>, <span class="st">"a"</span>)
+<span class="va">f</span>.<span class="fn">write</span>(<span class="st">f"Diakses pada: </span><span class="nu">{waktu_sekarang}</span><span class="st">\n"</span>)
+<span class="va">f</span>.<span class="fn">close</span>()
+
+<span class="fn">print</span>(<span class="st">f"✅ Log ditambahkan! Waktu: </span><span class="nu">{waktu_sekarang}</span><span class="st">"</span>)
+
+<span class="cm"># Baca kembali untuk membuktikan</span>
+<span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"log_akses.txt"</span>, <span class="st">"r"</span>)
+<span class="fn">print</span>(<span class="st">"\n📋 Isi log sekarang:"</span>)
+<span class="fn">print</span>(<span class="va">f</span>.<span class="fn">read</span>())
+<span class="va">f</span>.<span class="fn">close</span>()</pre>
+      </div>
+
+      <div class="box box-warn">
+        <div class="box-title">🔍 Yang Harus Kamu Amati</div>
+        <p>Jalankan kode di atas <strong>3–4 kali</strong>. Setiap kali dijalankan,
+        isi <code>log_akses.txt</code> akan bertambah satu baris baru dengan timestamp berbeda.
+        Inilah perbedaan mode <code>"a"</code> vs <code>"w"</code>!</p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 6 · WITH STATEMENT
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="with">
+      <div class="section-header">
+        <div class="section-num red">6</div>
+        <h2>Cara Aman: Pakai <code>with</code></h2>
+      </div>
+
+      <p>
+        Cara yang paling <strong>direkomendasikan</strong> saat bekerja dengan file adalah
+        menggunakan keyword <code>with</code>. Keunggulannya: file otomatis ditutup
+        meskipun terjadi error di tengah program.
+      </p>
+
+      <div class="box box-green">
+        <div class="box-title">✅ Kenapa pakai <code>with</code>?</div>
+        <p>Dengan <code>with open(...) as f:</code>, Python otomatis memanggil <code>f.close()</code>
+        ketika blok kode selesai dieksekusi — bahkan jika ada error. Tidak perlu ingat tutup file manual!</p>
+      </div>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; with_menulis.py
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">THONNY</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># ===== MENULIS dengan WITH =====</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"nilai.txt"</span>, <span class="st">"w"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">f</span>.<span class="fn">write</span>(<span class="st">"Nama   : Siti\n"</span>)
+    <span class="va">f</span>.<span class="fn">write</span>(<span class="st">"Nilai  : 92\n"</span>)
+    <span class="va">f</span>.<span class="fn">write</span>(<span class="st">"Grade  : A\n"</span>)
+<span class="cm"># ↑ file sudah otomatis tertutup di sini</span>
+
+<span class="fn">print</span>(<span class="st">"✅ Data tersimpan!"</span>)
+
+<span class="cm"># ===== MEMBACA dengan WITH =====</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"nilai.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">isi</span> <span class="op">=</span> <span class="va">f</span>.<span class="fn">read</span>()
+
+<span class="fn">print</span>(<span class="st">"📄 Isi file nilai.txt:"</span>)
+<span class="fn">print</span>(<span class="va">isi</span>)</pre>
+      </div>
+
+      <p>Perbandingan cara lama vs cara baru:</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div class="code-block" style="margin:0">
+          <div class="code-header" style="background:#2a1a1a;border-color:#4a2020">
+            <div class="code-title"><span class="dot dot-r"></span>&nbsp; ❌ Cara Lama</div>
+          </div>
+          <pre style="font-size:12.5px"><span class="va">f</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"file.txt"</span>, <span class="st">"r"</span>)
+<span class="va">isi</span> <span class="op">=</span> <span class="va">f</span>.<span class="fn">read</span>()
+<span class="cm"># kalau error di sini,</span>
+<span class="cm"># f.close() tidak dipanggil!</span>
+<span class="va">f</span>.<span class="fn">close</span>()</pre>
+        </div>
+        <div class="code-block" style="margin:0">
+          <div class="code-header" style="background:#0e2218;border-color:#1a4a2a">
+            <div class="code-title"><span class="dot dot-g"></span>&nbsp; ✅ Cara Baru (with)</div>
+          </div>
+          <pre style="font-size:12.5px"><span class="kw">with</span> <span class="fn">open</span>(<span class="st">"file.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">isi</span> <span class="op">=</span> <span class="va">f</span>.<span class="fn">read</span>()
+<span class="cm"># otomatis tertutup,</span>
+<span class="cm"># bahkan jika ada error!</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 7 · INTEGRASI UI TKINTER
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="ui">
+      <div class="section-header">
+        <div class="section-num green">7</div>
+        <h2>Integrasi dengan UI Tkinter</h2>
+      </div>
+
+      <p>
+        Di pertemuan sebelumnya kamu sudah belajar membuat GUI dengan Tkinter.
+        Sekarang kita gabungkan! Contoh berikut membuat aplikasi <strong>Buku Catatan Sederhana</strong>
+        — pengguna bisa menulis di text area, lalu simpan/baca dari file.
+      </p>
+
+      <div class="box box-blue">
+        <div class="box-title">🖥️ Fitur Aplikasi yang Akan Dibuat</div>
+        <p>✅ Text area untuk menulis catatan &nbsp;|&nbsp; ✅ Tombol Simpan ke file &nbsp;|&nbsp;
+        ✅ Tombol Buka dari file &nbsp;|&nbsp; ✅ Label status informasi</p>
+      </div>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; buku_catatan_ui.py — Aplikasi Buku Catatan dengan File I/O
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">THONNY + TKINTER</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="kw">import</span> <span class="cl">tkinter</span> <span class="kw">as</span> <span class="va">tk</span>
+<span class="kw">from</span> <span class="cl">tkinter</span> <span class="kw">import</span> <span class="va">messagebox</span>, <span class="va">filedialog</span>
+
+<span class="cm"># ===== FUNGSI SIMPAN =====</span>
+<span class="kw">def</span> <span class="fn">simpan_file</span>():
+    <span class="cm"># Ambil isi text area</span>
+    <span class="va">isi</span> <span class="op">=</span> <span class="va">text_area</span>.<span class="fn">get</span>(<span class="st">"1.0"</span>, <span class="va">tk</span>.<span class="va">END</span>)
+    
+    <span class="kw">if</span> <span class="va">isi</span>.<span class="fn">strip</span>() <span class="op">==</span> <span class="st">""</span>:
+        <span class="va">messagebox</span>.<span class="fn">showwarning</span>(<span class="st">"Peringatan"</span>, <span class="st">"Catatan masih kosong!"</span>)
+        <span class="kw">return</span>
+    
+    <span class="cm"># Dialog pilih lokasi simpan</span>
+    <span class="va">path</span> <span class="op">=</span> <span class="va">filedialog</span>.<span class="fn">asksaveasfilename</span>(
+        <span class="va">defaultextension</span><span class="op">=</span><span class="st">".txt"</span>,
+        <span class="va">filetypes</span><span class="op">=</span>[(<span class="st">"Text Files"</span>, <span class="st">"*.txt"</span>), (<span class="st">"All Files"</span>, <span class="st">"*.*"</span>)]
+    )
+    
+    <span class="kw">if</span> <span class="va">path</span>:  <span class="cm"># Jika user tidak cancel</span>
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="va">path</span>, <span class="st">"w"</span>, <span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span>) <span class="kw">as</span> <span class="va">f</span>:
+            <span class="va">f</span>.<span class="fn">write</span>(<span class="va">isi</span>)
+        <span class="va">label_status</span>.<span class="fn">config</span>(<span class="va">text</span><span class="op">=</span><span class="st">f"✅ Tersimpan: {path}"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"#28c840"</span>)
+
+<span class="cm"># ===== FUNGSI BUKA =====</span>
+<span class="kw">def</span> <span class="fn">buka_file</span>():
+    <span class="va">path</span> <span class="op">=</span> <span class="va">filedialog</span>.<span class="fn">askopenfilename</span>(
+        <span class="va">filetypes</span><span class="op">=</span>[(<span class="st">"Text Files"</span>, <span class="st">"*.txt"</span>), (<span class="st">"All Files"</span>, <span class="st">"*.*"</span>)]
+    )
+    
+    <span class="kw">if</span> <span class="va">path</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="va">path</span>, <span class="st">"r"</span>, <span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span>) <span class="kw">as</span> <span class="va">f</span>:
+            <span class="va">isi</span> <span class="op">=</span> <span class="va">f</span>.<span class="fn">read</span>()
+        
+        <span class="cm"># Hapus isi lama, masukkan isi baru</span>
+        <span class="va">text_area</span>.<span class="fn">delete</span>(<span class="st">"1.0"</span>, <span class="va">tk</span>.<span class="va">END</span>)
+        <span class="va">text_area</span>.<span class="fn">insert</span>(<span class="va">tk</span>.<span class="va">END</span>, <span class="va">isi</span>)
+        <span class="va">label_status</span>.<span class="fn">config</span>(<span class="va">text</span><span class="op">=</span><span class="st">f"📂 Dibuka: {path}"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"#5b7fff"</span>)
+
+<span class="cm"># ===== FUNGSI HAPUS =====</span>
+<span class="kw">def</span> <span class="fn">hapus_area</span>():
+    <span class="va">text_area</span>.<span class="fn">delete</span>(<span class="st">"1.0"</span>, <span class="va">tk</span>.<span class="va">END</span>)
+    <span class="va">label_status</span>.<span class="fn">config</span>(<span class="va">text</span><span class="op">=</span><span class="st">"🗑️ Area catatan dikosongkan."</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"gray"</span>)
+
+<span class="cm"># ===== BUAT JENDELA UTAMA =====</span>
+<span class="va">root</span> <span class="op">=</span> <span class="va">tk</span>.<span class="cl">Tk</span>()
+<span class="va">root</span>.<span class="fn">title</span>(<span class="st">"📝 Buku Catatan Sederhana"</span>)
+<span class="va">root</span>.<span class="fn">geometry</span>(<span class="st">"600x450"</span>)
+<span class="va">root</span>.<span class="fn">configure</span>(<span class="va">bg</span><span class="op">=</span><span class="st">"#f0f4f8"</span>)
+
+<span class="cm"># Header</span>
+<span class="va">header</span> <span class="op">=</span> <span class="va">tk</span>.<span class="cl">Label</span>(<span class="va">root</span>, <span class="va">text</span><span class="op">=</span><span class="st">"📝 Buku Catatan"</span>,
+    <span class="va">font</span><span class="op">=</span>(<span class="st">"Arial"</span>, <span class="nu">14</span>, <span class="st">"bold"</span>), <span class="va">bg</span><span class="op">=</span><span class="st">"#5b7fff"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"white"</span>,
+    <span class="va">pady</span><span class="op">=</span><span class="nu">10</span>)
+<span class="va">header</span>.<span class="fn">pack</span>(<span class="va">fill</span><span class="op">=</span><span class="st">"x"</span>)
+
+<span class="cm"># Frame tombol</span>
+<span class="va">frame_btn</span> <span class="op">=</span> <span class="va">tk</span>.<span class="cl">Frame</span>(<span class="va">root</span>, <span class="va">bg</span><span class="op">=</span><span class="st">"#e8ecf0"</span>, <span class="va">pady</span><span class="op">=</span><span class="nu">8</span>)
+<span class="va">frame_btn</span>.<span class="fn">pack</span>(<span class="va">fill</span><span class="op">=</span><span class="st">"x"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">10</span>)
+
+<span class="va">tk</span>.<span class="cl">Button</span>(<span class="va">frame_btn</span>, <span class="va">text</span><span class="op">=</span><span class="st">"📂 Buka File"</span>, <span class="va">command</span><span class="op">=</span><span class="va">buka_file</span>,
+    <span class="va">bg</span><span class="op">=</span><span class="st">"#5b7fff"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"white"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">12</span>, <span class="va">pady</span><span class="op">=</span><span class="nu">5</span>,
+    <span class="va">relief</span><span class="op">=</span><span class="st">"flat"</span>, <span class="va">cursor</span><span class="op">=</span><span class="st">"hand2"</span>).<span class="fn">pack</span>(<span class="va">side</span><span class="op">=</span><span class="st">"left"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">5</span>)
+
+<span class="va">tk</span>.<span class="cl">Button</span>(<span class="va">frame_btn</span>, <span class="va">text</span><span class="op">=</span><span class="st">"💾 Simpan File"</span>, <span class="va">command</span><span class="op">=</span><span class="va">simpan_file</span>,
+    <span class="va">bg</span><span class="op">=</span><span class="st">"#28c840"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"white"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">12</span>, <span class="va">pady</span><span class="op">=</span><span class="nu">5</span>,
+    <span class="va">relief</span><span class="op">=</span><span class="st">"flat"</span>, <span class="va">cursor</span><span class="op">=</span><span class="st">"hand2"</span>).<span class="fn">pack</span>(<span class="va">side</span><span class="op">=</span><span class="st">"left"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">5</span>)
+
+<span class="va">tk</span>.<span class="cl">Button</span>(<span class="va">frame_btn</span>, <span class="va">text</span><span class="op">=</span><span class="st">"🗑️ Hapus"</span>, <span class="va">command</span><span class="op">=</span><span class="va">hapus_area</span>,
+    <span class="va">bg</span><span class="op">=</span><span class="st">"#ff5f5f"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"white"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">12</span>, <span class="va">pady</span><span class="op">=</span><span class="nu">5</span>,
+    <span class="va">relief</span><span class="op">=</span><span class="st">"flat"</span>, <span class="va">cursor</span><span class="op">=</span><span class="st">"hand2"</span>).<span class="fn">pack</span>(<span class="va">side</span><span class="op">=</span><span class="st">"left"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">5</span>)
+
+<span class="cm"># Text area</span>
+<span class="va">frame_text</span> <span class="op">=</span> <span class="va">tk</span>.<span class="cl">Frame</span>(<span class="va">root</span>, <span class="va">bg</span><span class="op">=</span><span class="st">"#f0f4f8"</span>)
+<span class="va">frame_text</span>.<span class="fn">pack</span>(<span class="va">fill</span><span class="op">=</span><span class="st">"both"</span>, <span class="va">expand</span><span class="op">=</span><span class="kw">True</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">10</span>, <span class="va">pady</span><span class="op">=</span><span class="nu">10</span>)
+
+<span class="va">scrollbar</span> <span class="op">=</span> <span class="va">tk</span>.<span class="cl">Scrollbar</span>(<span class="va">frame_text</span>)
+<span class="va">scrollbar</span>.<span class="fn">pack</span>(<span class="va">side</span><span class="op">=</span><span class="st">"right"</span>, <span class="va">fill</span><span class="op">=</span><span class="st">"y"</span>)
+
+<span class="va">text_area</span> <span class="op">=</span> <span class="va">tk</span>.<span class="cl">Text</span>(<span class="va">frame_text</span>,
+    <span class="va">font</span><span class="op">=</span>(<span class="st">"Consolas"</span>, <span class="nu">12</span>),
+    <span class="va">bg</span><span class="op">=</span><span class="st">"white"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"#1e2333"</span>,
+    <span class="va">wrap</span><span class="op">=</span><span class="va">tk</span>.<span class="va">WORD</span>,
+    <span class="va">yscrollcommand</span><span class="op">=</span><span class="va">scrollbar</span>.<span class="va">set</span>,
+    <span class="va">relief</span><span class="op">=</span><span class="st">"flat"</span>, <span class="va">bd</span><span class="op">=</span><span class="nu">5</span>)
+<span class="va">text_area</span>.<span class="fn">pack</span>(<span class="va">fill</span><span class="op">=</span><span class="st">"both"</span>, <span class="va">expand</span><span class="op">=</span><span class="kw">True</span>)
+<span class="va">scrollbar</span>.<span class="fn">config</span>(<span class="va">command</span><span class="op">=</span><span class="va">text_area</span>.<span class="va">yview</span>)
+
+<span class="cm"># Label status</span>
+<span class="va">label_status</span> <span class="op">=</span> <span class="va">tk</span>.<span class="cl">Label</span>(<span class="va">root</span>,
+    <span class="va">text</span><span class="op">=</span><span class="st">"💡 Mulai ketik catatan atau buka file yang sudah ada."</span>,
+    <span class="va">font</span><span class="op">=</span>(<span class="st">"Arial"</span>, <span class="nu">9</span>), <span class="va">bg</span><span class="op">=</span><span class="st">"#e8ecf0"</span>, <span class="va">fg</span><span class="op">=</span><span class="st">"gray"</span>,
+    <span class="va">anchor</span><span class="op">=</span><span class="st">"w"</span>, <span class="va">padx</span><span class="op">=</span><span class="nu">10</span>, <span class="va">pady</span><span class="op">=</span><span class="nu">5</span>)
+<span class="va">label_status</span>.<span class="fn">pack</span>(<span class="va">fill</span><span class="op">=</span><span class="st">"x"</span>)
+
+<span class="va">root</span>.<span class="fn">mainloop</span>()</pre>
+      </div>
+
+      <div class="box box-green">
+        <div class="box-title">🎯 Penjelasan Kode UI di Atas</div>
+        <p>
+          • <code>filedialog.asksaveasfilename()</code> → membuka dialog "Save As" seperti di aplikasi nyata<br>
+          • <code>filedialog.askopenfilename()</code> → membuka dialog "Open File"<br>
+          • <code>text_area.get("1.0", tk.END)</code> → ambil semua teks dari baris 1 karakter 0 sampai akhir<br>
+          • <code>encoding="utf-8"</code> → agar teks Indonesia (huruf beraksara) tersimpan dengan benar
+        </p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION 8 · LATIHAN
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="latihan">
+      <div class="section-header">
+        <div class="section-num warn">8</div>
+        <h2>Latihan Mandiri</h2>
+      </div>
+
+      <p>Kerjakan latihan berikut di Thonny untuk memperkuat pemahaman:</p>
+
+      <div class="box box-blue" style="margin-bottom:16px">
+        <div class="box-title">🧩 Latihan 1 — Buku Nilai Sederhana</div>
+        <p>Buat program yang meminta input nama siswa dan nilai (loop sampai user ketik "selesai"),
+        lalu simpan seluruh data ke file <code>nilai_siswa.txt</code>.
+        Setelah disimpan, baca kembali dan tampilkan isinya.</p>
+      </div>
+
+      <div class="try-badge">🧪 Coba di Thonny!</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-title">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            &nbsp; latihan1_nilai.py
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="code-label">LATIHAN</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+        </div>
+        <pre><span class="cm"># ===== LATIHAN 1: Buku Nilai =====</span>
+
+<span class="va">data_siswa</span> <span class="op">=</span> []
+
+<span class="fn">print</span>(<span class="st">"=== Input Nilai Siswa ==="</span>)
+<span class="fn">print</span>(<span class="st">"Ketik 'selesai' untuk berhenti.\n"</span>)
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    <span class="va">nama</span> <span class="op">=</span> <span class="fn">input</span>(<span class="st">"Nama siswa : "</span>)
+    <span class="kw">if</span> <span class="va">nama</span>.<span class="fn">lower</span>() <span class="op">==</span> <span class="st">"selesai"</span>:
+        <span class="kw">break</span>
+    <span class="va">nilai</span> <span class="op">=</span> <span class="fn">input</span>(<span class="st">"Nilai      : "</span>)
+    <span class="va">data_siswa</span>.<span class="fn">append</span>(<span class="st">f"</span><span class="nu">{nama}</span><span class="st"> - </span><span class="nu">{nilai}</span><span class="st">\n"</span>)
+
+<span class="cm"># Simpan ke file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"nilai_siswa.txt"</span>, <span class="st">"w"</span>, <span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="va">f</span>.<span class="fn">writelines</span>(<span class="va">data_siswa</span>)
+
+<span class="fn">print</span>(<span class="st">"\n✅ Data tersimpan!"</span>)
+
+<span class="cm"># Baca dan tampilkan kembali</span>
+<span class="fn">print</span>(<span class="st">"\n📋 Rekapitulasi Nilai:"</span>)
+<span class="fn">print</span>(<span class="st">"-" * 30</span>)
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"nilai_siswa.txt"</span>, <span class="st">"r"</span>, <span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span>) <span class="kw">as</span> <span class="va">f</span>:
+    <span class="kw">for</span> <span class="va">baris</span> <span class="kw">in</span> <span class="va">f</span>:
+        <span class="fn">print</span>(<span class="st">" "</span>, <span class="va">baris</span>.<span class="fn">strip</span>())</pre>
+      </div>
+
+      <div class="box box-warn" style="margin-bottom:16px">
+        <div class="box-title">🏆 Latihan 2 (Tantangan) — Buku Catatan + UI</div>
+        <p>Kembangkan aplikasi Buku Catatan yang sudah dibuat di Section 7.
+        Tambahkan fitur: <strong>(1)</strong> Label penghitung jumlah karakter yang diketik,
+        <strong>(2)</strong> Tombol "Append" untuk menambah ke file yang sudah ada tanpa menghapus isinya,
+        <strong>(3)</strong> Tombol "Baru" untuk mulai catatan kosong.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SECTION RINGKASAN
+    ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="ringkasan">
+      <div class="section-header">
+        <div class="section-num">📋</div>
+        <h2>Ringkasan Pertemuan 11</h2>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="sc-icon">📂</div>
+          <div class="sc-title">open() & close()</div>
+          <div class="sc-desc">Fungsi dasar untuk membuka dan menutup file. Selalu tutup setelah selesai!</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-icon">🔑</div>
+          <div class="sc-title">Mode File</div>
+          <div class="sc-desc"><code>"r"</code> baca, <code>"w"</code> tulis (hapus dulu), <code>"a"</code> tambah, <code>"x"</code> buat baru.</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-icon">📖</div>
+          <div class="sc-title">Membaca File</div>
+          <div class="sc-desc"><code>.read()</code> semua, <code>.readline()</code> satu baris, <code>.readlines()</code> → list.</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-icon">✍️</div>
+          <div class="sc-title">Menulis File</div>
+          <div class="sc-desc"><code>.write(teks)</code> satu string, <code>.writelines(list)</code> banyak baris.</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-icon">🛡️</div>
+          <div class="sc-title">with Statement</div>
+          <div class="sc-desc">Cara terbaik dan aman. File otomatis tertutup, bahkan saat error terjadi.</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-icon">🖥️</div>
+          <div class="sc-title">Integrasi Tkinter</div>
+          <div class="sc-desc">Gunakan <code>filedialog</code> untuk dialog simpan/buka file yang profesional.</div>
+        </div>
+      </div>
+
+      <div class="box box-green" style="margin-top:24px">
+        <div class="box-title">🎯 Yang Harus Dikuasai Setelah Pertemuan Ini</div>
+        <p>
+          ✅ Bisa membuat dan menulis file teks dengan Python<br>
+          ✅ Bisa membaca isi file dengan 3 cara berbeda<br>
+          ✅ Memahami perbedaan mode <code>"w"</code> dan <code>"a"</code><br>
+          ✅ Selalu menggunakan <code>with</code> saat bekerja dengan file<br>
+          ✅ Bisa menggabungkan File I/O ke dalam aplikasi GUI Tkinter
+        </p>
+      </div>
+    </div>
+
+  </div><!-- end .content -->
+</main>
+
+<script>
+  // ── Copy button
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── Active nav highlight on scroll
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const id = e.target.id;
+        const active = document.querySelector(`.nav-link[href="#${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

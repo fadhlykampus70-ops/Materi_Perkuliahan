@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universitas Nusantara - Web Profil Kampus</title>
+
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <!-- Font Awesome (pengganti Glyphicon di Bootstrap 4) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========================================
+       NAVBAR (Materi P11 - Navbar)
+  ======================================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <a class="navbar-brand font-weight-bold" href="#">
+      <i class="fas fa-university"></i> Universitas Nusantara
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active"><a class="nav-link" href="#hero">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link" href="#tentang">Tentang</a></li>
+        <li class="nav-item"><a class="nav-link" href="#fakultas">Fakultas</a></li>
+        <li class="nav-item"><a class="nav-link" href="#berita">Berita</a></li>
+        <li class="nav-item"><a class="nav-link" href="#galeri">Galeri</a></li>
+        <li class="nav-item"><a class="nav-link" href="#kontak">Kontak</a></li>
+
+        <!-- Dropdown (Materi P11 - Dropdown) -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownAkademik" data-toggle="dropdown">
+            Akademik
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <h6 class="dropdown-header">Program Studi</h6>
+            <a class="dropdown-item" href="#"><i class="fas fa-laptop-code mr-2 text-primary"></i>Teknik Informatika</a>
+            <a class="dropdown-item" href="#"><i class="fas fa-calculator mr-2 text-success"></i>Sistem Informasi</a>
+            <a class="dropdown-item" href="#"><i class="fas fa-robot mr-2 text-warning"></i>Teknik Komputer</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Lihat Semua Prodi</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========================================
+       HERO / JUMBOTRON (Materi P11 - Jumbotron)
+  ======================================== -->
+  <section id="hero">
+    <div class="jumbotron jumbotron-fluid jumbotron-custom text-white text-center mb-0">
+      <div class="container">
+        <h1 class="display-4 font-weight-bold">Selamat Datang di Universitas Nusantara</h1>
+        <p class="lead">
+          Mencetak generasi unggul, berdaya saing global, dan berkarakter Pancasila
+        </p>
+        <hr class="my-4 bg-white">
+        <p>Bergabunglah bersama 15.000+ mahasiswa aktif dari seluruh penjuru Indonesia</p>
+
+        <!-- BUTTON (Materi P9 - Button Style, Size) -->
+        <a href="#tentang" class="btn btn-light btn-lg mr-2">
+          <i class="fas fa-info-circle"></i> Tentang Kami
+        </a>
+        <a href="#kontak" class="btn btn-outline-light btn-lg">
+          <i class="fas fa-envelope"></i> Hubungi Kami
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       BREADCRUMB (Materi P11 - Breadcrumbs)
+  ======================================== -->
+  <div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active">
+          <i class="fas fa-home"></i> Beranda
+        </li>
+        <li class="breadcrumb-item"><a href="#tentang">Profil Kampus</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Universitas Nusantara</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- ========================================
+       ALERT (Materi P11 - Alerts)
+  ======================================== -->
+  <div class="container">
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+      <i class="fas fa-bullhorn mr-2"></i>
+      <strong>Pengumuman!</strong> Pendaftaran Mahasiswa Baru Tahun Akademik 2025/2026 telah dibuka.
+      <a href="#" class="alert-link ml-2">Daftar Sekarang</a>
+      <button type="button" class="close" data-dismiss="alert">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-triangle mr-2"></i>
+      <strong>Perhatian!</strong> Jadwal UAS Semester Genap akan dimulai tanggal 20 Juni 2025.
+      <button type="button" class="close" data-dismiss="alert">
+        <span>&times;</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================
+       TENTANG & STATISTIK
+       (P11 - Page Header, Badge, Label)
+       (P10 - Contextual Color, Background)
+  ======================================== -->
+  <section id="tentang" class="py-5">
+    <div class="container">
+
+      <!-- Page Header (Materi P11) -->
+      <div class="page-header-custom pb-2 mb-4">
+        <h2 class="font-weight-bold text-primary">
+          <i class="fas fa-university"></i> Tentang Universitas
+          <!-- Badge (Materi P11 - Badges) -->
+          <span class="badge badge-success ml-2">Terakreditasi A</span>
+        </h2>
+        <p class="text-muted">Mengenal lebih dekat Universitas Nusantara</p>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-6 mb-4">
+          <!-- IMAGE (Materi P9 - Image) -->
+          <img
+            src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80"
+            alt="Gedung Kampus"
+            class="img-fluid rounded shadow"
+          >
+          <small class="text-muted d-block mt-1 text-center">Gedung Utama Universitas Nusantara</small>
+        </div>
+
+        <div class="col-md-6">
+          <p class="text-justify">
+            Universitas Nusantara adalah perguruan tinggi swasta terkemuka yang berdiri sejak tahun 1985.
+            Dengan visi menjadi universitas kelas dunia, kami berkomitmen menghadirkan pendidikan
+            berkualitas tinggi yang relevan dengan kebutuhan industri global.
+          </p>
+
+          <!-- Contextual Color (Materi P10) -->
+          <p class="text-success"><i class="fas fa-check-circle"></i> Terakreditasi A oleh BAN-PT</p>
+          <p class="text-primary"><i class="fas fa-check-circle"></i> Anggota Asosiasi Perguruan Tinggi Asia</p>
+          <p class="text-warning"><i class="fas fa-check-circle"></i> Peringkat 10 Besar Universitas Swasta Nasional</p>
+          <p class="text-danger"><i class="fas fa-check-circle"></i> 500+ Mitra Industri Aktif</p>
+
+          <!-- Label/Badge sebagai tag (Materi P11) -->
+          <div class="mt-3">
+            <span class="badge badge-primary mr-1">Teknologi</span>
+            <span class="badge badge-success mr-1">Bisnis</span>
+            <span class="badge badge-info mr-1">Hukum</span>
+            <span class="badge badge-warning mr-1">Kedokteran</span>
+            <span class="badge badge-danger mr-1">Teknik</span>
+            <span class="badge badge-secondary mr-1">Sastra</span>
+          </div>
+
+          <!-- Button Group (Materi P11 - Button Group) -->
+          <div class="btn-group mt-4" role="group">
+            <button class="btn btn-primary">
+              <i class="fas fa-download"></i> Brosur
+            </button>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-video"></i> Virtual Tour
+            </button>
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-map-marker-alt"></i> Lokasi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bars (Materi P11 - Progress Bars) -->
+      <div class="mt-5">
+        <h5 class="font-weight-bold mb-3">Capaian Akademik Kami</h5>
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <span>Tingkat Kelulusan</span><span class="text-success font-weight-bold">95%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar bg-success" style="width: 95%" role="progressbar"
+              aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">95%</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <span>Penyerapan Lulusan di Industri</span><span class="text-primary font-weight-bold">88%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" style="width: 88%"
+              role="progressbar" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100">88%</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <span>Kepuasan Mahasiswa</span><span class="text-warning font-weight-bold">92%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar bg-warning" style="width: 92%"
+              role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100">92%</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <span>Publikasi Ilmiah Internasional</span><span class="text-info font-weight-bold">75%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar bg-info progress-bar-striped" style="width: 75%"
+              role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       FAKULTAS (Materi P11 - Cards sebagai pengganti Panel/Wells Bootstrap 4)
+       (P10 - Contextual Background)
+       (P9 - Button, Image)
+  ======================================== -->
+  <section id="fakultas" class="py-5 bg-light">
+    <div class="container">
+      <div class="page-header-custom pb-2 mb-4">
+        <h2 class="font-weight-bold text-primary">
+          <i class="fas fa-building"></i> Fakultas & Program Studi
+        </h2>
+        <p class="text-muted">Program unggulan yang kami tawarkan</p>
+      </div>
+
+      <div class="row">
+
+        <!-- Card 1 (Panel Bootstrap 4) -->
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm border-primary">
+            <div class="card-header bg-primary text-white">
+              <i class="fas fa-laptop-code"></i> Fakultas Ilmu Komputer
+            </div>
+            <div class="card-body">
+              <!-- Contextual Background (Materi P10) -->
+              <span class="badge badge-pill bg-info text-white mb-2">3 Program Studi</span>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Teknik Informatika
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Sistem Informasi
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Ilmu Komputer
+                  <span class="badge badge-success badge-pill">S2</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <!-- Button dengan efek aktif (Materi P9) -->
+              <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modalFakultas"
+                data-fakultas="Fakultas Ilmu Komputer" data-deskripsi="Fakultas Ilmu Komputer Universitas Nusantara menawarkan kurikulum berbasis industri dengan laboratorium komputer modern dan dosen berpengalaman di bidang teknologi informasi.">
+                <i class="fas fa-info-circle"></i> Detail Fakultas
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm border-success">
+            <div class="card-header bg-success text-white">
+              <i class="fas fa-chart-line"></i> Fakultas Ekonomi & Bisnis
+            </div>
+            <div class="card-body">
+              <span class="badge badge-pill bg-warning text-dark mb-2">4 Program Studi</span>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Manajemen
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Akuntansi
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Ekonomi Pembangunan
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Magister Manajemen
+                  <span class="badge badge-success badge-pill">S2</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#modalFakultas"
+                data-fakultas="Fakultas Ekonomi & Bisnis" data-deskripsi="Fakultas Ekonomi dan Bisnis hadir dengan kurikulum yang mengintegrasikan teori ekonomi modern dengan praktik bisnis nyata, didukung kerjasama dengan ratusan perusahaan nasional dan multinasional.">
+                <i class="fas fa-info-circle"></i> Detail Fakultas
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm border-warning">
+            <div class="card-header bg-warning text-dark">
+              <i class="fas fa-hard-hat"></i> Fakultas Teknik
+            </div>
+            <div class="card-body">
+              <span class="badge badge-pill bg-danger text-white mb-2">3 Program Studi</span>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Teknik Sipil
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Teknik Elektro
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Teknik Mesin
+                  <span class="badge badge-primary badge-pill">S1</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-warning btn-sm btn-block text-dark" data-toggle="modal" data-target="#modalFakultas"
+                data-fakultas="Fakultas Teknik" data-deskripsi="Fakultas Teknik Universitas Nusantara dilengkapi dengan laboratorium riset berteknologi tinggi, workshop manufaktur, dan studio desain yang mendukung pembelajaran berbasis proyek nyata.">
+                <i class="fas fa-info-circle"></i> Detail Fakultas
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Wells pengganti Bootstrap 4 (card dengan bg-light) -->
+      <div class="card bg-light border-0 mt-2">
+        <div class="card-body">
+          <p class="mb-0 text-muted text-center">
+            <i class="fas fa-info-circle text-primary"></i>
+            Universitas Nusantara juga membuka program <strong>Kelas Karyawan</strong> dan
+            <strong>Program Double Degree</strong> untuk semua fakultas.
+            Hubungi <a href="mailto:admisi@uninusantara.ac.id">admisi@uninusantara.ac.id</a> untuk informasi lebih lanjut.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================
+       PENDAFTARAN & INPUT GROUP
+       (P11 - Input Group, Navs)
+       (P9 - Button Size, Disabled)
+  ======================================== -->
+  <section id="pendaftaran" class="py-5">
+    <div class="container">
+      <div class="page-header-custom pb-2 mb-4">
+        <h2 class="font-weight-bold text-primary">
+          <i class="fas fa-user-plus"></i> Pendaftaran Mahasiswa Baru
+        </h2>
+        <p class="text-muted">Cek jalur penerimaan dan informasi biaya</p>
+      </div>
+
+      <!-- Navs Tab (Materi P11 - Navs) -->
+      <ul class="nav nav-tabs mb-4" id="tabPendaftaran" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="tab-reguler" data-toggle="tab" href="#reguler" role="tab">
+            <i class="fas fa-user"></i> Jalur Reguler
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="tab-prestasi" data-toggle="tab" href="#prestasi" role="tab">
+            <i class="fas fa-star"></i> Jalur Prestasi
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="tab-beasiswa" data-toggle="tab" href="#beasiswa" role="tab">
+            <i class="fas fa-hand-holding-usd"></i> Beasiswa
+          </a>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="tabPendaftaranContent">
+
+        <!-- Tab Reguler -->
+        <div class="tab-pane fade show active" id="reguler" role="tabpanel">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Formulir Cek Pendaftaran</h5>
+
+              <!-- Input Group (Materi P11 - Input Group) -->
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Cari program studi..." id="searchProdi">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button" onclick="cariProdi()">Cari</button>
+                </div>
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Nama</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Masukkan nama lengkap">
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">@</span>
+                </div>
+                <input type="email" class="form-control" placeholder="Email aktif">
+                <div class="input-group-append">
+                  <span class="input-group-text">.com</span>
+                </div>
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="tel" class="form-control" placeholder="Nomor WhatsApp aktif">
+              </div>
+
+              <!-- Button berbagai ukuran (Materi P9) -->
+              <div class="mt-3">
+                <p class="text-muted small">Contoh ukuran button:</p>
+                <!-- Button Large -->
+                <button class="btn btn-success btn-lg btn-block mb-2" onclick="submitPendaftaran()">
+                  <i class="fas fa-paper-plane"></i> Kirim Pendaftaran (Large)
+                </button>
+                <!-- Button Normal -->
+                <button class="btn btn-primary btn-block mb-2">
+                  <i class="fas fa-save"></i> Simpan Draft (Normal)
+                </button>
+                <!-- Button Small -->
+                <button class="btn btn-secondary btn-sm btn-block mb-2">
+                  <i class="fas fa-times"></i> Batal (Small)
+                </button>
+                <!-- Button Disabled (Materi P9 - Menonaktifkan Button) -->
+                <button class="btn btn-dark btn-block mb-2" disabled>
+                  <i class="fas fa-lock"></i> Fitur Belum Tersedia (Disabled)
+                </button>
+                <!-- Button Active/Efek ditekan (Materi P9) -->
+                <button class="btn btn-info btn-block active" aria-pressed="true">
+                  <i class="fas fa-check"></i> Status Aktif (Active/Pressed)
+                </button>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <!-- Card info biaya (Wells alternatif Bootstrap 4) -->
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h5 class="card-title text-primary"><i class="fas fa-money-bill-wave"></i> Biaya Pendidikan 2025/2026</h5>
+                  <table class="table table-sm table-bordered table-hover mt-3">
+                    <thead class="thead-primary">
+                      <tr class="bg-primary text-white">
+                        <th>Program Studi</th>
+                        <th>UKT/Semester</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Teknik Informatika</td>
+                        <td>Rp 4.500.000</td>
+                        <td><span class="badge badge-success">Buka</span></td>
+                      </tr>
+                      <tr>
+                        <td>Sistem Informasi</td>
+                        <td>Rp 4.000.000</td>
+                        <td><span class="badge badge-success">Buka</span></td>
+                      </tr>
+                      <tr>
+                        <td>Manajemen</td>
+                        <td>Rp 3.800.000</td>
+                        <td><span class="badge badge-success">Buka</span></td>
+                      </tr>
+                      <tr>
+                        <td>Teknik Sipil</td>
+                        <td>Rp 4.200.000</td>
+                        <td><span class="badge badge-warning text-dark">Hampir Penuh</span></td>
+                      </tr>
+                      <tr>
+                        <td>Kedokteran</td>
+                        <td>Rp 12.000.000</td>
+                        <td><span class="badge badge-danger">Penuh</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Prestasi -->
+        <div class="tab-pane fade" id="prestasi" role="tabpanel">
+          <div class="alert alert-success">
+            <i class="fas fa-trophy mr-2"></i>
+            <strong>Jalur Prestasi</strong> — Bebas UKT semester 1 untuk peraih juara olimpiade, hafidz Al-Quran, dan atlet nasional.
+          </div>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-success"><i class="fas fa-medal mr-2"></i> Juara olimpiade sains nasional/internasional</li>
+            <li class="list-group-item list-group-item-primary"><i class="fas fa-quran mr-2"></i> Hafidz Al-Quran minimal 20 juz</li>
+            <li class="list-group-item list-group-item-warning"><i class="fas fa-running mr-2"></i> Atlet berprestasi tingkat nasional</li>
+            <li class="list-group-item list-group-item-info"><i class="fas fa-paint-brush mr-2"></i> Juara lomba seni budaya nasional</li>
+          </ul>
+        </div>
+
+        <!-- Tab Beasiswa -->
+        <div class="tab-pane fade" id="beasiswa" role="tabpanel">
+          <div class="alert alert-info">
+            <i class="fas fa-hand-holding-usd mr-2"></i>
+            Tersedia berbagai program beasiswa untuk mahasiswa berprestasi dan kurang mampu.
+          </div>
+          <!-- Media Object (Materi P11 - Media Object) -->
+          <div class="media mb-3 p-3 border rounded">
+            <i class="fas fa-award fa-2x text-warning mr-3 mt-1"></i>
+            <div class="media-body">
+              <h6 class="font-weight-bold">Beasiswa Unggulan Nusantara</h6>
+              <p class="mb-0 text-muted">Beasiswa penuh mencakup UKT, biaya hidup, dan laptop untuk 50 mahasiswa terbaik setiap tahunnya.</p>
+            </div>
+          </div>
+          <div class="media mb-3 p-3 border rounded">
+            <i class="fas fa-hands-helping fa-2x text-success mr-3 mt-1"></i>
+            <div class="media-body">
+              <h6 class="font-weight-bold">Beasiswa KIP-K</h6>
+              <p class="mb-0 text-muted">Program beasiswa pemerintah untuk mahasiswa dari keluarga kurang mampu yang memiliki potensi akademik tinggi.</p>
+            </div>
+          </div>
+          <div class="media p-3 border rounded">
+            <i class="fas fa-industry fa-2x text-primary mr-3 mt-1"></i>
+            <div class="media-body">
+              <h6 class="font-weight-bold">Beasiswa Mitra Industri</h6>
+              <p class="mb-0 text-muted">Didukung oleh 50+ perusahaan mitra, beasiswa ini mencakup pengurangan UKT hingga 75% dan jaminan magang.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       BERITA (Materi P11 - Thumbnails/Card Image)
+       (P10 - Icon, Responsive Utility)
+       (P9 - Image, Button)
+  ======================================== -->
+  <section id="berita" class="py-5 bg-light">
+    <div class="container">
+      <div class="page-header-custom pb-2 mb-4">
+        <h2 class="font-weight-bold text-primary">
+          <i class="fas fa-newspaper"></i> Berita & Pengumuman
+          <span class="badge badge-danger ml-2">Terbaru</span>
+        </h2>
+        <p class="text-muted">Informasi terkini dari Universitas Nusantara</p>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <!-- Thumbnail (Card + Image = Thumbnail Bootstrap 4) -->
+          <div class="card h-100 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80"
+              class="card-img-top img-thumbnail-custom" alt="Wisuda">
+            <div class="card-body">
+              <span class="badge badge-primary mb-2">Akademik</span>
+              <h6 class="card-title font-weight-bold">Wisuda Periode III 2025 Dihadiri 1.200 Lulusan</h6>
+              <p class="card-text text-muted small">
+                Universitas Nusantara kembali menyelenggarakan wisuda dengan 1.200 lulusan dari 12 fakultas...
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted"><i class="fas fa-calendar mr-1"></i>15 Mei 2025</small>
+              <button class="btn btn-outline-primary btn-sm">Selengkapnya</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?w=400&q=80"
+              class="card-img-top img-thumbnail-custom" alt="Riset">
+            <div class="card-body">
+              <span class="badge badge-success mb-2">Riset</span>
+              <h6 class="card-title font-weight-bold">Tim Peneliti Raih Hibah Riset Internasional Rp 2 Miliar</h6>
+              <p class="card-text text-muted small">
+                Tim dosen Fakultas Ilmu Komputer berhasil meraih hibah penelitian dari lembaga internasional...
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted"><i class="fas fa-calendar mr-1"></i>10 Mei 2025</small>
+              <button class="btn btn-outline-success btn-sm">Selengkapnya</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&q=80"
+              class="card-img-top img-thumbnail-custom" alt="Seminar">
+            <div class="card-body">
+              <span class="badge badge-warning mb-2">Event</span>
+              <h6 class="card-title font-weight-bold">Seminar Nasional AI & Machine Learning 2025</h6>
+              <p class="card-text text-muted small">
+                Universitas Nusantara menggelar seminar nasional bertema kecerdasan buatan yang dihadiri 500 peserta...
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted"><i class="fas fa-calendar mr-1"></i>5 Mei 2025</small>
+              <button class="btn btn-outline-warning btn-sm">Selengkapnya</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination (Materi P11 - Pagination) -->
+      <nav aria-label="Navigasi Berita" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i> Sebelumnya</a>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">4</a></li>
+          <li class="page-item"><a class="page-link" href="#">5</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Berikutnya <i class="fas fa-chevron-right"></i></a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Pager (Materi P11 - Pager, menggunakan d-flex di Bootstrap 4) -->
+      <div class="d-flex justify-content-between mt-2">
+        <a href="#" class="btn btn-outline-secondary btn-sm">
+          <i class="fas fa-arrow-left"></i> Berita Lama
+        </a>
+        <a href="#" class="btn btn-outline-secondary btn-sm">
+          Berita Terbaru <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       GALERI (Materi P9 - Image, Responsive Image)
+       (P10 - Responsive Utility, Hide/Show)
+  ======================================== -->
+  <section id="galeri" class="py-5">
+    <div class="container">
+      <div class="page-header-custom pb-2 mb-4">
+        <h2 class="font-weight-bold text-primary">
+          <i class="fas fa-images"></i> Galeri Kampus
+        </h2>
+        <p class="text-muted">Suasana belajar dan kegiatan di Universitas Nusantara</p>
+      </div>
+
+      <!-- Button Group untuk filter galeri (Materi P11 - Button Group) -->
+      <div class="btn-group mb-4 d-flex flex-wrap" role="group" id="filterGaleri">
+        <button class="btn btn-primary active" onclick="filterGaleri(this, 'semua')">Semua</button>
+        <button class="btn btn-outline-primary" onclick="filterGaleri(this, 'kampus')">Kampus</button>
+        <button class="btn btn-outline-primary" onclick="filterGaleri(this, 'kegiatan')">Kegiatan</button>
+        <button class="btn btn-outline-primary" onclick="filterGaleri(this, 'fasilitas')">Fasilitas</button>
+      </div>
+
+      <div class="row" id="gridGaleri">
+        <div class="col-md-4 col-sm-6 mb-4 galeri-item kampus">
+          <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=400&q=80"
+            class="img-fluid img-thumbnail rounded galeri-img" alt="Gedung Kampus">
+          <p class="text-center mt-1 small text-muted">Gedung Rektorat</p>
+        </div>
+        <div class="col-md-4 col-sm-6 mb-4 galeri-item fasilitas">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80"
+            class="img-fluid img-thumbnail rounded galeri-img" alt="Perpustakaan">
+          <p class="text-center mt-1 small text-muted">Perpustakaan Digital</p>
+        </div>
+        <div class="col-md-4 col-sm-6 mb-4 galeri-item kegiatan">
+          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80"
+            class="img-fluid img-thumbnail rounded galeri-img" alt="Wisuda">
+          <p class="text-center mt-1 small text-muted">Acara Wisuda</p>
+        </div>
+        <div class="col-md-4 col-sm-6 mb-4 galeri-item fasilitas">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&q=80"
+            class="img-fluid img-thumbnail rounded galeri-img" alt="Laboratorium">
+          <p class="text-center mt-1 small text-muted">Lab Komputer</p>
+        </div>
+        <div class="col-md-4 col-sm-6 mb-4 galeri-item kegiatan">
+          <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&q=80"
+            class="img-fluid img-thumbnail rounded galeri-img" alt="Seminar">
+          <p class="text-center mt-1 small text-muted">Seminar Nasional</p>
+        </div>
+        <div class="col-md-4 col-sm-6 mb-4 galeri-item kampus">
+          <img src="https://images.unsplash.com/photo-1590012314607-cda9d9b699ae?w=400&q=80"
+            class="img-fluid img-thumbnail rounded galeri-img" alt="Lapangan">
+          <p class="text-center mt-1 small text-muted">Area Olahraga</p>
+        </div>
+      </div>
+
+      <!-- Responsive Utility (Materi P10) -->
+      <!-- Teks ini hanya muncul di layar besar -->
+      <p class="d-none d-md-block text-center text-muted mt-2">
+        <i class="fas fa-desktop mr-1"></i> Anda sedang melihat galeri dalam tampilan desktop
+      </p>
+      <!-- Teks ini hanya muncul di layar kecil -->
+      <p class="d-md-none text-center text-muted mt-2">
+        <i class="fas fa-mobile-alt mr-1"></i> Anda sedang melihat galeri dalam tampilan mobile
+      </p>
+    </div>
+  </section>
+
+  <!-- ========================================
+       TESTIMONI DOSEN (Materi P11 - Media Object, List Group)
+       (P10 - Contextual Background)
+  ======================================== -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="page-header-custom pb-2 mb-4">
+        <h2 class="font-weight-bold text-primary">
+          <i class="fas fa-chalkboard-teacher"></i> Profil Dosen Unggulan
+        </h2>
+        <p class="text-muted">Tenaga pengajar berpengalaman dan berdedikasi</p>
+      </div>
+
+      <!-- List Group (Materi P11 - List Group) -->
+      <div class="row">
+        <div class="col-md-5 mb-4">
+          <div class="list-group" id="listDosen">
+            <a href="#" class="list-group-item list-group-item-action active" data-dosen="0" onclick="tampilDosen(this, 0)">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-user-circle fa-2x mr-3"></i>
+                <div>
+                  <strong>Dr. Budi Santoso, M.T.</strong>
+                  <br><small>Teknik Informatika</small>
+                </div>
+                <span class="badge badge-light ml-auto">S3</span>
+              </div>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action" data-dosen="1" onclick="tampilDosen(this, 1)">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-user-circle fa-2x mr-3"></i>
+                <div>
+                  <strong>Prof. Dr. Siti Rahayu, M.Kom.</strong>
+                  <br><small>Sistem Informasi</small>
+                </div>
+                <span class="badge badge-warning ml-auto">Guru Besar</span>
+              </div>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action" data-dosen="2" onclick="tampilDosen(this, 2)">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-user-circle fa-2x mr-3"></i>
+                <div>
+                  <strong>Dr. Ahmad Fauzi, M.M.</strong>
+                  <br><small>Manajemen Bisnis</small>
+                </div>
+                <span class="badge badge-success ml-auto">S3</span>
+              </div>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action" data-dosen="3" onclick="tampilDosen(this, 3)">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-user-circle fa-2x mr-3"></i>
+                <div>
+                  <strong>Dr. Ir. Dewi Lestari, M.T.</strong>
+                  <br><small>Teknik Sipil</small>
+                </div>
+                <span class="badge badge-info ml-auto">S3</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-7">
+          <!-- Media Object (Materi P11) -->
+          <div class="card shadow-sm" id="profilDosen">
+            <div class="card-body">
+              <div class="media">
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mr-4 dosen-avatar">
+                  <i class="fas fa-user fa-2x"></i>
+                </div>
+                <div class="media-body">
+                  <h5 id="namaDosen" class="font-weight-bold">Dr. Budi Santoso, M.T.</h5>
+                  <p id="prodiDosen" class="text-muted mb-2">Teknik Informatika</p>
+                  <div id="infoDosen">
+                    <p><i class="fas fa-book text-primary mr-2"></i> Bidang Keahlian: Machine Learning & AI</p>
+                    <p><i class="fas fa-award text-warning mr-2"></i> Publikasi Internasional: 25 Jurnal Terindeks Scopus</p>
+                    <p><i class="fas fa-project-diagram text-success mr-2"></i> Proyek Riset Aktif: 3 Hibah Nasional</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Button Dropdown (Materi P11 - Button Dropdown) -->
+          <div class="mt-3">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary">
+                <i class="fas fa-envelope"></i> Hubungi Dosen
+              </button>
+              <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#"><i class="fas fa-envelope mr-2"></i> Via Email</a>
+                <a class="dropdown-item" href="#"><i class="fab fa-whatsapp mr-2"></i> Via WhatsApp</a>
+                <a class="dropdown-item" href="#"><i class="fas fa-calendar-alt mr-2"></i> Buat Janji Konsultasi</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#"><i class="fas fa-file-alt mr-2"></i> Lihat CV Lengkap</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       KONTAK (P10 - Screen Reader, Clearfix)
+       (P9 - Button Style)
+       (P11 - Navbar bottom reference)
+  ======================================== -->
+  <section id="kontak" class="py-5">
+    <div class="container">
+      <div class="page-header-custom pb-2 mb-4">
+        <h2 class="font-weight-bold text-primary">
+          <i class="fas fa-map-marker-alt"></i> Hubungi Kami
+        </h2>
+        <p class="text-muted">Kami siap membantu Anda</p>
+      </div>
+
+      <!-- Clearfix (Materi P10) -->
+      <div class="clearfix mb-4">
+        <div class="float-left mr-4 mb-3">
+          <div class="card border-0 text-center p-3 shadow-sm" style="min-width:180px">
+            <i class="fas fa-phone fa-2x text-primary mb-2"></i>
+            <h6 class="font-weight-bold">Telepon</h6>
+            <p class="text-muted mb-0">(0761) 555-1234</p>
+          </div>
+        </div>
+        <div class="float-left mr-4 mb-3">
+          <div class="card border-0 text-center p-3 shadow-sm" style="min-width:180px">
+            <i class="fas fa-envelope fa-2x text-success mb-2"></i>
+            <h6 class="font-weight-bold">Email</h6>
+            <p class="text-muted mb-0">info@uninusantara.ac.id</p>
+          </div>
+        </div>
+        <div class="float-left mb-3">
+          <div class="card border-0 text-center p-3 shadow-sm" style="min-width:180px">
+            <i class="fas fa-map-marker-alt fa-2x text-danger mb-2"></i>
+            <h6 class="font-weight-bold">Alamat</h6>
+            <p class="text-muted mb-0">Jl. Pendidikan No. 1, Pekanbaru</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen Reader (Materi P10) -->
+      <span class="sr-only">Formulir kontak untuk menghubungi Universitas Nusantara</span>
+
+      <!-- Input Group & Button untuk kontak -->
+      <div class="row mt-4">
+        <div class="col-md-6 offset-md-3">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+              <i class="fas fa-paper-plane"></i> Kirim Pesan Langsung
+            </div>
+            <div class="card-body">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Nama Anda" id="kontakNama">
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                </div>
+                <input type="email" class="form-control" placeholder="Email Anda" id="kontakEmail">
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" rows="4" placeholder="Tulis pesan Anda di sini..." id="kontakPesan"></textarea>
+              </div>
+              <button class="btn btn-primary btn-block" onclick="kirimPesan()">
+                <i class="fas fa-paper-plane"></i> Kirim Pesan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Icon Sosial Media (Materi P10 - Icon) -->
+      <div class="text-center mt-5">
+        <h6 class="text-muted mb-3">Ikuti Kami di Media Sosial</h6>
+        <a href="#" class="btn btn-outline-primary btn-circle mr-2" title="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#" class="btn btn-outline-info btn-circle mr-2" title="Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" class="btn btn-outline-danger btn-circle mr-2" title="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="#" class="btn btn-outline-danger btn-circle mr-2" title="YouTube">
+          <i class="fab fa-youtube"></i>
+        </a>
+        <a href="#" class="btn btn-outline-primary btn-circle" title="LinkedIn">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================
+       FOOTER
+  ======================================== -->
+  <footer class="bg-dark text-white py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h6 class="font-weight-bold"><i class="fas fa-university mr-2"></i>Universitas Nusantara</h6>
+          <p class="text-muted small">Mencetak generasi unggul yang siap bersaing di era global.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h6 class="font-weight-bold">Tautan Cepat</h6>
+          <ul class="list-unstyled text-muted small">
+            <li><a href="#tentang" class="text-muted">Tentang Kami</a></li>
+            <li><a href="#fakultas" class="text-muted">Fakultas</a></li>
+            <li><a href="#pendaftaran" class="text-muted">Pendaftaran</a></li>
+            <li><a href="#berita" class="text-muted">Berita</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h6 class="font-weight-bold">Akreditasi</h6>
+          <p class="text-muted small">
+            <span class="badge badge-success">A</span> BAN-PT No. 123/SK/BAN-PT/2024
+          </p>
+          <p class="text-muted small">
+            <i class="fas fa-certificate text-warning"></i> ISO 9001:2015 Certified
+          </p>
+        </div>
+      </div>
+      <hr class="border-secondary">
+      <p class="text-center text-muted small mb-0">
+        &copy; 2025 Universitas Nusantara. Semua Hak Dilindungi.
+        | <a href="#" class="text-muted">Kebijakan Privasi</a>
+        | <a href="#" class="text-muted">Sitemap</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ========================================
+       MODAL FAKULTAS
+  ======================================== -->
+  <div class="modal fade" id="modalFakultas" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalFakultasTitle">Detail Fakultas</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalFakultasBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-primary">Daftar Sekarang</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 4 JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.3/js/bootstrap.min.js"></script>
+  <!-- Custom JS -->
+  <script src="script.js"></script>
+</body>
+</html>

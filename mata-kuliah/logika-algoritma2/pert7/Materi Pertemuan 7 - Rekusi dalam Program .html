@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan 7 — Rekursi | Logika & Algoritma 2</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2128;
+    --border: #2d333b;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --accent5: #ffa657;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --text-dim: #6e7681;
+    --code-bg: #0d1117;
+    --tag-blue: rgba(88,166,255,0.12);
+    --tag-green: rgba(63,185,80,0.12);
+    --tag-red: rgba(247,129,102,0.12);
+    --tag-purple: rgba(210,168,255,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Sora', sans-serif; font-size: 15px; line-height: 1.7; min-height: 100vh; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* SIDEBAR */
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0; overflow-y: auto; z-index: 100; }
+  .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .course-tag { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); background: var(--tag-blue); border: 1px solid rgba(88,166,255,0.25); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .sidebar-logo h2 { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.4; }
+  .sidebar-logo p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .nav-section { padding: 0 12px; margin-bottom: 4px; }
+  .nav-section-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); padding: 8px 8px 4px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; cursor: pointer; transition: all 0.15s; text-decoration: none; color: var(--text-muted); font-size: 13px; }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--tag-blue); color: var(--accent); font-weight: 600; }
+
+  /* MAIN */
+  .main { margin-left: 240px; min-height: 100vh; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1f2e 100%); border-bottom: 1px solid var(--border); padding: 60px 56px 48px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(88,166,255,0.06) 0%, transparent 70%); border-radius: 50%; }
+  .hero::after { content: 'f(n)'; position: absolute; right: 56px; top: 50%; transform: translateY(-50%); font-family: 'JetBrains Mono', monospace; font-size: 80px; font-weight: 700; color: rgba(88,166,255,0.05); pointer-events: none; }
+  .hero-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+  .badge-blue { background: var(--tag-blue); color: var(--accent); border: 1px solid rgba(88,166,255,0.25); }
+  .badge-green { background: var(--tag-green); color: var(--accent2); border: 1px solid rgba(63,185,80,0.25); }
+  .badge-purple { background: var(--tag-purple); color: var(--accent4); border: 1px solid rgba(210,168,255,0.25); }
+  .badge-orange { background: rgba(255,166,87,0.1); color: var(--accent5); border: 1px solid rgba(255,166,87,0.25); }
+  .hero h1 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--text-muted); font-size: 15px; max-width: 520px; }
+  .hero-stats { display: flex; gap: 32px; margin-top: 28px; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-val { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* CONTENT */
+  .content { padding: 48px 56px; max-width: 900px; }
+  .section { margin-bottom: 64px; scroll-margin-top: 24px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .section-number { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--accent); background: var(--tag-blue); border: 1px solid rgba(88,166,255,0.25); padding: 3px 8px; border-radius: 4px; }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--text); }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+
+  /* ANALOGY */
+  .analogy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .analogy-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: border-color 0.2s; }
+  .analogy-card:hover { border-color: var(--accent); }
+  .analogy-icon { font-size: 28px; margin-bottom: 10px; }
+  .analogy-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .analogy-card p { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+  /* TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  .compare-table th { background: var(--surface2); padding: 10px 16px; text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border: 1px solid var(--border); }
+  .compare-table td { padding: 10px 16px; border: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+  .good { color: var(--accent2) !important; }
+  .bad { color: var(--accent3) !important; }
+
+  /* CODE */
+  .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 16px 0; font-family: 'JetBrains Mono', monospace; }
+  .code-header { background: var(--surface); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .code-header-left { display: flex; align-items: center; gap: 10px; }
+  .code-dots { display: flex; gap: 5px; }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; } .dot-yellow { background: #ffbd2e; } .dot-green { background: #28ca41; }
+  .code-filename { font-size: 12px; color: var(--text-muted); }
+  .code-lang { font-size: 10px; font-weight: 600; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+  .code-body { padding: 20px 24px; overflow-x: auto; }
+  .code-body pre { font-size: 13px; line-height: 1.7; color: var(--text); }
+  .kw { color: #ff7b72; font-weight: 600; } .type { color: #79c0ff; } .fn { color: #d2a8ff; }
+  .num { color: #79c0ff; } .str { color: #a5d6ff; } .cmt { color: #6e7681; font-style: italic; }
+
+  /* CALLOUT */
+  .callout { border-radius: 8px; padding: 16px 20px; margin: 16px 0; display: flex; gap: 12px; align-items: flex-start; }
+  .callout-info { background: var(--tag-blue); border-left: 3px solid var(--accent); }
+  .callout-success { background: var(--tag-green); border-left: 3px solid var(--accent2); }
+  .callout-warning { background: rgba(255,166,87,0.1); border-left: 3px solid var(--accent5); }
+  .callout-danger { background: var(--tag-red); border-left: 3px solid var(--accent3); }
+  .callout-icon { font-size: 18px; line-height: 1; }
+  .callout-body { flex: 1; }
+  .callout-body strong { font-size: 13px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .callout-body p { font-size: 13px; color: var(--text-muted); margin: 0; }
+  .callout-info .callout-body strong { color: var(--accent); }
+  .callout-success .callout-body strong { color: var(--accent2); }
+  .callout-warning .callout-body strong { color: var(--accent5); }
+  .callout-danger .callout-body strong { color: var(--accent3); }
+
+  /* FORMULA */
+  .formula-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 16px 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; text-align: center; }
+  .formula { color: var(--accent4); font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .formula-note { font-size: 11px; color: var(--text-dim); }
+
+  /* VISUALIZER */
+  .visualizer { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 16px 0; }
+  .viz-header { background: var(--surface2); padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .viz-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .viz-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .viz-body { padding: 24px; }
+
+  .btn { padding: 7px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transition: all 0.15s; font-family: 'Sora', sans-serif; }
+  .btn-primary { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+  .btn-primary:hover { background: #79b8ff; }
+  .btn-secondary { background: transparent; color: var(--text-muted); border-color: var(--border); }
+  .btn-secondary:hover { background: var(--surface2); color: var(--text); }
+  .btn-green { background: var(--accent2); color: #0d1117; border-color: var(--accent2); }
+  .btn-green:hover { background: #56d364; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* TRACE */
+  .trace-steps { display: flex; flex-direction: column; gap: 0; max-height: 280px; overflow-y: auto; }
+  .trace-step { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; opacity: 0; transform: translateX(-8px); transition: all 0.25s ease; border-bottom: 1px solid transparent; }
+  .trace-step.visible { opacity: 1; transform: translateX(0); border-bottom-color: var(--border); }
+  .trace-step:last-child { border-bottom: none; }
+  .trace-call { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .call { color: var(--accent4); } .ret { color: var(--accent2); } .base { color: var(--accent3); font-weight: 700; }
+
+  /* STACK */
+  .stack-container { display: flex; gap: 24px; align-items: flex-start; }
+  .stack-viz { flex: 1; } .stack-info { flex: 1; }
+  .stack-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; }
+  .stack-frames { display: flex; flex-direction: column-reverse; gap: 4px; min-height: 160px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px; }
+  .stack-frame { background: var(--tag-blue); border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; padding: 8px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); display: flex; align-items: center; justify-content: space-between; animation: slideIn 0.25s ease; }
+  .stack-frame.returning { background: var(--tag-green); border-color: rgba(63,185,80,0.3); color: var(--accent2); }
+  .stack-frame.base-frame { background: var(--tag-red); border-color: rgba(247,129,102,0.3); color: var(--accent3); }
+  @keyframes slideIn { from { opacity:0; transform:scaleY(0); } to { opacity:1; transform:scaleY(1); } }
+  .current-output { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; min-height: 80px; color: var(--text-muted); }
+  .output-line { color: var(--accent2); margin-bottom: 4px; }
+
+  /* INPUT */
+  .num-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent); width: 70px; text-align: center; outline: none; transition: border-color 0.15s; }
+  .num-input:focus { border-color: var(--accent); }
+
+  /* PROGRESS */
+  .viz-progress { margin-bottom: 12px; background: var(--surface2); border-radius: 20px; height: 4px; overflow: hidden; }
+  .viz-progress-bar { height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.3s ease; width: 0%; }
+  .step-info { font-size: 12px; color: var(--text-dim); text-align: center; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+
+  /* TABS */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab { padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* DEFINITION */
+  .definition { background: var(--surface); border: 1px solid rgba(210,168,255,0.2); border-left: 3px solid var(--accent4); border-radius: 8px; padding: 20px 24px; margin: 16px 0; }
+  .definition-term { font-size: 12px; font-weight: 700; color: var(--accent4); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+  .definition-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* CASE BOXES */
+  .case-boxes { display: flex; gap: 16px; margin: 16px 0; }
+  .case-box { flex: 1; padding: 16px 20px; border-radius: 8px; border: 1px solid; }
+  .case-box.base { background: var(--tag-red); border-color: rgba(247,129,102,0.3); }
+  .case-box.recursive { background: var(--tag-blue); border-color: rgba(88,166,255,0.3); }
+  .case-box-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .case-box.base .case-box-title { color: var(--accent3); }
+  .case-box.recursive .case-box-title { color: var(--accent); }
+  .case-box p { font-size: 13px; color: var(--text-muted); margin: 0; }
+  .case-box code { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  /* STEPS FLOW */
+  .steps-flow { display: flex; align-items: center; gap: 0; margin: 20px 0; overflow-x: auto; padding-bottom: 4px; }
+  .step-node { flex-shrink: 0; text-align: center; }
+  .step-node-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin: 0 auto 6px; font-family: 'JetBrains Mono', monospace; background: var(--surface); transition: all 0.3s; color: var(--text-muted); }
+  .step-node.active .step-node-circle { border-color: var(--accent); color: var(--accent); background: var(--tag-blue); }
+  .step-node.done .step-node-circle { border-color: var(--accent2); color: var(--accent2); background: var(--tag-green); }
+  .step-node-label { font-size: 11px; color: var(--text-dim); max-width: 60px; line-height: 1.3; }
+  .step-connector { flex: 1; height: 2px; background: var(--border); min-width: 20px; margin-bottom: 22px; transition: background 0.3s; }
+  .step-connector.done { background: var(--accent2); }
+
+  /* EXERCISE */
+  .exercise-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+  .exercise-header { background: var(--surface2); padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .exercise-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .exercise-body { padding: 20px; }
+  .exercise-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.7; }
+  .exercise-hint { background: rgba(255,166,87,0.08); border: 1px solid rgba(255,166,87,0.2); border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: var(--accent5); cursor: pointer; user-select: none; }
+  .hint-content { display: none; margin-top: 8px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8; }
+  .exercise-hint.open .hint-content { display: block; }
+
+  /* EDITOR */
+  .editor-wrap { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .editor-toolbar { background: var(--surface); padding: 8px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .editor-toolbar-left { display: flex; align-items: center; gap: 8px; }
+  .editor-area { width: 100%; min-height: 180px; background: var(--code-bg); border: none; padding: 16px 20px; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; resize: vertical; outline: none; tab-size: 4; }
+  .editor-output { border-top: 1px solid var(--border); background: #010409; padding: 14px 20px; min-height: 60px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent2); display: none; }
+  .editor-output.show { display: block; }
+  .output-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; }
+  .output-error { color: var(--accent3); }
+
+  /* FIBONACCI */
+  .fib-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .fib-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+  .fib-btn:hover, .fib-btn.selected { background: var(--tag-blue); color: var(--accent); border-color: rgba(88,166,255,0.3); }
+  .fib-step-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; flex-wrap: wrap; }
+  .fib-n { width: 48px; text-align: right; color: var(--text-dim); }
+  .fib-eq { color: var(--text-dim); }
+
+  /* SCROLL TOP */
+  .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 38px; height: 38px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-muted); transition: all 0.15s; z-index: 50; opacity: 0; pointer-events: none; }
+  .scroll-top.show { opacity: 1; pointer-events: all; }
+  .scroll-top:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+
+  p { color: var(--text-muted); font-size: 14px; line-height: 1.8; margin-bottom: 12px; }
+  ul, ol { color: var(--text-muted); font-size: 14px; padding-left: 20px; }
+  li { margin-bottom: 6px; line-height: 1.7; }
+  .hl-blue { color: var(--accent); font-weight: 600; }
+  .hl-green { color: var(--accent2); font-weight: 600; }
+  .hl-red { color: var(--accent3); font-weight: 600; }
+  .hl-purple { color: var(--accent4); font-weight: 600; }
+  .hl-orange { color: var(--accent5); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .hero { padding: 32px 24px; }
+    .content { padding: 24px; }
+    .hero::after { display: none; }
+    .two-col { grid-template-columns: 1fr; }
+    .analogy-grid { grid-template-columns: 1fr; }
+    .stack-container { flex-direction: column; }
+    .case-boxes { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="course-tag">Pertemuan 7</div>
+    <h2>Logika & Algoritma 2</h2>
+    <p>D3 Manajemen Informatika</p>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Materi</div>
+    <a class="nav-item active" href="#review">📋 Review Fungsi</a>
+    <a class="nav-item" href="#konsep">🔄 Konsep Rekursi</a>
+    <a class="nav-item" href="#struktur">🏗️ Base & Recursive Case</a>
+    <a class="nav-item" href="#faktorial">➗ Faktorial</a>
+    <a class="nav-item" href="#fibonacci">🌿 Fibonacci</a>
+    <a class="nav-item" href="#perbandingan">⚖️ Rekursi vs Iterasi</a>
+    <a class="nav-item" href="#latihan">💻 Latihan Coding</a>
+  </div>
+</nav>
+
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-meta">
+      <span class="badge badge-blue">Pertemuan 7</span>
+      <span class="badge badge-green">C / C++</span>
+      <span class="badge badge-purple">Rekursi</span>
+    </div>
+    <h1>Memahami & Menerapkan<br><span>Rekursi</span></h1>
+    <p>Konsep fungsi yang memanggil dirinya sendiri — dari dasar logika hingga implementasi faktorial dan Fibonacci.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">2</div><div class="stat-label">Studi Kasus</div></div>
+      <div class="stat"><div class="stat-val">3</div><div class="stat-label">Latihan Soal</div></div>
+      <div class="stat"><div class="stat-val">7+</div><div class="stat-label">Contoh Kode</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION 1: REVIEW FUNGSI -->
+    <section class="section" id="review">
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2 class="section-title">Review Singkat: Fungsi dalam C++</h2>
+      </div>
+      <p>Sebelum masuk ke rekursi, kita pastikan dulu pemahaman tentang <span class="hl-blue">fungsi</span>, karena rekursi adalah teknik lanjutan dari konsep fungsi.</p>
+      <div class="definition">
+        <div class="definition-term">Definisi Fungsi</div>
+        <div class="definition-text">Fungsi adalah blok kode yang memiliki nama, dapat dipanggil berkali-kali, bisa menerima input (parameter) serta menghasilkan output (return value).</div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left">
+            <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+            <span class="code-filename">review_fungsi.cpp</span>
+          </div>
+          <span class="code-lang">C++</span>
+        </div>
+        <div class="code-body"><pre><span class="cmt">// Struktur dasar fungsi di C++</span>
+<span class="type">int</span> <span class="fn">tambah</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+    <span class="kw">return</span> a + b;        <span class="cmt">// menghasilkan nilai</span>
+}
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> hasil = <span class="fn">tambah</span>(<span class="num">3</span>, <span class="num">5</span>);  <span class="cmt">// memanggil fungsi</span>
+    cout &lt;&lt; hasil;              <span class="cmt">// output: 8</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+      </div>
+      <div class="two-col">
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body"><strong>Yang perlu diingat</strong><p>Saat fungsi dipanggil, program "masuk" ke dalam fungsi, jalankan isinya, lalu "kembali" ke tempat semula.</p></div>
+        </div>
+        <div class="callout callout-success">
+          <div class="callout-icon">✅</div>
+          <div class="callout-body"><strong>Kunci rekursi</strong><p>Rekursi hanyalah sebuah fungsi yang di dalam tubuhnya memanggil <em>fungsi itu sendiri</em>.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: KONSEP REKURSI -->
+    <section class="section" id="konsep">
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2 class="section-title">Apa Itu Rekursi?</h2>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Rekursi (Recursion)</div>
+        <div class="definition-text">Teknik pemrograman di mana sebuah fungsi <strong>memanggil dirinya sendiri</strong> untuk menyelesaikan masalah yang lebih kecil, hingga mencapai kondisi berhenti (base case).</div>
+      </div>
+      <p>Bayangkan rekursi seperti melihat ke dalam cermin yang ada di depan cermin lain — kamu melihat pantulan dirimu terus-menerus, semakin kecil, dan akhirnya berhenti pada satu titik.</p>
+
+      <h3 style="font-size:15px;font-weight:700;margin:20px 0 12px;color:var(--text)">Analogi Dunia Nyata</h3>
+      <div class="analogy-grid">
+        <div class="analogy-card">
+          <div class="analogy-icon">🪜</div>
+          <h4>Menuruni Tangga</h4>
+          <p>Untuk sampai lantai 1 dari lantai 5, kamu harus sampai ke lantai 4 dulu. Untuk ke lantai 4, harus ke lantai 3 dulu. Dan seterusnya hingga tiba di lantai 1.</p>
+        </div>
+        <div class="analogy-card">
+          <div class="analogy-icon">🪆</div>
+          <h4>Boneka Matryoshka</h4>
+          <p>Boneka besar berisi boneka lebih kecil, yang berisi boneka lebih kecil lagi — terus sampai boneka terkecil yang sudah tidak bisa dibuka lagi.</p>
+        </div>
+        <div class="analogy-card">
+          <div class="analogy-icon">📁</div>
+          <h4>Folder dalam Folder</h4>
+          <p>Sebuah folder bisa berisi folder lain — kamu menjelajahinya satu per satu sampai menemukan folder yang tidak punya isi (base case).</p>
+        </div>
+        <div class="analogy-card">
+          <div class="analogy-icon">🔍</div>
+          <h4>Tanya ke Teman</h4>
+          <p>Kamu tidak tahu nomor antrian ke-5. Tanya orang ke-4, dia tanya ke-3, dst sampai orang ke-1 yang langsung tahu jawabannya — lalu jawaban diteruskan balik.</p>
+        </div>
+      </div>
+      <div class="callout callout-warning">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body"><strong>Perhatian Penting!</strong><p>Rekursi HARUS ada kondisi berhenti (base case). Tanpa base case, fungsi akan memanggil dirinya terus-menerus hingga program crash — disebut <em>Stack Overflow</em>.</p></div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: STRUKTUR -->
+    <section class="section" id="struktur">
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2 class="section-title">Struktur Rekursi: Base Case & Recursive Case</h2>
+      </div>
+      <p>Setiap fungsi rekursif <strong>wajib</strong> memiliki dua bagian:</p>
+      <div class="case-boxes">
+        <div class="case-box base">
+          <div class="case-box-title">🛑 Base Case</div>
+          <p>Kondisi berhenti. Ketika ini terpenuhi, fungsi <strong>tidak</strong> memanggil dirinya lagi — langsung mengembalikan nilai.<br><br><code>"Jawaban langsung, tanpa pemanggilan lagi"</code></p>
+        </div>
+        <div class="case-box recursive">
+          <div class="case-box-title">🔄 Recursive Case</div>
+          <p>Fungsi memanggil dirinya sendiri dengan masalah yang <strong>lebih kecil</strong>, selangkah mendekati base case.<br><br><code>"Pecah masalah, terus ke bawah"</code></p>
+        </div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left">
+            <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+            <span class="code-filename">struktur_rekursi.cpp</span>
+          </div>
+          <span class="code-lang">C++</span>
+        </div>
+        <div class="code-body"><pre><span class="type">int</span> <span class="fn">rekursi</span>(<span class="type">int</span> n) {
+
+    <span class="cmt">// ✅ BASE CASE — kondisi berhenti</span>
+    <span class="kw">if</span> (n &lt;= <span class="num">0</span>) {
+        <span class="kw">return</span> <span class="num">0</span>;   <span class="cmt">// langsung kembalikan nilai, TIDAK memanggil lagi</span>
+    }
+
+    <span class="cmt">// 🔄 RECURSIVE CASE — pecah masalah, panggil dengan n lebih kecil</span>
+    <span class="kw">return</span> n + <span class="fn">rekursi</span>(n - <span class="num">1</span>);
+}</pre></div>
+      </div>
+      <div class="steps-flow">
+        <div class="step-node active" id="sn1"><div class="step-node-circle">1</div><div class="step-node-label">Fungsi dipanggil</div></div>
+        <div class="step-connector" id="sc1"></div>
+        <div class="step-node" id="sn2"><div class="step-node-circle">2</div><div class="step-node-label">Cek base case?</div></div>
+        <div class="step-connector" id="sc2"></div>
+        <div class="step-node" id="sn3"><div class="step-node-circle">3</div><div class="step-node-label">Ya → return nilai</div></div>
+        <div class="step-connector" id="sc3"></div>
+        <div class="step-node" id="sn4"><div class="step-node-circle">4</div><div class="step-node-label">Tidak → panggil lagi</div></div>
+        <div class="step-connector" id="sc4"></div>
+        <div class="step-node" id="sn5"><div class="step-node-circle">5</div><div class="step-node-label">Kumpulkan hasil</div></div>
+      </div>
+      <div style="text-align:center;margin-top:8px">
+        <button class="btn btn-secondary" onclick="animateSteps()">▶ Animasikan Alur</button>
+      </div>
+    </section>
+
+    <!-- SECTION 4: FAKTORIAL -->
+    <section class="section" id="faktorial">
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2 class="section-title">Studi Kasus 1: Faktorial</h2>
+        <span class="badge badge-orange">n!</span>
+      </div>
+      <p>Faktorial adalah perkalian berurutan dari 1 hingga n. Ini contoh klasik rekursi yang paling mudah dipahami.</p>
+      <div class="formula-box">
+        <div class="formula">n! = n × (n−1) × (n−2) × ... × 2 × 1</div>
+        <div class="formula-note">Contoh: 5! = 5 × 4 × 3 × 2 × 1 = 120</div>
+      </div>
+
+      <h3 style="font-size:15px;font-weight:700;margin:20px 0 12px;color:var(--text)">Pola Rekursif Faktorial</h3>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2.2">
+          <div><span style="color:var(--text-dim)">5! = </span><span style="color:var(--accent)">5</span><span style="color:var(--text-dim)"> × </span><span style="color:var(--accent4)">4!</span></div>
+          <div><span style="color:var(--text-dim)">4! = </span><span style="color:var(--accent)">4</span><span style="color:var(--text-dim)"> × </span><span style="color:var(--accent4)">3!</span></div>
+          <div><span style="color:var(--text-dim)">3! = </span><span style="color:var(--accent)">3</span><span style="color:var(--text-dim)"> × </span><span style="color:var(--accent4)">2!</span></div>
+          <div><span style="color:var(--text-dim)">2! = </span><span style="color:var(--accent)">2</span><span style="color:var(--text-dim)"> × </span><span style="color:var(--accent4)">1!</span></div>
+          <div><span style="color:var(--accent3);font-weight:700">1! = 1</span><span style="color:var(--text-dim);font-size:11px"> &nbsp;← BASE CASE, berhenti di sini</span></div>
+        </div>
+      </div>
+      <div class="formula-box">
+        <div class="formula">factorial(n) = n × factorial(n−1) &nbsp;&nbsp; jika n > 1</div>
+        <div class="formula-note" style="margin-top:6px">factorial(1) = 1 &nbsp;&nbsp;← base case</div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left">
+            <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+            <span class="code-filename">faktorial.cpp</span>
+          </div>
+          <span class="code-lang">C++</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="type">int</span> <span class="fn">faktorial</span>(<span class="type">int</span> n) {
+
+    <span class="cmt">// BASE CASE: 1! = 1</span>
+    <span class="kw">if</span> (n == <span class="num">1</span>) {
+        <span class="kw">return</span> <span class="num">1</span>;
+    }
+
+    <span class="cmt">// RECURSIVE CASE: n! = n × (n-1)!</span>
+    <span class="kw">return</span> n * <span class="fn">faktorial</span>(n - <span class="num">1</span>);
+}
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    cout &lt;&lt; <span class="fn">faktorial</span>(<span class="num">5</span>);  <span class="cmt">// Output: 120</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+      </div>
+
+      <!-- VISUALIZER FAKTORIAL -->
+      <div class="visualizer">
+        <div class="viz-header">
+          <div class="viz-title">🔬 Visualisasi Trace Faktorial — Step by Step</div>
+          <div class="viz-controls">
+            <span style="font-size:13px;color:var(--text-muted)">n =</span>
+            <input type="number" class="num-input" id="facInput" value="5" min="1" max="8">
+            <button class="btn btn-primary" onclick="startFacViz()">▶ Mulai</button>
+            <button class="btn btn-secondary" id="facNextBtn" onclick="nextFacStep()" disabled>→ Next</button>
+            <button class="btn btn-secondary" onclick="resetFacViz()">↺ Reset</button>
+          </div>
+        </div>
+        <div class="viz-body">
+          <div class="viz-progress"><div class="viz-progress-bar" id="facProgressBar"></div></div>
+          <div class="step-info" id="facStepInfo">Masukkan nilai n (1–8) dan tekan Mulai</div>
+          <div class="stack-container">
+            <div class="stack-viz">
+              <div class="stack-label">📚 Call Stack</div>
+              <div class="stack-frames" id="facStack"><div style="color:var(--text-dim);font-size:12px;padding:8px;font-family:'JetBrains Mono',monospace">Stack kosong...</div></div>
+            </div>
+            <div class="stack-info">
+              <div class="stack-label">📋 Status saat ini</div>
+              <div class="current-output" id="facOutput"><span style="color:var(--text-dim)">Belum dimulai...</span></div>
+            </div>
+          </div>
+          <div class="stack-label" style="margin-top:16px">📝 Trace Detail</div>
+          <div class="trace-steps" id="facTrace"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: FIBONACCI -->
+    <section class="section" id="fibonacci">
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2 class="section-title">Studi Kasus 2: Fibonacci</h2>
+        <span class="badge badge-green">Fib(n)</span>
+      </div>
+      <p>Deret Fibonacci adalah deret bilangan di mana setiap angka adalah <span class="hl-blue">jumlah dua angka sebelumnya</span>. Berbeda dengan faktorial, Fibonacci menggunakan <strong>dua</strong> pemanggilan rekursif sekaligus.</p>
+      <div class="formula-box">
+        <div class="formula">0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ...</div>
+        <div class="formula-note">Pola: Fib(n) = Fib(n−1) + Fib(n−2)</div>
+      </div>
+
+      <div class="two-col">
+        <div class="callout callout-info">
+          <div class="callout-icon">➗</div>
+          <div class="callout-body"><strong>Faktorial: 1 recursive call</strong><p>Setiap langkah hanya memanggil dirinya satu kali dengan n−1.</p></div>
+        </div>
+        <div class="callout callout-success">
+          <div class="callout-icon">🌿</div>
+          <div class="callout-body"><strong>Fibonacci: 2 recursive calls</strong><p>Setiap langkah memanggil dirinya dua kali: Fib(n−1) dan Fib(n−2).</p></div>
+        </div>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula">Fib(0) = 0 &nbsp;&nbsp; Fib(1) = 1 &nbsp;&nbsp; ← dua base case</div>
+        <div class="formula-note" style="margin-top:6px">Fib(n) = Fib(n−1) + Fib(n−2) &nbsp;&nbsp;jika n > 1</div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left">
+            <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+            <span class="code-filename">fibonacci.cpp</span>
+          </div>
+          <span class="code-lang">C++</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="type">int</span> <span class="fn">fibonacci</span>(<span class="type">int</span> n) {
+
+    <span class="cmt">// BASE CASE: Fib(0) = 0, Fib(1) = 1</span>
+    <span class="kw">if</span> (n == <span class="num">0</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">if</span> (n == <span class="num">1</span>) <span class="kw">return</span> <span class="num">1</span>;
+
+    <span class="cmt">// RECURSIVE CASE: Fib(n) = Fib(n-1) + Fib(n-2)</span>
+    <span class="kw">return</span> <span class="fn">fibonacci</span>(n - <span class="num">1</span>) + <span class="fn">fibonacci</span>(n - <span class="num">2</span>);
+}
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="cmt">// Cetak deret fibonacci 0 sampai 10</span>
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt;= <span class="num">10</span>; i++) {
+        cout &lt;&lt; <span class="fn">fibonacci</span>(i) &lt;&lt; <span class="str">" "</span>;
+    }
+    <span class="cmt">// Output: 0 1 1 2 3 5 8 13 21 34 55</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+      </div>
+
+      <!-- VISUALIZER FIBONACCI -->
+      <div class="visualizer">
+        <div class="viz-header">
+          <div class="viz-title">🌿 Visualisasi Deret Fibonacci</div>
+        </div>
+        <div class="viz-body">
+          <p style="margin-bottom:12px">Pilih nilai n untuk melihat bagaimana Fib(n) dihitung secara rekursif:</p>
+          <div class="fib-selector" id="fibSelector"></div>
+          <div id="fibDisplay"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body"><strong>Rekursi Fibonacci bisa sangat lambat!</strong><p>Fib(5) memanggil Fib(4) dan Fib(3). Fib(4) lagi memanggil Fib(3). Artinya Fib(3) dihitung <em>dua kali</em>! Semakin besar n, semakin banyak perhitungan berulang — ini kelemahan rekursi naif.</p></div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: PERBANDINGAN -->
+    <section class="section" id="perbandingan">
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2 class="section-title">Rekursi vs Iterasi</h2>
+      </div>
+      <p>Hampir semua masalah yang bisa diselesaikan rekursi, bisa juga diselesaikan dengan iterasi (loop). Kapan pilih mana?</p>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'tab-rekursi')">Kode Rekursif</div>
+        <div class="tab" onclick="switchTab(this,'tab-iterasi')">Kode Iteratif</div>
+      </div>
+      <div class="tab-panel active" id="tab-rekursi">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left"><div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div><span class="code-filename">faktorial_rekursif.cpp</span></div>
+            <span class="code-lang">Rekursif</span>
+          </div>
+          <div class="code-body"><pre><span class="type">int</span> <span class="fn">faktorial</span>(<span class="type">int</span> n) {
+    <span class="kw">if</span> (n == <span class="num">1</span>) <span class="kw">return</span> <span class="num">1</span>;   <span class="cmt">// base case</span>
+    <span class="kw">return</span> n * <span class="fn">faktorial</span>(n - <span class="num">1</span>);
+}
+<span class="cmt">// ✅ Kode pendek & mudah dibaca</span>
+<span class="cmt">// ❌ Lebih lambat & boros memori</span></pre></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="tab-iterasi">
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left"><div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div><span class="code-filename">faktorial_iteratif.cpp</span></div>
+            <span class="code-lang">Iteratif</span>
+          </div>
+          <div class="code-body"><pre><span class="type">int</span> <span class="fn">faktorial</span>(<span class="type">int</span> n) {
+    <span class="type">int</span> hasil = <span class="num">1</span>;
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+        hasil = hasil * i;
+    }
+    <span class="kw">return</span> hasil;
+}
+<span class="cmt">// ✅ Lebih cepat & hemat memori</span>
+<span class="cmt">// ❌ Kadang kurang intuitif untuk masalah tertentu</span></pre></div>
+        </div>
+      </div>
+      <table class="compare-table">
+        <thead><tr><th>Aspek</th><th>Rekursi</th><th>Iterasi</th></tr></thead>
+        <tbody>
+          <tr><td>Keterbacaan</td><td class="good">Lebih bersih untuk masalah rekursif</td><td>Kadang lebih panjang</td></tr>
+          <tr><td>Performa</td><td class="bad">Lebih lambat (overhead pemanggilan)</td><td class="good">Lebih cepat</td></tr>
+          <tr><td>Penggunaan memori</td><td class="bad">Lebih besar (call stack bertumpuk)</td><td class="good">Lebih hemat</td></tr>
+          <tr><td>Risiko crash</td><td class="bad">Stack overflow jika terlalu dalam</td><td class="good">Tidak ada risiko</td></tr>
+          <tr><td>Cocok untuk</td><td class="good">Tree, graph, divide & conquer</td><td class="good">Masalah sekuensial sederhana</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION 7: LATIHAN -->
+    <section class="section" id="latihan">
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2 class="section-title">Latihan Coding</h2>
+        <span class="badge badge-purple">3 Soal</span>
+      </div>
+      <p>Kerjakan soal berikut dengan konsep rekursi. Editor di bawah menggunakan JavaScript sebagai simulasi — logikanya identik dengan C++, hanya sintaks sedikit berbeda.</p>
+      <div class="callout callout-info">
+        <div class="callout-icon">📝</div>
+        <div class="callout-body"><strong>Cara Menggunakan Editor</strong><p>Tulis kode di area editor, tekan "▶ Jalankan" untuk melihat hasilnya. Gunakan <code>console.log()</code> untuk menampilkan output (setara <code>cout</code> di C++).</p></div>
+      </div>
+
+      <!-- SOAL 1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-title"><span class="badge badge-blue">Soal 1</span> Pangkat Bilangan — x<sup>n</sup></div>
+          <span class="badge badge-green">Mudah</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-desc">
+            Buat fungsi rekursif <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:2px 6px;border-radius:4px">pangkat(x, n)</code> yang menghitung x dipangkatkan n.<br><br>
+            <strong style="color:var(--text)">Contoh:</strong> pangkat(2, 5) = 2 × 2 × 2 × 2 × 2 = <span class="hl-blue">32</span><br>
+            <strong style="color:var(--text)">Base case:</strong> Jika n = 0, maka x⁰ = <strong>1</strong><br>
+            <strong style="color:var(--text)">Recursive case:</strong> xⁿ = x × x<sup>n−1</sup>
+          </div>
+          <div class="exercise-hint" onclick="toggleHint(this)">
+            <div style="font-weight:700">💡 Klik untuk lihat petunjuk</div>
+            <div class="hint-content">function pangkat(x, n) {<br>&nbsp;&nbsp;if (n == 0) return ___; // base case: x pangkat 0 = ?<br>&nbsp;&nbsp;return x * pangkat(x, ___); // recursive case<br>}</div>
+          </div>
+          <div class="editor-wrap">
+            <div class="editor-toolbar">
+              <div class="editor-toolbar-left"><div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted)">latihan1.js</span></div>
+              <button class="btn btn-green" onclick="runCode(1)">▶ Jalankan</button>
+            </div>
+            <textarea class="editor-area" id="editor1" spellcheck="false">// Lengkapi fungsi rekursif pangkat di bawah ini
+function pangkat(x, n) {
+    // TODO: tulis base case di sini
+
+    // TODO: tulis recursive case di sini
+}
+
+// Test — jangan ubah baris berikut
+console.log("pangkat(2, 5) =", pangkat(2, 5));   // Harusnya: 32
+console.log("pangkat(3, 4) =", pangkat(3, 4));   // Harusnya: 81
+console.log("pangkat(5, 0) =", pangkat(5, 0));   // Harusnya: 1</textarea>
+            <div class="editor-output" id="output1"><div class="output-label">OUTPUT</div><div id="output1-content"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAL 2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-title"><span class="badge badge-blue">Soal 2</span> Jumlah Deret — 1 + 2 + 3 + ... + n</div>
+          <span class="badge badge-green">Mudah</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-desc">
+            Buat fungsi rekursif <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:2px 6px;border-radius:4px">jumlahDeret(n)</code> yang menghitung total 1 + 2 + 3 + ... + n.<br><br>
+            <strong style="color:var(--text)">Contoh:</strong> jumlahDeret(5) = 1+2+3+4+5 = <span class="hl-blue">15</span><br>
+            <strong style="color:var(--text)">Base case:</strong> Jika n = 1, kembalikan 1<br>
+            <strong style="color:var(--text)">Recursive case:</strong> jumlahDeret(n) = n + jumlahDeret(n−1)
+          </div>
+          <div class="exercise-hint" onclick="toggleHint(this)">
+            <div style="font-weight:700">💡 Klik untuk lihat petunjuk</div>
+            <div class="hint-content">jumlahDeret(5) = 5 + jumlahDeret(4)<br>jumlahDeret(4) = 4 + jumlahDeret(3)<br>jumlahDeret(1) = 1 ← berhenti di sini</div>
+          </div>
+          <div class="editor-wrap">
+            <div class="editor-toolbar">
+              <div class="editor-toolbar-left"><div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted)">latihan2.js</span></div>
+              <button class="btn btn-green" onclick="runCode(2)">▶ Jalankan</button>
+            </div>
+            <textarea class="editor-area" id="editor2" spellcheck="false">// Buat fungsi rekursif jumlahDeret
+function jumlahDeret(n) {
+    // TODO: tulis kode rekursif di sini
+
+}
+
+// Test
+console.log("jumlahDeret(5)  =", jumlahDeret(5));   // Harusnya: 15
+console.log("jumlahDeret(10) =", jumlahDeret(10));  // Harusnya: 55
+console.log("jumlahDeret(1)  =", jumlahDeret(1));   // Harusnya: 1</textarea>
+            <div class="editor-output" id="output2"><div class="output-label">OUTPUT</div><div id="output2-content"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOAL 3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-title"><span class="badge badge-blue">Soal 3</span> Countdown — Hitungan Mundur</div>
+          <span class="badge badge-purple">Menengah</span>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-desc">
+            Buat fungsi rekursif <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:2px 6px;border-radius:4px">countdown(n)</code> yang mencetak hitungan mundur dari n sampai 0, lalu mencetak "Selesai!".<br><br>
+            <strong style="color:var(--text)">Contoh output countdown(5):</strong><br>
+            <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent2)">5 → 4 → 3 → 2 → 1 → 0 → Selesai!</code><br><br>
+            <strong style="color:var(--text)">Base case:</strong> Jika n &lt; 0, cetak "Selesai!" dan berhenti (return)<br>
+            <strong style="color:var(--text)">Recursive case:</strong> Cetak n, lalu panggil countdown(n−1)
+          </div>
+          <div class="exercise-hint" onclick="toggleHint(this)">
+            <div style="font-weight:700">💡 Klik untuk lihat petunjuk</div>
+            <div class="hint-content">function countdown(n) {<br>&nbsp;&nbsp;if (n &lt; 0) { console.log("Selesai!"); return; }<br>&nbsp;&nbsp;console.log(n);<br>&nbsp;&nbsp;countdown(n - 1); // rekursif tanpa return value<br>}</div>
+          </div>
+          <div class="editor-wrap">
+            <div class="editor-toolbar">
+              <div class="editor-toolbar-left"><div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted)">latihan3.js</span></div>
+              <button class="btn btn-green" onclick="runCode(3)">▶ Jalankan</button>
+            </div>
+            <textarea class="editor-area" id="editor3" spellcheck="false">// Buat fungsi rekursif countdown
+function countdown(n) {
+    // TODO: tulis kode rekursif di sini
+
+}
+
+// Test
+countdown(5);</textarea>
+            <div class="editor-output" id="output3"><div class="output-label">OUTPUT</div><div id="output3-content"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PENUTUP -->
+    <div class="card" style="border-color:rgba(88,166,255,0.2);background:linear-gradient(135deg,var(--surface),#1a1f2e);margin-bottom:32px">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px">📌 Rangkuman Pertemuan 7</div>
+      <p style="margin:0">Rekursi adalah teknik di mana fungsi memanggil dirinya sendiri. Setiap fungsi rekursif wajib memiliki <span class="hl-red">base case</span> (kondisi berhenti) dan <span class="hl-blue">recursive case</span> (kondisi memanggil ulang dengan masalah yang lebih kecil). Faktorial menggunakan 1 recursive call, Fibonacci menggunakan 2. Rekursi lebih intuitif untuk masalah tertentu, namun lebih boros memori dibanding iterasi.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ===== SIDEBAR ACTIVE =====
+const sections = document.querySelectorAll('section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) cur = s.id; });
+  navItems.forEach(n => {
+    n.classList.remove('active');
+    if (n.getAttribute('href') === '#' + cur) n.classList.add('active');
+  });
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
+});
+
+// ===== TABS =====
+function switchTab(el, panelId) {
+  el.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+// ===== HINT =====
+function toggleHint(el) { el.classList.toggle('open'); }
+
+// ===== STEPS ANIMATION =====
+function animateSteps() {
+  const nodes = ['sn1','sn2','sn3','sn4','sn5'];
+  const conns = ['sc1','sc2','sc3','sc4'];
+  nodes.forEach(id => { document.getElementById(id).className = 'step-node'; });
+  conns.forEach(id => { document.getElementById(id).className = 'step-connector'; });
+  let i = 0;
+  const iv = setInterval(() => {
+    if (i < nodes.length) {
+      if (i > 0) {
+        document.getElementById(nodes[i-1]).classList.remove('active');
+        document.getElementById(nodes[i-1]).classList.add('done');
+        if (i-1 < conns.length) document.getElementById(conns[i-1]).classList.add('done');
+      }
+      document.getElementById(nodes[i]).classList.add('active');
+      i++;
+    } else {
+      document.getElementById(nodes[nodes.length-1]).classList.remove('active');
+      document.getElementById(nodes[nodes.length-1]).classList.add('done');
+      clearInterval(iv);
+    }
+  }, 650);
+}
+
+// ===== FAKTORIAL VISUALIZER =====
+let facSteps = [], facIdx = 0;
+
+function buildFacSteps(n) {
+  const steps = [];
+  function trace(n, depth) {
+    steps.push({ type:'call', n, depth });
+    if (n === 1) { steps.push({ type:'base', n, depth }); return 1; }
+    const sub = trace(n-1, depth+1);
+    const result = n * sub;
+    steps.push({ type:'return', n, depth, result, sub });
+    return result;
+  }
+  trace(n, 0);
+  return steps;
+}
+
+function startFacViz() {
+  const n = parseInt(document.getElementById('facInput').value);
+  if (n < 1 || n > 8) { alert('Masukkan n antara 1 dan 8'); return; }
+  facSteps = buildFacSteps(n);
+  facIdx = 0;
+  document.getElementById('facStack').innerHTML = '';
+  document.getElementById('facTrace').innerHTML = '';
+  document.getElementById('facOutput').innerHTML = '<span style="color:var(--text-dim)">Tekan → Next untuk melanjutkan...</span>';
+  document.getElementById('facNextBtn').disabled = false;
+  document.getElementById('facProgressBar').style.width = '0%';
+  document.getElementById('facStepInfo').textContent = `Langkah 0 / ${facSteps.length}`;
+}
+
+function resetFacViz() {
+  facSteps = []; facIdx = 0;
+  document.getElementById('facStack').innerHTML = '<div style="color:var(--text-dim);font-size:12px;padding:8px;font-family:\'JetBrains Mono\',monospace">Stack kosong...</div>';
+  document.getElementById('facTrace').innerHTML = '';
+  document.getElementById('facOutput').innerHTML = '<span style="color:var(--text-dim)">Belum dimulai...</span>';
+  document.getElementById('facNextBtn').disabled = true;
+  document.getElementById('facProgressBar').style.width = '0%';
+  document.getElementById('facStepInfo').textContent = 'Masukkan nilai n (1–8) dan tekan Mulai';
+}
+
+function nextFacStep() {
+  if (facIdx >= facSteps.length) return;
+  const step = facSteps[facIdx]; facIdx++;
+  document.getElementById('facProgressBar').style.width = (facIdx/facSteps.length*100) + '%';
+  document.getElementById('facStepInfo').textContent = `Langkah ${facIdx} / ${facSteps.length}`;
+
+  const stack = document.getElementById('facStack');
+  const out = document.getElementById('facOutput');
+
+  if (step.type === 'call') {
+    // clear placeholder
+    const placeholder = stack.querySelector('[data-placeholder]');
+    if (placeholder) placeholder.remove();
+    const frame = document.createElement('div');
+    frame.className = 'stack-frame';
+    frame.id = `frame-${step.n}`;
+    frame.innerHTML = `<span>faktorial(${step.n})</span><span style="font-size:10px;opacity:0.6">depth ${step.depth}</span>`;
+    stack.appendChild(frame);
+    out.innerHTML = `<div class="output-line">📞 faktorial(${step.n}) dipanggil — masuk ke dalam fungsi</div>`;
+    addTrace(`<span class="call">→ faktorial(${step.n}) dipanggil</span>`, step.depth);
+  } else if (step.type === 'base') {
+    const frame = document.getElementById(`frame-${step.n}`);
+    if (frame) { frame.classList.add('base-frame'); frame.innerHTML = `<span>faktorial(1) = 1</span><span style="font-size:10px">BASE</span>`; }
+    out.innerHTML = `<div class="output-line" style="color:var(--accent3)">🛑 BASE CASE! faktorial(1) = 1 — berhenti, langsung kembalikan nilai 1</div>`;
+    addTrace(`<span class="base">🛑 BASE CASE: faktorial(1) = 1</span>`, step.depth);
+  } else if (step.type === 'return') {
+    const frame = document.getElementById(`frame-${step.n}`);
+    if (frame) { frame.classList.add('returning'); frame.innerHTML = `<span>faktorial(${step.n}) = ${step.result}</span><span style="font-size:10px">✓</span>`; setTimeout(()=>{ if(frame.parentNode) frame.parentNode.removeChild(frame); },500); }
+    out.innerHTML = `<div class="output-line">← faktorial(${step.n}) = ${step.n} × ${step.sub} = <strong>${step.result}</strong></div>`;
+    addTrace(`<span class="ret">← faktorial(${step.n}) = ${step.n} × ${step.sub} = ${step.result}</span>`, step.depth);
+  }
+
+  if (facIdx >= facSteps.length) {
+    document.getElementById('facNextBtn').disabled = true;
+    setTimeout(() => { out.innerHTML += `<div style="margin-top:8px;color:var(--accent2);font-weight:700">✅ Selesai! Semua pemanggilan telah selesai dikembalikan.</div>`; }, 300);
+  }
+}
+
+function addTrace(html, depth) {
+  const trace = document.getElementById('facTrace');
+  const row = document.createElement('div');
+  row.className = 'trace-step';
+  row.innerHTML = `<div style="padding-left:${depth*14}px;font-family:'JetBrains Mono',monospace;font-size:12px">${html}</div>`;
+  trace.appendChild(row);
+  requestAnimationFrame(() => row.classList.add('visible'));
+  trace.scrollTop = trace.scrollHeight;
+}
+
+// ===== FIBONACCI VISUALIZER =====
+const fibCache = {};
+function fib(n) {
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+  if (fibCache[n]) return fibCache[n];
+  fibCache[n] = fib(n-1) + fib(n-2);
+  return fibCache[n];
+}
+for (let i = 0; i <= 12; i++) fib(i);
+
+function initFibSelector() {
+  const sel = document.getElementById('fibSelector');
+  for (let i = 0; i <= 10; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'fib-btn';
+    btn.textContent = `Fib(${i})`;
+    const n = i;
+    btn.onclick = () => showFib(n, btn);
+    sel.appendChild(btn);
+  }
+}
+
+function showFib(n, btn) {
+  document.querySelectorAll('.fib-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const display = document.getElementById('fibDisplay');
+  let html = `<div style="margin-bottom:16px"><span style="font-size:24px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--accent)">Fib(${n}) = ${fib(n)}</span></div>`;
+  if (n <= 1) {
+    html += `<div class="callout callout-danger"><div class="callout-icon">🛑</div><div class="callout-body"><strong>Base Case!</strong><p>Fib(${n}) = ${fib(n)} — kondisi berhenti, tidak ada pemanggilan rekursif lagi.</p></div></div>`;
+  } else {
+    html += `<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">Cara perhitungan mundur:</div>`;
+    for (let i = n; i >= 2; i--) {
+      html += `<div class="fib-step-row"><span class="fib-n">Fib(${i})</span><span class="fib-eq">=</span><span style="color:var(--accent4)">Fib(${i-1})</span><span class="fib-eq">+</span><span style="color:var(--accent5)">Fib(${i-2})</span><span class="fib-eq">=</span><span style="color:var(--accent4)">${fib(i-1)}</span><span class="fib-eq">+</span><span style="color:var(--accent5)">${fib(i-2)}</span><span class="fib-eq">=</span><span style="color:var(--accent);font-weight:700">${fib(i)}</span></div>`;
+    }
+    html += `<div class="fib-step-row"><span class="fib-n">Fib(1)</span><span class="fib-eq">=</span><span style="color:var(--accent3);font-weight:700">1</span><span style="font-size:11px;color:var(--text-dim);margin-left:8px">(base case)</span></div>`;
+    html += `<div class="fib-step-row"><span class="fib-n">Fib(0)</span><span class="fib-eq">=</span><span style="color:var(--accent3);font-weight:700">0</span><span style="font-size:11px;color:var(--text-dim);margin-left:8px">(base case)</span></div>`;
+  }
+  display.innerHTML = html;
+}
+
+initFibSelector();
+
+// ===== CODE RUNNER =====
+function runCode(num) {
+  const code = document.getElementById(`editor${num}`).value;
+  const outContent = document.getElementById(`output${num}-content`);
+  const outWrap = document.getElementById(`output${num}`);
+  outWrap.classList.add('show');
+  const logs = [];
+  const fakeConsole = { log: (...args) => logs.push(args.map(a => String(a)).join(' ')) };
+  try {
+    new Function('console', code)(fakeConsole);
+    outContent.innerHTML = logs.length ? logs.map(l => `<div class="output-line">${escHtml(l)}</div>`).join('') : '<span style="color:var(--text-dim)">(tidak ada output — pastikan ada console.log)</span>';
+  } catch(e) {
+    outContent.innerHTML = `<span class="output-error">❌ Error: ${escHtml(e.message)}</span>`;
+  }
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Tab key in editors
+document.querySelectorAll('.editor-area').forEach(ta => {
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const s = ta.selectionStart, en = ta.selectionEnd;
+      ta.value = ta.value.substring(0,s) + '    ' + ta.value.substring(en);
+      ta.selectionStart = ta.selectionEnd = s + 4;
+    }
+  });
+});
+</script>
+</body>
+</html>

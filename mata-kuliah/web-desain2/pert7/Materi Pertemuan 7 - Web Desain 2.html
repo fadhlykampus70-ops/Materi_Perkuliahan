@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Design II — Pertemuan 7: Tabel & Form Bootstrap 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --surface2: #f0f3fa;
+    --primary: #3B5BDB;
+    --primary-light: #e8edff;
+    --primary-dark: #2c46b8;
+    --accent: #12B886;
+    --accent-light: #e6f9f3;
+    --danger: #FA5252;
+    --danger-light: #fff0f0;
+    --warning: #FF922B;
+    --warning-light: #fff4e6;
+    --text: #1e2a45;
+    --text-muted: #6c7a99;
+    --border: #dde3f0;
+    --code-bg: #1a1f35;
+    --code-text: #e2e8f5;
+    --highlight: #f7d060;
+    --shadow: 0 2px 16px rgba(59,91,219,0.08);
+    --shadow-lg: 0 8px 32px rgba(59,91,219,0.13);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+    box-shadow: var(--shadow);
+  }
+  .navbar-brand {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700; font-size: 17px; color: var(--primary); text-decoration: none;
+  }
+  .brand-badge {
+    background: var(--primary); color: #fff;
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing:.5px;
+  }
+  .navbar-meta { color: var(--text-muted); font-size: 13px; }
+  .progress-bar-wrap {
+    position: fixed; top: 62px; left: 0; right: 0; height: 3px; z-index: 99;
+    background: var(--border);
+  }
+  .progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent));
+    width: 0%; transition: width .2s;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #5c7cfa 60%, var(--accent) 100%);
+    color: #fff; padding: 72px 40px 60px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(18,184,134,.15) 0%, transparent 50%);
+  }
+  .hero-tag {
+    display:inline-block; background: rgba(255,255,255,.18); backdrop-filter:blur(8px);
+    padding: 5px 18px; border-radius:20px; font-size:12px; font-weight:600;
+    letter-spacing:1px; text-transform:uppercase; margin-bottom:20px;
+  }
+  .hero h1 { font-size: clamp(26px,4vw,44px); font-weight:700; margin-bottom:14px; position:relative; }
+  .hero p { font-size:17px; opacity:.88; max-width:560px; margin:0 auto 32px; position:relative; }
+  .hero-chips { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; position:relative; }
+  .chip {
+    background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.3);
+    padding:6px 16px; border-radius:20px; font-size:13px; font-weight:500;
+    backdrop-filter:blur(6px);
+  }
+
+  /* ── SUMMARY CARDS ── */
+  .summary-section { padding: 48px 32px; max-width: 1100px; margin: 0 auto; }
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .summary-card {
+    background: var(--surface); border-radius: var(--radius); padding: 28px;
+    border: 1.5px solid var(--border); box-shadow: var(--shadow);
+    display: flex; align-items: flex-start; gap: 18px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .summary-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .summary-icon {
+    width:52px; height:52px; border-radius:14px; display:flex; align-items:center;
+    justify-content:center; font-size:24px; flex-shrink:0;
+  }
+  .si-blue { background: var(--primary-light); }
+  .si-green { background: var(--accent-light); }
+  .summary-card h3 { font-size:16px; font-weight:600; margin-bottom:6px; }
+  .summary-card p { color:var(--text-muted); font-size:14px; }
+
+  /* ── SECTION ── */
+  .content-section { max-width:1100px; margin:0 auto; padding:0 32px 64px; }
+  .part-header {
+    display:flex; align-items:center; gap:16px; margin:48px 0 28px;
+    padding-bottom:16px; border-bottom:2px solid var(--border);
+  }
+  .part-number {
+    background: var(--primary); color:#fff; width:40px; height:40px;
+    border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:16px; flex-shrink:0;
+  }
+  .part-header h2 { font-size:22px; font-weight:700; }
+  .part-header p { color:var(--text-muted); font-size:14px; }
+
+  /* ── ACCORDION ── */
+  .accordion { display:flex; flex-direction:column; gap:14px; }
+  .acc-item {
+    background:var(--surface); border:1.5px solid var(--border);
+    border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+    transition: box-shadow .2s;
+  }
+  .acc-item.open { box-shadow:var(--shadow-lg); border-color: var(--primary); }
+  .acc-header {
+    display:flex; align-items:center; gap:14px; padding:18px 22px;
+    cursor:pointer; user-select:none;
+    transition: background .15s;
+  }
+  .acc-header:hover { background: var(--surface2); }
+  .acc-num {
+    width:30px; height:30px; border-radius:8px; background:var(--primary-light);
+    color:var(--primary); font-weight:700; font-size:13px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .acc-title { font-weight:600; font-size:15px; flex:1; }
+  .acc-badge {
+    font-size:11px; padding:3px 10px; border-radius:12px; font-weight:600; margin-right:8px;
+  }
+  .badge-table { background:#e8edff; color:var(--primary); }
+  .badge-form { background:#e6f9f3; color:var(--accent); }
+  .badge-latihan { background:#fff4e6; color:var(--warning); }
+  .badge-star { background:#fff9db; color:#d4a000; }
+  .acc-arrow {
+    width:22px; height:22px; display:flex; align-items:center; justify-content:center;
+    color:var(--text-muted); transition:transform .3s; flex-shrink:0;
+  }
+  .acc-item.open .acc-arrow { transform:rotate(180deg); }
+  .acc-body { display:none; padding:0 22px 22px; }
+  .acc-item.open .acc-body { display:block; animation: fadeSlide .25s ease; }
+
+  @keyframes fadeSlide {
+    from { opacity:0; transform:translateY(-6px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── DEMO PANE ── */
+  .demo-layout { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+  .demo-pane {
+    background:var(--surface2); border-radius:var(--radius-sm);
+    border:1.5px solid var(--border); overflow:hidden;
+  }
+  .demo-pane-header {
+    padding:10px 16px; border-bottom:1.5px solid var(--border);
+    font-size:12px; font-weight:600; color:var(--text-muted);
+    display:flex; align-items:center; justify-content:space-between;
+    text-transform:uppercase; letter-spacing:.5px;
+    background:var(--surface);
+  }
+  .demo-pane-body { padding:20px; }
+  .code-pane-body {
+    background:var(--code-bg); padding:16px;
+    font-family:'JetBrains Mono',monospace; font-size:12.5px;
+    color:var(--code-text); overflow-x:auto; line-height:1.7;
+    position:relative; max-height:320px; overflow-y:auto;
+  }
+  .code-pane-body::-webkit-scrollbar { width:6px; height:6px; }
+  .code-pane-body::-webkit-scrollbar-track { background:rgba(255,255,255,.05); }
+  .code-pane-body::-webkit-scrollbar-thumb { background:rgba(255,255,255,.18); border-radius:3px; }
+
+  /* toggle tab buttons */
+  .tab-btns { display:flex; gap:6px; }
+  .tab-btn {
+    padding:5px 12px; border-radius:6px; font-size:12px; font-weight:600;
+    border:1.5px solid var(--border); background:transparent; cursor:pointer;
+    color:var(--text-muted); transition:all .15s;
+  }
+  .tab-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+  .tab-btn:hover:not(.active) { background:var(--primary-light); color:var(--primary); }
+
+  .btn-copy {
+    padding:5px 12px; border-radius:6px; font-size:12px; font-weight:600;
+    background:var(--accent-light); color:var(--accent); border:1.5px solid var(--accent);
+    cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:5px;
+  }
+  .btn-copy:hover { background:var(--accent); color:#fff; }
+  .btn-copy.copied { background:var(--accent); color:#fff; }
+
+  /* single pane (full width code) */
+  .single-demo { margin-top:16px; }
+
+  /* ── HIGHLIGHT BOXES ── */
+  .highlight-grid { display:grid; gap:12px; margin-top:16px; }
+  .hbox {
+    border-radius:var(--radius-sm); padding:16px 18px;
+    border-left:4px solid; display:flex; gap:12px; align-items:flex-start;
+  }
+  .hbox-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+  .hbox-content strong { display:block; font-size:13px; font-weight:600; margin-bottom:4px; }
+  .hbox-content p, .hbox-content ul { font-size:13.5px; color:var(--text); }
+  .hbox-content ul { padding-left:18px; }
+  .hbox-penjelasan { background:#eef2ff; border-color:var(--primary); }
+  .hbox-tips { background:var(--accent-light); border-color:var(--accent); }
+  .hbox-kesalahan { background:var(--danger-light); border-color:var(--danger); }
+
+  /* ── BOOTSTRAP DEMO STYLES (minimal inline) ── */
+  .demo-pane-body table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  .demo-pane-body table th, .demo-pane-body table td { padding:8px 12px; text-align:left; }
+
+  /* Bootstrap table simulation */
+  .bs-table { width:100%; margin-bottom:1rem; color:#212529; border-collapse:collapse; font-size:13.5px; }
+  .bs-table th, .bs-table td { padding:.5rem .75rem; vertical-align:top; border-top:1px solid #dee2e6; }
+  .bs-table thead th { vertical-align:bottom; border-bottom:2px solid #dee2e6; background:#f8f9fa; font-weight:600; }
+  .bs-table-striped tbody tr:nth-of-type(odd) { background-color:rgba(0,0,0,.05); }
+  .bs-table-bordered { border:1px solid #dee2e6; }
+  .bs-table-bordered th, .bs-table-bordered td { border:1px solid #dee2e6; }
+  .bs-table-hover tbody tr:hover { background-color:rgba(0,0,0,.075); cursor:pointer; }
+  .bs-table-sm th, .bs-table-sm td { padding:.3rem .5rem; }
+  .bg-primary-row { background:#cce5ff !important; color:#004085 !important; }
+  .bg-success-row { background:#d4edda !important; color:#155724 !important; }
+  .bg-danger-row  { background:#f8d7da !important; color:#721c24 !important; }
+  .responsive-wrap { overflow-x:auto; border:1px solid #dee2e6; border-radius:6px; padding:4px; }
+
+  /* Bootstrap form simulation */
+  .bs-form-group { margin-bottom:1rem; }
+  .bs-label { display:inline-block; margin-bottom:.4rem; font-weight:500; font-size:13.5px; }
+  .bs-control {
+    display:block; width:100%; padding:.375rem .75rem; font-size:14px;
+    border:1.5px solid #ced4da; border-radius:6px; background:#fff;
+    transition:border-color .15s, box-shadow .15s; outline:none; font-family:inherit;
+  }
+  .bs-control:focus { border-color:#80bdff; box-shadow:0 0 0 3px rgba(59,91,219,.18); }
+  .bs-control.is-valid { border-color:#28a745; }
+  .bs-control.is-invalid { border-color:#dc3545; }
+  .bs-control:disabled, .bs-control[readonly] { background:#e9ecef; cursor:not-allowed; }
+  .bs-control-plaintext { padding:.375rem 0; border:none; background:transparent; font-size:14px; width:100%; font-family:inherit; }
+  .bs-form-text { font-size:12px; color:#6c757d; margin-top:.25rem; }
+  .valid-feedback { color:#28a745; font-size:12px; margin-top:.25rem; }
+  .invalid-feedback { color:#dc3545; font-size:12px; margin-top:.25rem; }
+  .bs-btn {
+    display:inline-block; padding:.375rem .75rem; font-size:14px; font-weight:500;
+    border-radius:6px; border:none; cursor:pointer; transition:all .15s; font-family:inherit;
+  }
+  .bs-btn-primary { background:#3B5BDB; color:#fff; }
+  .bs-btn-primary:hover { background:#2c46b8; }
+  .bs-btn-secondary { background:#6c757d; color:#fff; }
+  .bs-btn-success { background:#28a745; color:#fff; }
+  .bs-btn-outline { background:transparent; border:1.5px solid #3B5BDB; color:#3B5BDB; }
+  .bs-btn-outline:hover { background:#3B5BDB; color:#fff; }
+  .bs-check { display:flex; align-items:center; gap:8px; margin-bottom:.4rem; font-size:13.5px; }
+  .bs-check input { width:15px; height:15px; cursor:pointer; accent-color:var(--primary); }
+  .bs-form-row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+  .bs-form-row .bs-form-group { flex:1; min-width:120px; }
+  .bs-form-horizontal { display:grid; grid-template-columns:120px 1fr; align-items:center; gap:8px 12px; }
+  .bs-form-horizontal .bs-label { margin-bottom:0; text-align:right; }
+  .bs-select { width:100%; padding:.375rem .75rem; font-size:14px; border:1.5px solid #ced4da; border-radius:6px; background:#fff; font-family:inherit; }
+  .bs-lg { padding:.5rem 1rem; font-size:16px; border-radius:8px; }
+  .bs-sm { padding:.2rem .5rem; font-size:12px; border-radius:4px; }
+
+  /* ── LATIHAN ── */
+  .exercise-card {
+    background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+    border-radius:var(--radius); padding:28px; border:2px dashed var(--primary);
+    margin-top:16px;
+  }
+  .exercise-card h4 { font-size:15px; font-weight:700; color:var(--primary); margin-bottom:12px; }
+  .exercise-steps { counter-reset:step; }
+  .exercise-step {
+    display:flex; gap:12px; align-items:flex-start; margin-bottom:10px;
+    counter-increment:step;
+  }
+  .exercise-step::before {
+    content:counter(step); background:var(--primary); color:#fff;
+    width:24px; height:24px; border-radius:6px; font-size:12px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;
+  }
+  .exercise-step p { font-size:14px; }
+
+  /* ── SYNTAX HIGHLIGHT ── */
+  .kw { color:#82AAFF; }        /* keyword / tag */
+  .at { color:#C3E88D; }        /* attribute */
+  .st { color:#F78C6C; }        /* string */
+  .cm { color:#546E7A; font-style:italic; } /* comment */
+  .hl { background:rgba(247,208,96,.15); display:block; margin:0 -16px; padding:0 16px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background:var(--code-bg); color:rgba(255,255,255,.5);
+    text-align:center; padding:28px; font-size:13px; margin-top:40px;
+  }
+  footer strong { color:rgba(255,255,255,.8); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width:768px) {
+    .demo-layout { grid-template-columns:1fr; }
+    .summary-grid { grid-template-columns:1fr; }
+    .bs-form-horizontal { grid-template-columns:1fr; }
+    .bs-form-horizontal .bs-label { text-align:left; }
+    .navbar { padding:0 16px; }
+    .hero { padding:48px 20px 40px; }
+    .content-section, .summary-section { padding-left:16px; padding-right:16px; }
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position:fixed; bottom:28px; right:28px; background:#1a1f35;
+    color:#fff; padding:12px 20px; border-radius:10px; font-size:13px;
+    font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,.3);
+    opacity:0; transform:translateY(12px); transition:all .25s;
+    z-index:9999; display:flex; align-items:center; gap:8px;
+  }
+  .toast.show { opacity:1; transform:translateY(0); }
+
+  /* ── SCROLL TO TOP ── */
+  .scroll-top {
+    position:fixed; bottom:84px; right:28px; width:42px; height:42px;
+    background:var(--primary); color:#fff; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow:var(--shadow-lg); opacity:0;
+    transition:opacity .25s, transform .25s; transform:translateY(8px);
+    border:none; z-index:9999;
+  }
+  .scroll-top.show { opacity:1; transform:translateY(0); }
+  .scroll-top:hover { background:var(--primary-dark); }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="navbar-brand" href="#">
+    <span class="brand-badge">P7</span>
+    Web Design II
+  </a>
+  <span class="navbar-meta">Tabel & Form dengan Bootstrap 4</span>
+</nav>
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">📚 Pertemuan 7 — Materi Interaktif</div>
+  <h1>Tabel & Form<br>dengan Bootstrap 4</h1>
+  <p>Pelajari cara membuat tampilan data yang rapi dan formulir yang profesional menggunakan komponen Bootstrap 4</p>
+  <div class="hero-chips">
+    <span class="chip">📊 7 Topik Tabel</span>
+    <span class="chip">📝 10 Topik Form</span>
+    <span class="chip">🎯 3 Latihan</span>
+    <span class="chip">💻 Kode Siap Copy</span>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<div class="summary-section">
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-icon si-blue">📊</div>
+      <div>
+        <h3>Tabel Bootstrap</h3>
+        <p>Digunakan untuk <strong>menampilkan data</strong> secara terstruktur. Bootstrap menyediakan class utilitas untuk membuat tabel lebih menarik, responsif, dan mudah dibaca.</p>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon si-green">📝</div>
+      <div>
+        <h3>Form Bootstrap</h3>
+        <p>Digunakan untuk <strong>mengambil input</strong> dari pengguna. Bootstrap mempercantik form dengan styling konsisten, validasi visual, dan layout yang fleksibel.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BAGIAN 1: TABEL ═══════════════ -->
+<div class="content-section">
+  <div class="part-header">
+    <div class="part-number">1</div>
+    <div>
+      <h2>Tabel Bootstrap 4</h2>
+      <p>Kelas-kelas Bootstrap untuk mempercantik tampilan tabel data</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+
+    <!-- S3: Tabel Dasar -->
+    <div class="acc-item open" id="s3">
+      <div class="acc-header" onclick="toggleAcc('s3')">
+        <div class="acc-num">3</div>
+        <div class="acc-title">Tabel Dasar Bootstrap</div>
+        <span class="acc-badge badge-table">Tabel</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Cukup tambahkan class <code>.table</code> pada tag <code>&lt;table&gt;</code>. Bootstrap akan secara otomatis memberikan style dasar: padding, border-top pada setiap baris, dan warna header yang lebih gelap.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>👁 Hasil</span>
+            </div>
+            <div class="demo-pane-body">
+              <table class="bs-table">
+                <thead><tr><th>Nama</th><th>Jurusan</th><th>Angkatan</th></tr></thead>
+                <tbody>
+                  <tr><td>Fadhly</td><td>Informatika</td><td>2023</td></tr>
+                  <tr><td>Rina</td><td>Sistem Informasi</td><td>2022</td></tr>
+                  <tr><td>Budi</td><td>Manajemen</td><td>2023</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s3')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s3"><span class="hl"><span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st">"table"</span><span class="kw">&gt;</span></span>
+  <span class="kw">&lt;thead&gt;</span>
+    <span class="kw">&lt;tr&gt;</span>
+      <span class="kw">&lt;th&gt;</span>Nama<span class="kw">&lt;/th&gt;</span>
+      <span class="kw">&lt;th&gt;</span>Jurusan<span class="kw">&lt;/th&gt;</span>
+      <span class="kw">&lt;th&gt;</span>Angkatan<span class="kw">&lt;/th&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+  <span class="kw">&lt;/thead&gt;</span>
+  <span class="kw">&lt;tbody&gt;</span>
+    <span class="kw">&lt;tr&gt;</span>
+      <span class="kw">&lt;td&gt;</span>Fadhly<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>Informatika<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>2023<span class="kw">&lt;/td&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+  <span class="kw">&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S4: Striped -->
+    <div class="acc-item" id="s4">
+      <div class="acc-header" onclick="toggleAcc('s4')">
+        <div class="acc-num">4</div>
+        <div class="acc-title">Baris Selang-Seling (Striped)</div>
+        <span class="acc-badge badge-table">Tabel</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Class <code>.table-striped</code> memberikan warna abu-abu muda pada baris ganjil, membuat data lebih mudah dibaca mata — terutama pada tabel dengan banyak baris.</p>
+            </div>
+          </div>
+          <div class="hbox hbox-tips">
+            <div class="hbox-icon">✅</div>
+            <div class="hbox-content">
+              <strong>Tips</strong>
+              <p>Gabungkan dengan class lain: <code>class="table table-striped table-hover"</code> untuk tampilan yang lebih profesional.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <table class="bs-table bs-table-striped">
+                <thead><tr><th>No</th><th>Nama</th><th>Nilai</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Ahmad</td><td>85</td></tr>
+                  <tr><td>2</td><td>Budi</td><td>90</td></tr>
+                  <tr><td>3</td><td>Citra</td><td>78</td></tr>
+                  <tr><td>4</td><td>Dian</td><td>92</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s4')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s4"><span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st"><span class="hl">"table table-striped"</span></span><span class="kw">&gt;</span>
+  <span class="kw">&lt;thead&gt;</span>
+    <span class="kw">&lt;tr&gt;</span>
+      <span class="kw">&lt;th&gt;</span>No<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Nama<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Nilai<span class="kw">&lt;/th&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+  <span class="kw">&lt;/thead&gt;</span>
+  <span class="kw">&lt;tbody&gt;</span>
+    <span class="kw">&lt;tr&gt;&lt;td&gt;</span>1<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Ahmad<span class="kw">&lt;/td&gt;&lt;td&gt;</span>85<span class="kw">&lt;/td&gt;&lt;/tr&gt;</span>
+    <span class="kw">&lt;tr&gt;&lt;td&gt;</span>2<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Budi<span class="kw">&lt;/td&gt;&lt;td&gt;</span>90<span class="kw">&lt;/td&gt;&lt;/tr&gt;</span>
+  <span class="kw">&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S5: Bordered -->
+    <div class="acc-item" id="s5">
+      <div class="acc-header" onclick="toggleAcc('s5')">
+        <div class="acc-num">5</div>
+        <div class="acc-title">Tabel dengan Border</div>
+        <span class="acc-badge badge-table">Tabel</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Class <code>.table-bordered</code> menambahkan garis border pada semua sisi sel tabel — atas, bawah, kiri, dan kanan. Cocok untuk laporan formal atau data dengan banyak kolom.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <table class="bs-table bs-table-bordered">
+                <thead><tr><th>Kode MK</th><th>Mata Kuliah</th><th>SKS</th><th>Nilai</th></tr></thead>
+                <tbody>
+                  <tr><td>TI301</td><td>Web Design II</td><td>3</td><td>A</td></tr>
+                  <tr><td>TI302</td><td>Basis Data</td><td>3</td><td>B+</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s5')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s5"><span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st"><span class="hl">"table table-bordered"</span></span><span class="kw">&gt;</span>
+  <span class="cm">&lt;!-- thead dan tbody seperti biasa --&gt;</span>
+<span class="kw">&lt;/table&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S6: Hover -->
+    <div class="acc-item" id="s6">
+      <div class="acc-header" onclick="toggleAcc('s6')">
+        <div class="acc-num">6</div>
+        <div class="acc-title">Hover Effect pada Tabel</div>
+        <span class="acc-badge badge-table">Tabel</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Class <code>.table-hover</code> membuat baris tabel berubah warna saat kursor melayang di atasnya. Ini meningkatkan UX karena pengguna tahu baris mana yang sedang mereka lihat.</p>
+            </div>
+          </div>
+          <div class="hbox hbox-tips">
+            <div class="hbox-icon">✅</div>
+            <div class="hbox-content">
+              <strong>Tips</strong>
+              <p>Coba arahkan kursor ke baris tabel di sebelah kiri untuk melihat efeknya secara langsung!</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil — Arahkan kursor ke baris!</span></div>
+            <div class="demo-pane-body">
+              <table class="bs-table bs-table-hover">
+                <thead><tr><th>Nama</th><th>Email</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Fadhly</td><td>fadhly@email.com</td><td>Aktif</td></tr>
+                  <tr><td>Rina</td><td>rina@email.com</td><td>Aktif</td></tr>
+                  <tr><td>Budi</td><td>budi@email.com</td><td>Cuti</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s6')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s6"><span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st"><span class="hl">"table table-hover"</span></span><span class="kw">&gt;</span>
+  <span class="cm">&lt;!-- thead dan tbody seperti biasa --&gt;</span>
+<span class="kw">&lt;/table&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S7: Small -->
+    <div class="acc-item" id="s7">
+      <div class="acc-header" onclick="toggleAcc('s7')">
+        <div class="acc-num">7</div>
+        <div class="acc-title">Tabel Ringkas (.table-sm)</div>
+        <span class="acc-badge badge-table">Tabel</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Class <code>.table-sm</code> memperkecil padding sel tabel menjadi setengah ukuran normal. Berguna ketika Anda perlu menampilkan banyak data dalam ruang yang terbatas.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Perbandingan Normal vs SM</span></div>
+            <div class="demo-pane-body">
+              <p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Normal:</p>
+              <table class="bs-table bs-table-bordered" style="margin-bottom:12px;">
+                <thead><tr><th>Nama</th><th>Nilai</th></tr></thead>
+                <tbody><tr><td>Ahmad</td><td>85</td></tr></tbody>
+              </table>
+              <p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Ringkas (.table-sm):</p>
+              <table class="bs-table bs-table-bordered bs-table-sm">
+                <thead><tr><th>Nama</th><th>Nilai</th></tr></thead>
+                <tbody><tr><td>Ahmad</td><td>85</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s7')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s7"><span class="cm">&lt;!-- Normal --&gt;</span>
+<span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st">"table"</span><span class="kw">&gt;</span>...<span class="kw">&lt;/table&gt;</span>
+
+<span class="cm">&lt;!-- Ringkas --&gt;</span>
+<span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st"><span class="hl">"table table-sm"</span></span><span class="kw">&gt;</span>...<span class="kw">&lt;/table&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S8: Warna -->
+    <div class="acc-item" id="s8">
+      <div class="acc-header" onclick="toggleAcc('s8')">
+        <div class="acc-num">8</div>
+        <div class="acc-title">Warna Kontekstual pada Tabel</div>
+        <span class="acc-badge badge-table">Tabel</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Bootstrap menyediakan class warna kontekstual untuk baris atau sel tabel. Warna ini membawa makna: <strong>primary</strong> = info, <strong>success</strong> = berhasil/baik, <strong>danger</strong> = error/gagal.</p>
+            </div>
+          </div>
+          <div class="hbox hbox-tips">
+            <div class="hbox-icon">✅</div>
+            <div class="hbox-content">
+              <strong>Tips — Class yang Tersedia</strong>
+              <ul>
+                <li><code>table-primary</code> — Biru (Informasi)</li>
+                <li><code>table-success</code> — Hijau (Sukses)</li>
+                <li><code>table-danger</code>  — Merah (Bahaya)</li>
+                <li><code>table-warning</code> — Kuning (Peringatan)</li>
+                <li><code>table-info</code>    — Biru muda</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <table class="bs-table bs-table-bordered">
+                <thead><tr><th>Status</th><th>Mahasiswa</th><th>Nilai</th></tr></thead>
+                <tbody>
+                  <tr class="bg-primary-row"><td>Info</td><td>Fadhly</td><td>75</td></tr>
+                  <tr class="bg-success-row"><td>Lulus</td><td>Rina</td><td>92</td></tr>
+                  <tr class="bg-danger-row"><td>Gagal</td><td>Budi</td><td>40</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s8')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s8"><span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st">"table"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;tbody&gt;</span>
+    <span class="hl"><span class="kw">&lt;tr</span> <span class="at">class</span>=<span class="st">"table-primary"</span><span class="kw">&gt;</span></span>
+      <span class="kw">&lt;td&gt;</span>Info<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Fadhly<span class="kw">&lt;/td&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+    <span class="kw">&lt;tr</span> <span class="at">class</span>=<span class="st">"table-success"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;td&gt;</span>Lulus<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Rina<span class="kw">&lt;/td&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+    <span class="kw">&lt;tr</span> <span class="at">class</span>=<span class="st">"table-danger"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;td&gt;</span>Gagal<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Budi<span class="kw">&lt;/td&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+  <span class="kw">&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S9: Responsive -->
+    <div class="acc-item" id="s9">
+      <div class="acc-header" onclick="toggleAcc('s9')">
+        <div class="acc-num">9</div>
+        <div class="acc-title">Tabel Responsif</div>
+        <span class="acc-badge badge-table">Tabel</span>
+        <span class="acc-badge badge-star">⭐ Penting</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Bungkus tabel dengan <code>&lt;div class="table-responsive"&gt;</code>. Jika tabel terlalu lebar untuk layar, pengguna bisa scroll secara horizontal. Tabel tidak akan patah atau terpotong.</p>
+            </div>
+          </div>
+          <div class="hbox hbox-kesalahan">
+            <div class="hbox-icon">⚠️</div>
+            <div class="hbox-content">
+              <strong>Kesalahan Umum</strong>
+              <p>Lupa membungkus tabel lebar dengan <code>.table-responsive</code> sehingga tabel overflow dan merusak layout halaman, terutama di layar mobile.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Tabel Responsif (scroll ↔)</span></div>
+            <div class="demo-pane-body">
+              <div class="responsive-wrap" style="overflow-x:auto;">
+                <table class="bs-table bs-table-striped bs-table-bordered" style="min-width:600px;">
+                  <thead><tr><th>NIM</th><th>Nama</th><th>Jurusan</th><th>Semester</th><th>IPK</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>2023001</td><td>Fadhly Ahmad</td><td>Informatika</td><td>5</td><td>3.85</td><td>Aktif</td></tr>
+                    <tr><td>2023002</td><td>Rina Sari</td><td>Sistem Informasi</td><td>5</td><td>3.70</td><td>Aktif</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s9')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s9"><span class="hl"><span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"table-responsive"</span><span class="kw">&gt;</span></span>
+  <span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st">"table table-striped"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;thead&gt;</span>
+      <span class="kw">&lt;tr&gt;</span>
+        <span class="kw">&lt;th&gt;</span>NIM<span class="kw">&lt;/th&gt;</span>
+        <span class="kw">&lt;th&gt;</span>Nama<span class="kw">&lt;/th&gt;</span>
+        <span class="kw">&lt;th&gt;</span>Jurusan<span class="kw">&lt;/th&gt;</span>
+        <span class="kw">&lt;th&gt;</span>Semester<span class="kw">&lt;/th&gt;</span>
+        <span class="kw">&lt;th&gt;</span>IPK<span class="kw">&lt;/th&gt;</span>
+      <span class="kw">&lt;/tr&gt;</span>
+    <span class="kw">&lt;/thead&gt;</span>
+    <span class="kw">&lt;tbody&gt;</span>
+      <span class="kw">&lt;tr&gt;</span>
+        <span class="kw">&lt;td&gt;</span>2023001<span class="kw">&lt;/td&gt;</span>
+        <span class="kw">&lt;td&gt;</span>Fadhly Ahmad<span class="kw">&lt;/td&gt;</span>
+        <span class="kw">&lt;td&gt;</span>Informatika<span class="kw">&lt;/td&gt;</span>
+        <span class="kw">&lt;td&gt;</span>5<span class="kw">&lt;/td&gt;</span>
+        <span class="kw">&lt;td&gt;</span>3.85<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;/tr&gt;</span>
+    <span class="kw">&lt;/tbody&gt;</span>
+  <span class="kw">&lt;/table&gt;</span>
+<span class="hl"><span class="kw">&lt;/div&gt;</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end accordion tabel -->
+
+  <!-- ═══════════════ BAGIAN 2: FORM ═══════════════ -->
+  <div class="part-header" style="margin-top:60px;">
+    <div class="part-number" style="background:var(--accent);">2</div>
+    <div>
+      <h2>Form Bootstrap 4</h2>
+      <p>Komponen form yang terstruktur dan konsisten dengan Bootstrap</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+
+    <!-- S10: Basic Form -->
+    <div class="acc-item" id="s10">
+      <div class="acc-header" onclick="toggleAcc('s10')">
+        <div class="acc-num">10</div>
+        <div class="acc-title">Basic Form</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Gunakan class <code>.form-group</code> pada wrapper setiap field, <code>.form-control</code> pada input, dan <code>.form-label</code> pada label. Tiga class ini adalah fondasi form Bootstrap.</p>
+            </div>
+          </div>
+          <div class="hbox hbox-kesalahan">
+            <div class="hbox-icon">⚠️</div>
+            <div class="hbox-content">
+              <strong>Kesalahan Umum</strong>
+              <p>Lupa menambahkan <code>.form-control</code> pada input — akibatnya input tidak mendapat styling Bootstrap dan terlihat seperti input HTML biasa tanpa perbaikan visual.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label">Nama Lengkap</label>
+                <input type="text" class="bs-control" placeholder="Masukkan nama lengkap">
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Email</label>
+                <input type="email" class="bs-control" placeholder="contoh@email.com">
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Password</label>
+                <input type="password" class="bs-control" placeholder="••••••••">
+              </div>
+              <button class="bs-btn bs-btn-primary">Daftar Sekarang</button>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s10')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s10"><span class="kw">&lt;form&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st"><span class="hl">"form-group"</span></span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label&gt;</span>Nama Lengkap<span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"text"</span>
+           <span class="at">class</span>=<span class="st"><span class="hl">"form-control"</span></span>
+           <span class="at">placeholder</span>=<span class="st">"Masukkan nama"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label&gt;</span>Email<span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"email"</span>
+           <span class="at">class</span>=<span class="st">"form-control"</span>
+           <span class="at">placeholder</span>=<span class="st">"contoh@email.com"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label&gt;</span>Password<span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"password"</span>
+           <span class="at">class</span>=<span class="st">"form-control"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;button</span> <span class="at">type</span>=<span class="st">"submit"</span>
+           <span class="at">class</span>=<span class="st">"btn btn-primary"</span><span class="kw">&gt;</span>
+    Daftar
+  <span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/form&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S11: Inline Form -->
+    <div class="acc-item" id="s11">
+      <div class="acc-header" onclick="toggleAcc('s11')">
+        <div class="acc-num">11</div>
+        <div class="acc-title">Inline Form</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Tambahkan class <code>.form-inline</code> pada tag <code>&lt;form&gt;</code>. Semua elemen form akan ditampilkan secara horizontal (sejajar). Cocok untuk form pencarian atau filter singkat.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil — Form Sejajar</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-row" style="align-items:center;">
+                <div class="bs-form-group" style="flex:2;">
+                  <label class="bs-label" style="font-size:12px;">Username</label>
+                  <input type="text" class="bs-control" placeholder="Username">
+                </div>
+                <div class="bs-form-group" style="flex:2;">
+                  <label class="bs-label" style="font-size:12px;">Password</label>
+                  <input type="password" class="bs-control" placeholder="Password">
+                </div>
+                <div class="bs-form-group" style="flex:1;">
+                  <label class="bs-label" style="font-size:12px;">&nbsp;</label>
+                  <button class="bs-btn bs-btn-primary" style="display:block;width:100%;">Login</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s11')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s11"><span class="kw">&lt;form</span> <span class="at">class</span>=<span class="st"><span class="hl">"form-inline"</span></span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group mr-2"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label</span> <span class="at">class</span>=<span class="st">"mr-2"</span><span class="kw">&gt;</span>Username<span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"text"</span>
+           <span class="at">class</span>=<span class="st">"form-control"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group mr-2"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label</span> <span class="at">class</span>=<span class="st">"mr-2"</span><span class="kw">&gt;</span>Password<span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"password"</span>
+           <span class="at">class</span>=<span class="st">"form-control"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;button</span> <span class="at">class</span>=<span class="st">"btn btn-primary"</span><span class="kw">&gt;</span>
+    Login
+  <span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/form&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S12: Horizontal Form -->
+    <div class="acc-item" id="s12">
+      <div class="acc-header" onclick="toggleAcc('s12')">
+        <div class="acc-num">12</div>
+        <div class="acc-title">Horizontal Form</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Gunakan <code>.form-horizontal</code> dengan grid Bootstrap. Label berada di sebelah kiri, input di sebelah kanan. Cocok untuk form yang membutuhkan layout yang lebih rapi dan formal.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil — Label & Input Sejajar</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-horizontal">
+                <label class="bs-label" style="font-size:13px;">Nama</label>
+                <input type="text" class="bs-control" placeholder="Nama lengkap">
+                <label class="bs-label" style="font-size:13px;">Email</label>
+                <input type="email" class="bs-control" placeholder="Email">
+                <label class="bs-label" style="font-size:13px;">Jurusan</label>
+                <input type="text" class="bs-control" placeholder="Jurusan">
+                <div></div>
+                <button class="bs-btn bs-btn-primary">Simpan</button>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s12')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s12"><span class="kw">&lt;form</span> <span class="at">class</span>=<span class="st"><span class="hl">"form-horizontal"</span></span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group row"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label</span> <span class="at">class</span>=<span class="st">"col-sm-3 col-form-label"</span><span class="kw">&gt;</span>
+      Nama
+    <span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"col-sm-9"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"text"</span>
+             <span class="at">class</span>=<span class="st">"form-control"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/form&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S13: Checkbox Radio Select -->
+    <div class="acc-item" id="s13">
+      <div class="acc-header" onclick="toggleAcc('s13')">
+        <div class="acc-num">13</div>
+        <div class="acc-title">Checkbox, Radio & Select</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Bootstrap menyediakan class <code>.form-check</code> untuk checkbox dan radio, serta <code>.form-control</code> untuk dropdown select. Semua elemen memiliki styling yang konsisten.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label">Pilih Jurusan</label>
+                <select class="bs-select">
+                  <option>-- Pilih --</option>
+                  <option>Informatika</option>
+                  <option>Sistem Informasi</option>
+                  <option>Manajemen</option>
+                </select>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Jenis Kelamin</label>
+                <div class="bs-check"><input type="radio" name="jk"><span>Laki-laki</span></div>
+                <div class="bs-check"><input type="radio" name="jk"><span>Perempuan</span></div>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Persetujuan</label>
+                <div class="bs-check"><input type="checkbox"><span>Saya setuju dengan syarat & ketentuan</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s13')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s13"><span class="cm">&lt;!-- Select --&gt;</span>
+<span class="kw">&lt;select</span> <span class="at">class</span>=<span class="st"><span class="hl">"form-control"</span></span><span class="kw">&gt;</span>
+  <span class="kw">&lt;option&gt;</span>Informatika<span class="kw">&lt;/option&gt;</span>
+<span class="kw">&lt;/select&gt;</span>
+
+<span class="cm">&lt;!-- Radio --&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st"><span class="hl">"form-check"</span></span><span class="kw">&gt;</span>
+  <span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st">"form-check-input"</span>
+         <span class="at">type</span>=<span class="st">"radio"</span> <span class="at">name</span>=<span class="st">"jk"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;label</span> <span class="at">class</span>=<span class="st">"form-check-label"</span><span class="kw">&gt;</span>
+    Laki-laki
+  <span class="kw">&lt;/label&gt;</span>
+<span class="kw">&lt;/div&gt;</span>
+
+<span class="cm">&lt;!-- Checkbox --&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-check"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st">"form-check-input"</span>
+         <span class="at">type</span>=<span class="st">"checkbox"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;label</span> <span class="at">class</span>=<span class="st">"form-check-label"</span><span class="kw">&gt;</span>
+    Saya setuju
+  <span class="kw">&lt;/label&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S14: Plaintext -->
+    <div class="acc-item" id="s14">
+      <div class="acc-header" onclick="toggleAcc('s14')">
+        <div class="acc-num">14</div>
+        <div class="acc-title">Control Statis (Plaintext)</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Class <code>.form-control-plaintext</code> membuat input tampak seperti teks biasa (tanpa border), namun tetap menjaga alignment dengan form lainnya. Berguna untuk menampilkan data yang tidak bisa diedit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-horizontal">
+                <label class="bs-label" style="font-size:13px;">Email</label>
+                <input type="text" class="bs-control-plaintext" value="fadhly@univ.ac.id" readonly>
+                <label class="bs-label" style="font-size:13px;">NIM</label>
+                <input type="text" class="bs-control-plaintext" value="2023001" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s14')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s14"><span class="kw">&lt;input</span>
+  <span class="at">type</span>=<span class="st">"text"</span>
+  <span class="at">class</span>=<span class="st"><span class="hl">"form-control-plaintext"</span></span>
+  <span class="at">readonly</span>
+  <span class="at">value</span>=<span class="st">"fadhly@univ.ac.id"</span>
+<span class="kw">&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S15: Help Text -->
+    <div class="acc-item" id="s15">
+      <div class="acc-header" onclick="toggleAcc('s15')">
+        <div class="acc-num">15</div>
+        <div class="acc-title">Teks Bantuan (Help Text)</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Gunakan tag <code>&lt;small class="form-text text-muted"&gt;</code> di bawah input untuk menampilkan petunjuk atau informasi tambahan kepada pengguna.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label">Password</label>
+                <input type="password" class="bs-control" placeholder="Masukkan password">
+                <small class="bs-form-text">🔒 Password minimal 8 karakter, kombinasi huruf dan angka.</small>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Username</label>
+                <input type="text" class="bs-control" placeholder="username_anda">
+                <small class="bs-form-text">Gunakan huruf kecil, angka, dan underscore saja.</small>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s15')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s15"><span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;label&gt;</span>Password<span class="kw">&lt;/label&gt;</span>
+  <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"password"</span>
+         <span class="at">class</span>=<span class="st">"form-control"</span><span class="kw">&gt;</span>
+  <span class="hl"><span class="kw">&lt;small</span> <span class="at">class</span>=<span class="st">"form-text text-muted"</span><span class="kw">&gt;</span></span>
+    Password minimal 8 karakter.
+  <span class="hl"><span class="kw">&lt;/small&gt;</span></span>
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S16: Focus -->
+    <div class="acc-item" id="s16">
+      <div class="acc-header" onclick="toggleAcc('s16')">
+        <div class="acc-num">16</div>
+        <div class="acc-title">Efek Fokus pada Input</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Bootstrap secara otomatis menambahkan efek <strong>outline biru</strong> dan <strong>box-shadow</strong> ketika input mendapat fokus (diklik). Ini membantu aksesibilitas dan UX. Coba klik input di bawah!</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Klik input untuk melihat fokus!</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label">Nama (klik di sini)</label>
+                <input type="text" class="bs-control" placeholder="Klik untuk fokus — lihat border biru!">
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Email (klik di sini)</label>
+                <input type="email" class="bs-control" placeholder="Klik untuk fokus">
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 CSS Bootstrap (otomatis)</span>
+              <button class="btn-copy" onclick="copyCode('code-s16')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s16"><span class="cm">/* Bootstrap otomatis menambahkan
+   efek fokus via CSS: */</span>
+
+<span class="kw">.form-control</span>:<span class="at">focus</span> {
+  <span class="at">border-color</span>: <span class="st">#80bdff</span>;
+  <span class="hl">  <span class="at">box-shadow</span>: <span class="st">0 0 0 0.2rem
+    rgba(0,123,255,.25)</span>;</span>
+  <span class="at">outline</span>: <span class="st">0</span>;
+}
+
+<span class="cm">/* Tidak perlu kode tambahan!
+   Cukup class="form-control" */</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S17: Disabled Readonly -->
+    <div class="acc-item" id="s17">
+      <div class="acc-header" onclick="toggleAcc('s17')">
+        <div class="acc-num">17</div>
+        <div class="acc-title">Disabled & Readonly</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p><strong>disabled</strong>: input tidak bisa diklik sama sekali, nilainya tidak terkirim saat form submit. <strong>readonly</strong>: input bisa diklik tapi tidak bisa diubah, nilainya tetap terkirim.</p>
+            </div>
+          </div>
+          <div class="hbox hbox-tips">
+            <div class="hbox-icon">✅</div>
+            <div class="hbox-content">
+              <strong>Perbedaan Kunci</strong>
+              <ul>
+                <li><code>disabled</code> → tidak terkirim, cursor tidak diizinkan</li>
+                <li><code>readonly</code> → tetap terkirim, bisa disorot/dicopy</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label">Input Normal</label>
+                <input type="text" class="bs-control" placeholder="Bisa diisi">
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Disabled</label>
+                <input type="text" class="bs-control" value="Tidak bisa diubah" disabled>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Readonly</label>
+                <input type="text" class="bs-control" value="Bisa dibaca, tidak bisa diubah" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s17')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s17"><span class="cm">&lt;!-- Normal --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st">"form-control"</span>
+       <span class="at">type</span>=<span class="st">"text"</span><span class="kw">&gt;</span>
+
+<span class="cm">&lt;!-- Disabled --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st">"form-control"</span>
+       <span class="at">type</span>=<span class="st">"text"</span>
+       <span class="hl">       <span class="at">disabled</span></span>
+       <span class="at">value</span>=<span class="st">"Tidak bisa diubah"</span><span class="kw">&gt;</span>
+
+<span class="cm">&lt;!-- Readonly --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st">"form-control"</span>
+       <span class="at">type</span>=<span class="st">"text"</span>
+       <span class="hl">       <span class="at">readonly</span></span>
+       <span class="at">value</span>=<span class="st">"Hanya bisa dibaca"</span><span class="kw">&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S18: Validasi -->
+    <div class="acc-item" id="s18">
+      <div class="acc-header" onclick="toggleAcc('s18')">
+        <div class="acc-num">18</div>
+        <div class="acc-title">Validasi Form</div>
+        <span class="acc-badge badge-form">Form</span>
+        <span class="acc-badge badge-star">⭐ Penting</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Bootstrap menyediakan class <code>.is-valid</code> (hijau) dan <code>.is-invalid</code> (merah) pada input untuk memberikan feedback visual validasi. Tambahkan div <code>.valid-feedback</code> atau <code>.invalid-feedback</code> untuk pesan.</p>
+            </div>
+          </div>
+          <div class="hbox hbox-kesalahan">
+            <div class="hbox-icon">⚠️</div>
+            <div class="hbox-content">
+              <strong>Kesalahan Umum</strong>
+              <p>Lupa menambahkan class <code>was-validated</code> pada form, sehingga feedback validasi tidak tampil meski sudah ada class <code>.is-valid/invalid</code> di input.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Hasil</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label">Nama (Valid ✓)</label>
+                <input type="text" class="bs-control is-valid" value="Fadhly Ahmad">
+                <div class="valid-feedback">✓ Nama valid!</div>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Email (Invalid ✗)</label>
+                <input type="email" class="bs-control is-invalid" value="bukan-email">
+                <div class="invalid-feedback">✗ Format email tidak valid.</div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s18')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s18"><span class="cm">&lt;!-- Input Valid --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"text"</span>
+       <span class="at">class</span>=<span class="st"><span class="hl">"form-control is-valid"</span></span>
+       <span class="at">value</span>=<span class="st">"Fadhly Ahmad"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"valid-feedback"</span><span class="kw">&gt;</span>
+  Nama valid!
+<span class="kw">&lt;/div&gt;</span>
+
+<span class="cm">&lt;!-- Input Invalid --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"email"</span>
+       <span class="at">class</span>=<span class="st"><span class="hl">"form-control is-invalid"</span></span>
+       <span class="at">value</span>=<span class="st">"bukan-email"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"invalid-feedback"</span><span class="kw">&gt;</span>
+  Format email tidak valid.
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S19: Ukuran Form -->
+    <div class="acc-item" id="s19">
+      <div class="acc-header" onclick="toggleAcc('s19')">
+        <div class="acc-num">19</div>
+        <div class="acc-title">Ukuran Input Form</div>
+        <span class="acc-badge badge-form">Form</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="highlight-grid">
+          <div class="hbox hbox-penjelasan">
+            <div class="hbox-icon">💡</div>
+            <div class="hbox-content">
+              <strong>Penjelasan</strong>
+              <p>Bootstrap memiliki 3 ukuran input: <code>.form-control-sm</code> (kecil), default (normal), dan <code>.form-control-lg</code> (besar). Pilih sesuai konteks tampilan aplikasi.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Perbandingan Ukuran</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label" style="font-size:11px;">Small (.form-control-sm)</label>
+                <input class="bs-control bs-sm" type="text" placeholder="Input kecil">
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label" style="font-size:11px;">Normal (default)</label>
+                <input class="bs-control" type="text" placeholder="Input normal">
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label" style="font-size:11px;">Large (.form-control-lg)</label>
+                <input class="bs-control bs-lg" type="text" placeholder="Input besar">
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode HTML</span>
+              <button class="btn-copy" onclick="copyCode('code-s19')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s19"><span class="cm">&lt;!-- Small --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st"><span class="hl">"form-control form-control-sm"</span></span>
+       <span class="at">type</span>=<span class="st">"text"</span><span class="kw">&gt;</span>
+
+<span class="cm">&lt;!-- Normal (default) --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st">"form-control"</span>
+       <span class="at">type</span>=<span class="st">"text"</span><span class="kw">&gt;</span>
+
+<span class="cm">&lt;!-- Large --&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st"><span class="hl">"form-control form-control-lg"</span></span>
+       <span class="at">type</span>=<span class="st">"text"</span><span class="kw">&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end accordion form -->
+
+  <!-- ═══════════════ BAGIAN 3: LATIHAN ═══════════════ -->
+  <div class="part-header" style="margin-top:60px;">
+    <div class="part-number" style="background:var(--warning);">3</div>
+    <div>
+      <h2>Latihan & Tantangan</h2>
+      <p>Praktikkan pemahaman Anda dengan latihan berikut</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+
+    <!-- S20: Latihan Tabel -->
+    <div class="acc-item" id="s20">
+      <div class="acc-header" onclick="toggleAcc('s20')">
+        <div class="acc-num">20</div>
+        <div class="acc-title">Latihan 1 — Tabel Mahasiswa</div>
+        <span class="acc-badge badge-latihan">Latihan</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="exercise-card">
+          <h4>🎯 Soal: Buat Tabel Data Mahasiswa</h4>
+          <div class="exercise-steps">
+            <div class="exercise-step"><p>Buat tabel dengan class <code>.table .table-striped .table-hover .table-bordered</code></p></div>
+            <div class="exercise-step"><p>Tambahkan kolom: <strong>No, NIM, Nama, Jurusan, IPK, Status</strong></p></div>
+            <div class="exercise-step"><p>Isi minimal 5 baris data mahasiswa</p></div>
+            <div class="exercise-step"><p>Beri warna <code>table-success</code> untuk IPK ≥ 3.5, <code>table-danger</code> untuk IPK &lt; 2.5</p></div>
+            <div class="exercise-step"><p>Bungkus dengan <code>.table-responsive</code></p></div>
+          </div>
+        </div>
+        <div class="single-demo">
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Contoh Jawaban</span>
+              <button class="btn-copy" onclick="copyCode('code-s20')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s20"><span class="hl"><span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"table-responsive"</span><span class="kw">&gt;</span></span>
+<span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st"><span class="hl">"table table-striped table-hover table-bordered"</span></span><span class="kw">&gt;</span>
+  <span class="kw">&lt;thead</span> <span class="at">class</span>=<span class="st">"thead-dark"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;tr&gt;</span>
+      <span class="kw">&lt;th&gt;</span>No<span class="kw">&lt;/th&gt;&lt;th&gt;</span>NIM<span class="kw">&lt;/th&gt;</span>
+      <span class="kw">&lt;th&gt;</span>Nama<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Jurusan<span class="kw">&lt;/th&gt;</span>
+      <span class="kw">&lt;th&gt;</span>IPK<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Status<span class="kw">&lt;/th&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+  <span class="kw">&lt;/thead&gt;</span>
+  <span class="kw">&lt;tbody&gt;</span>
+    <span class="kw">&lt;tr</span> <span class="at">class</span>=<span class="st">"table-success"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;td&gt;</span>1<span class="kw">&lt;/td&gt;&lt;td&gt;</span>2023001<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>Fadhly<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Informatika<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>3.85<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Aktif<span class="kw">&lt;/td&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+    <span class="kw">&lt;tr</span> <span class="at">class</span>=<span class="st">"table-danger"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;td&gt;</span>2<span class="kw">&lt;/td&gt;&lt;td&gt;</span>2023002<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>Budi<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Manajemen<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>2.10<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Peringatan<span class="kw">&lt;/td&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+  <span class="kw">&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S21: Latihan Form -->
+    <div class="acc-item" id="s21">
+      <div class="acc-header" onclick="toggleAcc('s21')">
+        <div class="acc-num">21</div>
+        <div class="acc-title">Latihan 2 — Form Registrasi</div>
+        <span class="acc-badge badge-latihan">Latihan</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="exercise-card">
+          <h4>🎯 Soal: Buat Form Registrasi Mahasiswa</h4>
+          <div class="exercise-steps">
+            <div class="exercise-step"><p>Buat form dengan field: <strong>Nama, Email, Password, Jurusan (select), Jenis Kelamin (radio)</strong></p></div>
+            <div class="exercise-step"><p>Tambahkan help text di bawah field Password</p></div>
+            <div class="exercise-step"><p>Tambahkan checkbox persetujuan syarat & ketentuan</p></div>
+            <div class="exercise-step"><p>Tombol submit dengan class <code>.btn .btn-primary .btn-block</code></p></div>
+            <div class="exercise-step"><p>Uji validasi: tambahkan class <code>.is-valid/.is-invalid</code></p></div>
+          </div>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Preview Form</span></div>
+            <div class="demo-pane-body">
+              <div class="bs-form-group">
+                <label class="bs-label">Nama Lengkap</label>
+                <input type="text" class="bs-control is-valid" value="Fadhly Ahmad">
+                <div class="valid-feedback">✓ Nama valid</div>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Email</label>
+                <input type="email" class="bs-control is-valid" value="fadhly@email.com">
+                <div class="valid-feedback">✓ Email valid</div>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Password</label>
+                <input type="password" class="bs-control is-invalid" placeholder="••••">
+                <div class="invalid-feedback">✗ Password minimal 8 karakter</div>
+                <small class="bs-form-text">Kombinasi huruf, angka, dan simbol</small>
+              </div>
+              <div class="bs-form-group">
+                <label class="bs-label">Jurusan</label>
+                <select class="bs-select">
+                  <option>Informatika</option>
+                  <option>Sistem Informasi</option>
+                </select>
+              </div>
+              <div class="bs-form-group">
+                <div class="bs-check"><input type="checkbox" checked><span>Saya setuju dengan syarat & ketentuan</span></div>
+              </div>
+              <button class="bs-btn bs-btn-primary" style="width:100%;">Daftar Sekarang</button>
+            </div>
+          </div>
+          <div class="demo-pane">
+            <div class="demo-pane-header">
+              <span>💻 Kode Jawaban</span>
+              <button class="btn-copy" onclick="copyCode('code-s21')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s21"><span class="kw">&lt;form&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label&gt;</span>Nama<span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"text"</span>
+           <span class="at">class</span>=<span class="st"><span class="hl">"form-control is-valid"</span></span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"valid-feedback"</span><span class="kw">&gt;</span>Valid!<span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-group"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label&gt;</span>Password<span class="kw">&lt;/label&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"password"</span>
+           <span class="at">class</span>=<span class="st"><span class="hl">"form-control is-invalid"</span></span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"invalid-feedback"</span><span class="kw">&gt;</span>
+      Min. 8 karakter
+    <span class="kw">&lt;/div&gt;</span>
+    <span class="kw">&lt;small</span> <span class="at">class</span>=<span class="st">"form-text text-muted"</span><span class="kw">&gt;</span>
+      Kombinasi huruf &amp; angka
+    <span class="kw">&lt;/small&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"form-check"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;input</span> <span class="at">class</span>=<span class="st">"form-check-input"</span>
+           <span class="at">type</span>=<span class="st">"checkbox"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;label</span> <span class="at">class</span>=<span class="st">"form-check-label"</span><span class="kw">&gt;</span>
+      Setuju syarat &amp; ketentuan
+    <span class="kw">&lt;/label&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;button</span>
+    <span class="at">class</span>=<span class="st">"btn btn-primary btn-block"</span><span class="kw">&gt;</span>
+    Daftar
+  <span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/form&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S22: Latihan Kombinasi -->
+    <div class="acc-item" id="s22">
+      <div class="acc-header" onclick="toggleAcc('s22')">
+        <div class="acc-num">22</div>
+        <div class="acc-title">Latihan 3 — Kombinasi Tabel & Form</div>
+        <span class="acc-badge badge-latihan">Latihan</span>
+        <span class="acc-badge badge-star">⭐ Tantangan</span>
+        <div class="acc-arrow">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="exercise-card">
+          <h4>🎯 Soal: Halaman CRUD Mahasiswa Sederhana</h4>
+          <div class="exercise-steps">
+            <div class="exercise-step"><p>Buat <strong>form input</strong> di bagian atas: nama, email, jurusan, tombol "Tambah"</p></div>
+            <div class="exercise-step"><p>Di bawahnya, buat <strong>tabel data</strong> dengan class striped, hover, bordered</p></div>
+            <div class="exercise-step"><p>Tabel punya kolom: No, Nama, Email, Jurusan, Aksi (tombol Edit & Hapus)</p></div>
+            <div class="exercise-step"><p>Bungkus semua dalam <strong>card Bootstrap</strong> dengan shadow</p></div>
+            <div class="exercise-step"><p>Pastikan tampilan responsif di layar kecil</p></div>
+          </div>
+        </div>
+        <div class="single-demo" style="margin-top:16px;">
+          <div class="demo-pane">
+            <div class="demo-pane-header"><span>👁 Preview Hasil Kombinasi</span></div>
+            <div class="demo-pane-body" style="background:var(--surface2);">
+              <div style="background:#fff; border-radius:10px; padding:20px; box-shadow:var(--shadow);">
+                <h6 style="font-weight:700; margin-bottom:14px; color:var(--primary); font-size:15px;">📋 Manajemen Data Mahasiswa</h6>
+                <!-- Mini form -->
+                <div class="bs-form-row" style="margin-bottom:16px;">
+                  <div class="bs-form-group">
+                    <label class="bs-label" style="font-size:12px;">Nama</label>
+                    <input type="text" class="bs-control bs-sm" placeholder="Nama mahasiswa">
+                  </div>
+                  <div class="bs-form-group">
+                    <label class="bs-label" style="font-size:12px;">Email</label>
+                    <input type="email" class="bs-control bs-sm" placeholder="Email">
+                  </div>
+                  <div class="bs-form-group">
+                    <label class="bs-label" style="font-size:12px;">Jurusan</label>
+                    <select class="bs-select bs-sm" style="padding:.2rem .5rem; font-size:12px;">
+                      <option>Informatika</option>
+                      <option>Sistem Informasi</option>
+                    </select>
+                  </div>
+                  <div class="bs-form-group" style="flex:0;">
+                    <label class="bs-label" style="font-size:12px;">&nbsp;</label>
+                    <button class="bs-btn bs-btn-primary bs-sm" style="display:block; white-space:nowrap;">+ Tambah</button>
+                  </div>
+                </div>
+                <!-- Mini table -->
+                <div style="overflow-x:auto;">
+                  <table class="bs-table bs-table-striped bs-table-hover bs-table-bordered bs-table-sm">
+                    <thead style="background:#f8f9fa;"><tr><th>No</th><th>Nama</th><th>Email</th><th>Jurusan</th><th>Aksi</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>Fadhly</td><td>fadhly@email.com</td><td>Informatika</td><td><button class="bs-btn bs-sm" style="background:#fff3cd;color:#856404;border:1px solid #ffc107;font-size:11px;">✏️</button> <button class="bs-btn bs-sm" style="background:#f8d7da;color:#721c24;border:1px solid #dc3545;font-size:11px;">🗑️</button></td></tr>
+                      <tr><td>2</td><td>Rina</td><td>rina@email.com</td><td>Sistem Info</td><td><button class="bs-btn bs-sm" style="background:#fff3cd;color:#856404;border:1px solid #ffc107;font-size:11px;">✏️</button> <button class="bs-btn bs-sm" style="background:#f8d7da;color:#721c24;border:1px solid #dc3545;font-size:11px;">🗑️</button></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-pane" style="margin-top:12px;">
+            <div class="demo-pane-header">
+              <span>💻 Kode Kombinasi</span>
+              <button class="btn-copy" onclick="copyCode('code-s22')">📋 Copy</button>
+            </div>
+            <div class="code-pane-body" id="code-s22" style="max-height:400px;"><span class="cm">&lt;!-- Card Wrapper --&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"card shadow"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"card-body"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;h5</span> <span class="at">class</span>=<span class="st">"card-title"</span><span class="kw">&gt;</span>
+      Data Mahasiswa
+    <span class="kw">&lt;/h5&gt;</span>
+
+    <span class="cm">&lt;!-- FORM INPUT --&gt;</span>
+    <span class="kw">&lt;form</span> <span class="at">class</span>=<span class="st">"form-inline mb-3"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"text"</span>
+             <span class="at">class</span>=<span class="st"><span class="hl">"form-control mr-2"</span></span>
+             <span class="at">placeholder</span>=<span class="st">"Nama"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;input</span> <span class="at">type</span>=<span class="st">"email"</span>
+             <span class="at">class</span>=<span class="st">"form-control mr-2"</span>
+             <span class="at">placeholder</span>=<span class="st">"Email"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;select</span> <span class="at">class</span>=<span class="st">"form-control mr-2"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;option&gt;</span>Informatika<span class="kw">&lt;/option&gt;</span>
+        <span class="kw">&lt;option&gt;</span>Sistem Informasi<span class="kw">&lt;/option&gt;</span>
+      <span class="kw">&lt;/select&gt;</span>
+      <span class="kw">&lt;button</span> <span class="at">class</span>=<span class="st">"btn btn-primary"</span><span class="kw">&gt;</span>
+        Tambah
+      <span class="kw">&lt;/button&gt;</span>
+    <span class="kw">&lt;/form&gt;</span>
+
+    <span class="cm">&lt;!-- TABEL DATA --&gt;</span>
+    <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="st">"table-responsive"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;table</span> <span class="at">class</span>=<span class="st"><span class="hl">"table table-striped
+             table-hover table-bordered"</span></span><span class="kw">&gt;</span>
+        <span class="kw">&lt;thead</span> <span class="at">class</span>=<span class="st">"thead-dark"</span><span class="kw">&gt;</span>
+          <span class="kw">&lt;tr&gt;</span>
+            <span class="kw">&lt;th&gt;</span>No<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Nama<span class="kw">&lt;/th&gt;</span>
+            <span class="kw">&lt;th&gt;</span>Email<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Jurusan<span class="kw">&lt;/th&gt;</span>
+            <span class="kw">&lt;th&gt;</span>Aksi<span class="kw">&lt;/th&gt;</span>
+          <span class="kw">&lt;/tr&gt;</span>
+        <span class="kw">&lt;/thead&gt;</span>
+        <span class="kw">&lt;tbody&gt;</span>
+          <span class="kw">&lt;tr&gt;</span>
+            <span class="kw">&lt;td&gt;</span>1<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Fadhly<span class="kw">&lt;/td&gt;</span>
+            <span class="kw">&lt;td&gt;</span>fadhly@email.com<span class="kw">&lt;/td&gt;</span>
+            <span class="kw">&lt;td&gt;</span>Informatika<span class="kw">&lt;/td&gt;</span>
+            <span class="kw">&lt;td&gt;</span>
+              <span class="kw">&lt;a</span> <span class="at">class</span>=<span class="st">"btn btn-warning btn-sm"</span><span class="kw">&gt;</span>Edit<span class="kw">&lt;/a&gt;</span>
+              <span class="kw">&lt;a</span> <span class="at">class</span>=<span class="st">"btn btn-danger btn-sm"</span><span class="kw">&gt;</span>Hapus<span class="kw">&lt;/a&gt;</span>
+            <span class="kw">&lt;/td&gt;</span>
+          <span class="kw">&lt;/tr&gt;</span>
+        <span class="kw">&lt;/tbody&gt;</span>
+      <span class="kw">&lt;/table&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end accordion latihan -->
+</div><!-- end content-section -->
+
+<!-- FOOTER -->
+<footer>
+  <strong>Web Design II — Pertemuan 7</strong><br>
+  Tabel & Form dengan Bootstrap 4 · Materi Interaktif untuk Kegiatan Belajar Mengajar
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Kode berhasil disalin!</div>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // ── ACCORDION ──
+  function toggleAcc(id) {
+    const item = document.getElementById(id);
+    const isOpen = item.classList.contains('open');
+    item.classList.toggle('open', !isOpen);
+  }
+
+  // ── COPY CODE ──
+  function copyCode(id) {
+    const el = document.getElementById(id);
+    const text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast();
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast();
+    });
+  }
+
+  function showToast() {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ── PROGRESS BAR ──
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const scrolled = doc.scrollTop || document.body.scrollTop;
+    const total = doc.scrollHeight - doc.clientHeight;
+    const pct = total > 0 ? (scrolled / total) * 100 : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+
+    // scroll-to-top
+    const btn = document.getElementById('scrollTop');
+    if (scrolled > 400) {
+      btn.classList.add('show');
+    } else {
+      btn.classList.remove('show');
+    }
+  });
+
+  // ── SMOOTH ANIMATIONS on scroll ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.acc-item, .summary-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .4s ease, transform .4s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan 5 — Grid dan Tipografi Bootstrap 4 | Web Design II</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #bfdbfe;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-800: #1e40af;
+    --blue-900: #1e3a8a;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --green-100: #dcfce7;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --amber-100: #fef3c7;
+    --amber-600: #d97706;
+    --red-100: #fee2e2;
+    --red-600: #dc2626;
+    --purple-100: #f3e8ff;
+    --purple-600: #9333ea;
+    --col-a: #bfdbfe;
+    --col-b: #93c5fd;
+    --col-c: #60a5fa;
+    --col-d: #3b82f6;
+    --col-e: #ddd6fe;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--slate-50);
+    color: var(--slate-800);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── NAV ── */
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 10px 24px;
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .nav-logo {
+    font-weight: 800; font-size: 13px; color: var(--blue-600);
+    text-transform: uppercase; letter-spacing: .06em;
+    margin-right: 12px;
+  }
+  .nav-link {
+    font-size: 12px; font-weight: 500; color: var(--slate-500);
+    text-decoration: none; padding: 4px 10px; border-radius: 20px;
+    transition: all .2s;
+  }
+  .nav-link:hover { background: var(--blue-50); color: var(--blue-600); }
+
+  /* ── WRAPPER ── */
+  .page-wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ── HEADER ── */
+  .hero {
+    background: linear-gradient(135deg, var(--blue-700) 0%, var(--blue-500) 60%, #38bdf8 100%);
+    border-radius: 20px; margin: 28px 0 36px;
+    padding: 52px 48px; color: #fff; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; right: -60px; top: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+  }
+  .hero::after {
+    content: '';
+    position: absolute; right: 60px; bottom: -80px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.05);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,.22);
+    border: 1px solid rgba(255,255,255,.35);
+    color: #fff; font-size: 11px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(22px, 4vw, 34px); font-weight: 800;
+    line-height: 1.2; margin-bottom: 12px;
+  }
+  .hero p { font-size: 15px; opacity: .88; max-width: 540px; margin-bottom: 28px; }
+  .hero-goals { display: flex; flex-wrap: wrap; gap: 10px; }
+  .goal-pill {
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.3);
+    color: #fff; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .goal-pill::before { content: '✓'; font-weight: 800; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 40px; }
+
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--blue-500); margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--blue-200);
+  }
+
+  .section-title {
+    font-size: clamp(18px, 3vw, 24px); font-weight: 800;
+    color: var(--slate-900); margin-bottom: 6px;
+  }
+  .section-desc { color: var(--slate-500); margin-bottom: 20px; font-size: 14px; }
+
+  /* ── CARD ── */
+  .card {
+    background: #fff; border: 1px solid var(--slate-200);
+    border-radius: 14px; padding: 24px; margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  }
+  .card-sm { padding: 16px; border-radius: 10px; }
+  .card-blue { background: var(--blue-50); border-color: var(--blue-200); }
+  .card-title {
+    font-size: 15px; font-weight: 700; color: var(--slate-800); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-icon { font-size: 18px; }
+
+  /* ── RECALL GRID ── */
+  .recall-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .recall-item {
+    background: #fff; border: 1px solid var(--slate-200);
+    border-radius: 12px; padding: 18px;
+    border-top: 3px solid var(--blue-400);
+  }
+  .recall-item h4 { font-size: 13px; font-weight: 700; color: var(--blue-700); margin-bottom: 6px; }
+  .recall-item p { font-size: 13px; color: var(--slate-600); line-height: 1.6; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--slate-900); color: #e2e8f0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px; line-height: 1.8;
+    border-radius: 10px; padding: 16px 20px;
+    overflow-x: auto; white-space: pre;
+    margin: 10px 0;
+  }
+  .code-block .kw { color: #93c5fd; }
+  .code-block .cl { color: #86efac; }
+  .code-block .st { color: #fde68a; }
+  .code-block .cm { color: #64748b; font-style: italic; }
+
+  /* ── GRID VISUAL ── */
+  .grid-visual { display: flex; gap: 4px; margin: 14px 0; flex-wrap: wrap; }
+  .grid-col {
+    background: var(--col-a); border: 1.5px solid var(--blue-300);
+    border-radius: 6px; padding: 10px 4px; text-align: center;
+    font-size: 11px; font-weight: 700; color: var(--blue-800);
+    transition: transform .15s;
+  }
+  .grid-col:hover { transform: translateY(-2px); }
+  .grid-col.c1 { background: var(--col-a); }
+  .grid-col.c2 { background: var(--col-b); }
+  .grid-col.c3 { background: var(--col-c); color: #fff; }
+  .grid-col.c4 { background: var(--col-d); color: #fff; }
+  .grid-col.c5 { background: var(--col-e); color: var(--purple-600); }
+  .grid-col.offset-col { background: #fff; border: 2px dashed var(--slate-300); color: var(--slate-400); }
+
+  /* width helpers */
+  .w-1  { flex: 0 0 calc(8.33% - 4px); }
+  .w-2  { flex: 0 0 calc(16.66% - 4px); }
+  .w-3  { flex: 0 0 calc(25% - 4px); }
+  .w-4  { flex: 0 0 calc(33.33% - 4px); }
+  .w-5  { flex: 0 0 calc(41.66% - 4px); }
+  .w-6  { flex: 0 0 calc(50% - 4px); }
+  .w-7  { flex: 0 0 calc(58.33% - 4px); }
+  .w-8  { flex: 0 0 calc(66.66% - 4px); }
+  .w-9  { flex: 0 0 calc(75% - 4px); }
+  .w-12 { flex: 0 0 calc(100% - 4px); }
+
+  /* ── DIAGRAM ── */
+  .diagram {
+    background: var(--slate-50); border: 1.5px solid var(--slate-200);
+    border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  .diagram .d-container { color: var(--blue-700); font-weight: 700; }
+  .diagram .d-row { color: var(--green-600); font-weight: 600; padding-left: 20px; }
+  .diagram .d-col { color: var(--slate-600); padding-left: 40px; }
+
+  /* ── PREVIEW BOX ── */
+  .preview-box {
+    border: 2px solid var(--slate-200); border-radius: 10px;
+    padding: 16px; background: #fff;
+  }
+  .preview-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--slate-400); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .preview-label::before {
+    content: '▶ PREVIEW'; background: var(--blue-600); color: #fff;
+    padding: 2px 8px; border-radius: 4px; font-size: 10px;
+  }
+
+  /* ── EXAMPLE TABS ── */
+  .example-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .ex-tab {
+    padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    border: 1.5px solid var(--slate-200); background: #fff; color: var(--slate-600);
+    cursor: pointer; transition: all .2s;
+  }
+  .ex-tab.active, .ex-tab:hover { background: var(--blue-600); color: #fff; border-color: var(--blue-600); }
+
+  /* ── ACCORDION ── */
+  .accordion { border: 1.5px solid var(--slate-200); border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+  .accordion-header {
+    padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; background: #fff; font-weight: 700; font-size: 14px;
+    color: var(--slate-800); transition: background .15s;
+    user-select: none;
+  }
+  .accordion-header:hover { background: var(--blue-50); }
+  .accordion-arrow {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--blue-100); color: var(--blue-600);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: transform .3s; flex-shrink: 0;
+  }
+  .accordion-body { display: none; padding: 0 20px 18px; border-top: 1px solid var(--slate-100); }
+  .accordion.open .accordion-arrow { transform: rotate(180deg); }
+  .accordion.open .accordion-body { display: block; }
+  .accordion.open .accordion-header { background: var(--blue-50); }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; margin: 2px;
+  }
+  .badge-blue { background: var(--blue-100); color: var(--blue-700); }
+  .badge-green { background: var(--green-100); color: var(--green-700); }
+  .badge-amber { background: var(--amber-100); color: var(--amber-600); }
+  .badge-purple { background: var(--purple-100); color: var(--purple-600); }
+  .badge-red { background: var(--red-100); color: var(--red-600); }
+
+  /* ── HIGHLIGHT BOXES ── */
+  .box-penting {
+    background: var(--amber-100); border: 1.5px solid #fcd34d;
+    border-left: 4px solid var(--amber-600);
+    border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+    font-size: 13.5px; color: #78350f;
+  }
+  .box-penting strong { font-weight: 800; display: block; margin-bottom: 4px; color: var(--amber-600); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+
+  .box-error {
+    background: var(--red-100); border: 1.5px solid #fca5a5;
+    border-left: 4px solid var(--red-600);
+    border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+    font-size: 13.5px; color: #7f1d1d;
+  }
+  .box-error strong { font-weight: 800; display: block; margin-bottom: 6px; color: var(--red-600); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .box-error ul { padding-left: 18px; }
+  .box-error li { margin-bottom: 3px; }
+
+  .box-question {
+    background: var(--purple-100); border: 1.5px solid #d8b4fe;
+    border-left: 4px solid var(--purple-600);
+    border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+    font-size: 14px; color: #4c1d95; font-weight: 600; font-style: italic;
+  }
+  .box-question::before { content: '💬 '; }
+
+  .box-info {
+    background: var(--blue-50); border: 1.5px solid var(--blue-200);
+    border-left: 4px solid var(--blue-500);
+    border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+    font-size: 13.5px; color: var(--blue-900);
+  }
+
+  /* ── TOGGLE BUTTON ── */
+  .btn {
+    padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    border: none; cursor: pointer; transition: all .2s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary { background: var(--blue-600); color: #fff; }
+  .btn-primary:hover { background: var(--blue-700); transform: translateY(-1px); }
+  .btn-outline { background: #fff; color: var(--blue-600); border: 1.5px solid var(--blue-300); }
+  .btn-outline:hover { background: var(--blue-50); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media(max-width: 640px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .hero { padding: 32px 24px; }
+    .top-nav { gap: 6px; }
+  }
+
+  /* ── TYPOGRAPHY DEMOS ── */
+  .typo-demo { padding: 16px; background: var(--slate-50); border-radius: 8px; border: 1px solid var(--slate-200); }
+  .typo-row { display: flex; align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px dashed var(--slate-200); }
+  .typo-row:last-child { border-bottom: none; }
+  .typo-label { font-size: 11px; font-weight: 700; color: var(--slate-400); width: 90px; flex-shrink: 0; text-transform: uppercase; letter-spacing: .06em; }
+  .typo-class { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--blue-600); background: var(--blue-50); padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
+
+  /* ── MANUAL LAYOUT DEMO ── */
+  .manual-demo { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; }
+  .ml-main { display: flex; gap: 0; margin-bottom: 6px; }
+  .ml-left { background: #fee2e2; border: 2px solid #fca5a5; padding: 12px; width: 60%; }
+  .ml-right { background: #fef3c7; border: 2px solid #fde68a; padding: 12px; width: 40%; border-left: none; }
+  .ml-footer { background: #f3e8ff; border: 2px solid #d8b4fe; padding: 12px; font-size: 11px; color: #6b21a8; }
+  .ml-note { font-size: 11px; color: var(--slate-500); margin-top: 6px; font-style: italic; }
+
+  /* ── CHALLENGE BOX ── */
+  .challenge-box {
+    background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+    border: 2px solid var(--blue-200); border-radius: 16px; padding: 28px;
+  }
+  .challenge-box h3 { font-size: 18px; font-weight: 800; color: var(--blue-800); margin-bottom: 6px; }
+  .challenge-task { background: #fff; border: 1px solid var(--slate-200); border-radius: 10px; padding: 16px; margin: 14px 0; }
+  .challenge-task ul { padding-left: 20px; }
+  .challenge-task li { font-size: 14px; margin-bottom: 4px; }
+
+  /* ── SUMMARY ── */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .summary-card {
+    background: #fff; border: 1px solid var(--slate-200); border-radius: 12px;
+    padding: 20px; text-align: center;
+    border-top: 4px solid var(--blue-400);
+    transition: transform .2s;
+  }
+  .summary-card:hover { transform: translateY(-3px); }
+  .summary-icon { font-size: 32px; margin-bottom: 10px; }
+  .summary-card h4 { font-weight: 800; color: var(--slate-800); margin-bottom: 6px; font-size: 14px; }
+  .summary-card p { font-size: 12.5px; color: var(--slate-500); line-height: 1.6; }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    height: 4px; background: var(--slate-200); border-radius: 2px;
+    position: fixed; top: 0; left: 0; z-index: 999;
+    width: 0%; background: var(--blue-500);
+    transition: width .1s;
+  }
+
+  /* ── SEPARATOR ── */
+  .sep { border: none; border-top: 1px solid var(--slate-200); margin: 32px 0; }
+
+  /* ── TOGGLE CODE ── */
+  .code-toggle { display: none; }
+  .code-toggle.visible { display: block; }
+
+  /* ── NESTED GRID DEMO ── */
+  .nest-outer { background: var(--blue-100); border: 2px solid var(--blue-300); border-radius: 8px; padding: 12px; }
+  .nest-inner { display: flex; gap: 8px; margin-top: 8px; }
+  .nest-cell { flex: 1; background: #fff; border: 2px solid var(--blue-400); border-radius: 6px; padding: 10px; text-align: center; font-size: 12px; font-weight: 700; color: var(--blue-700); }
+
+  /* ── ORDER DEMO ── */
+  .order-demo { display: flex; gap: 8px; margin: 10px 0; }
+  .order-cell { flex: 1; padding: 12px; border-radius: 6px; text-align: center; font-weight: 700; font-size: 13px; }
+  .order-a { background: var(--blue-200); color: var(--blue-800); }
+  .order-b { background: var(--col-e); color: var(--purple-600); }
+
+  /* small util */
+  .mt-8 { margin-top: 8px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-8 { margin-bottom: 8px; }
+  .gap-2cols { display: flex; gap: 14px; }
+  .gap-2cols > * { flex: 1; }
+
+  .footer-note {
+    text-align: center; color: var(--slate-400); font-size: 12px;
+    padding: 24px 0; border-top: 1px solid var(--slate-200); margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <span class="nav-logo">Web Design II</span>
+  <a href="#recall" class="nav-link">Recall</a>
+  <a href="#grid-intro" class="nav-link">Grid</a>
+  <a href="#grid-rules" class="nav-link">Aturan Grid</a>
+  <a href="#grid-examples" class="nav-link">Contoh Grid</a>
+  <a href="#offset" class="nav-link">Offset</a>
+  <a href="#nesting" class="nav-link">Nesting</a>
+  <a href="#ordering" class="nav-link">Order</a>
+  <a href="#typo" class="nav-link">Tipografi</a>
+  <a href="#challenge" class="nav-link">Challenge</a>
+  <a href="#summary" class="nav-link">Kesimpulan</a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 1 — HERO / JUDUL
+  ══════════════════════════════════════════ -->
+  <div class="hero">
+    <span class="hero-badge">Pertemuan 5 · Web Design II</span>
+    <h1>Grid dan Tipografi<br>Bootstrap 4</h1>
+    <p>Pelajari cara mengatur layout halaman secara efisien dan tampilan teks yang profesional menggunakan sistem bawaan Bootstrap 4.</p>
+    <div class="hero-goals">
+      <span class="goal-pill">Memahami sistem Grid 12 kolom</span>
+      <span class="goal-pill">Membuat layout multi-kolom</span>
+      <span class="goal-pill">Menerapkan kelas tipografi Bootstrap</span>
+      <span class="goal-pill">Offset, Nesting & Order kolom</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 2 — RECALL
+  ══════════════════════════════════════════ -->
+  <div class="section" id="recall">
+    <p class="section-label">Section 2</p>
+    <h2 class="section-title">📋 Recall — Pertemuan Sebelumnya</h2>
+    <p class="section-desc">Sebelum lanjut, pastikan kamu ingat dasar-dasar Bootstrap dari pertemuan lalu.</p>
+    <div class="recall-grid">
+      <div class="recall-item">
+        <h4>🔷 Apa itu Bootstrap?</h4>
+        <p>Framework CSS open-source dari Twitter. Menyediakan komponen siap pakai untuk membangun tampilan web yang konsisten.</p>
+      </div>
+      <div class="recall-item">
+        <h4>📱 Mobile-First</h4>
+        <p>Bootstrap dirancang untuk tampilan mobile terlebih dahulu, lalu menyesuaikan ke layar lebih besar (responsive).</p>
+      </div>
+      <div class="recall-item">
+        <h4>🔗 Cara Menggunakan</h4>
+        <p>Tambahkan link CDN Bootstrap di dalam tag <code style="background:var(--blue-100);padding:1px 5px;border-radius:4px;font-size:12px;">&lt;head&gt;</code>, lalu gunakan class Bootstrap di elemen HTML.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 3 — MASALAH LAYOUT MANUAL
+  ══════════════════════════════════════════ -->
+  <div class="section" id="masalah">
+    <p class="section-label">Section 3</p>
+    <h2 class="section-title">⚠️ Masalah Layout Manual</h2>
+    <p class="section-desc">Layout dengan CSS manual sering kali tidak konsisten dan butuh banyak kode.</p>
+
+    <div class="card">
+      <div class="card-title"><span class="card-icon">🖥️</span> Contoh Layout Manual (CSS Biasa)</div>
+      <div class="manual-demo">
+        <div class="ml-main">
+          <div class="ml-left">
+            <strong>Konten Utama</strong><br>
+            <span style="font-size:11px;color:#991b1b;">width: 60%;<br>float: left;<br>padding: 10px;</span>
+          </div>
+          <div class="ml-right">
+            <strong>Sidebar</strong><br>
+            <span style="font-size:11px;color:#92400e;">width: 40%;<br>float: right;<br>padding: 10px;</span>
+          </div>
+        </div>
+        <div class="ml-footer">
+          Footer — <span style="font-size:11px;">clear: both; padding: 12px;</span>
+        </div>
+        <p class="ml-note">⚠️ Harus tulis CSS manual, hitung width sendiri, atur float, clear... ribet!</p>
+      </div>
+    </div>
+
+    <div class="box-question">Bagaimana jika kita ingin membagi halaman menjadi 2 atau 3 bagian dengan <em>cepat</em> dan <em>rapi</em>?</div>
+
+    <div class="box-error">
+      <strong>⚠️ Masalah Umum Layout Manual</strong>
+      <ul>
+        <li>Harus menghitung lebar kolom secara manual (%, px)</li>
+        <li>Float dan clearfix yang rumit dan rawan bug</li>
+        <li>Tidak konsisten di berbagai browser</li>
+        <li>Banyak kode CSS hanya untuk mengatur posisi</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 4 — PENGENALAN GRID
+  ══════════════════════════════════════════ -->
+  <div class="section" id="grid-intro">
+    <p class="section-label">Section 4</p>
+    <h2 class="section-title">🧩 Pengenalan Grid Bootstrap</h2>
+    <p class="section-desc">Grid adalah sistem pembagian layout yang membagi halaman menjadi 12 kolom secara otomatis.</p>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="card-icon">🔢</span> Kenapa 12 Kolom?</div>
+        <p style="font-size:13px;color:var(--slate-600);">Angka 12 mudah dibagi: 1, 2, 3, 4, 6, dan 12 — sehingga fleksibel untuk membuat berbagai kombinasi layout.</p>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+          <span class="badge badge-blue">÷ 2 = 6+6</span>
+          <span class="badge badge-green">÷ 3 = 4+4+4</span>
+          <span class="badge badge-amber">÷ 4 = 3+3+3+3</span>
+          <span class="badge badge-purple">÷ 6 = 2×6</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-icon">📐</span> Konsep Utama</div>
+        <p style="font-size:13px;color:var(--slate-600);">Tiga kelas kunci membentuk sistem grid Bootstrap:</p>
+        <div style="margin-top:10px;">
+          <div style="padding:6px 10px;border-radius:6px;background:var(--blue-600);color:#fff;font-weight:700;font-size:13px;margin-bottom:5px;">container</div>
+          <div style="padding:6px 10px;border-radius:6px;background:var(--green-600);color:#fff;font-weight:700;font-size:13px;margin-bottom:5px;margin-left:16px;">└ row</div>
+          <div style="padding:6px 10px;border-radius:6px;background:var(--col-c);color:#fff;font-weight:700;font-size:13px;margin-left:32px;">└ col-*</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 kotak visual -->
+    <div class="card mt-16">
+      <div class="card-title">📊 Visualisasi 12 Kolom</div>
+      <p style="font-size:13px;color:var(--slate-500);margin-bottom:12px;">Total 12 unit kolom dalam satu baris penuh.</p>
+
+      <p style="font-size:12px;font-weight:700;color:var(--slate-500);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;">12 kolom penuh</p>
+      <div class="grid-visual">
+        <div class="grid-col c1 w-1">1</div>
+        <div class="grid-col c1 w-1">1</div>
+        <div class="grid-col c1 w-1">1</div>
+        <div class="grid-col c1 w-1">1</div>
+        <div class="grid-col c1 w-1">1</div>
+        <div class="grid-col c1 w-1">1</div>
+        <div class="grid-col c2 w-1">1</div>
+        <div class="grid-col c2 w-1">1</div>
+        <div class="grid-col c2 w-1">1</div>
+        <div class="grid-col c2 w-1">1</div>
+        <div class="grid-col c2 w-1">1</div>
+        <div class="grid-col c2 w-1">1</div>
+      </div>
+
+      <p style="font-size:12px;font-weight:700;color:var(--slate-500);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.06em;">col-6 + col-6 (dua bagian sama rata)</p>
+      <div class="grid-visual">
+        <div class="grid-col c3 w-6" style="font-size:13px;">col-6</div>
+        <div class="grid-col c4 w-6" style="font-size:13px;">col-6</div>
+      </div>
+
+      <p style="font-size:12px;font-weight:700;color:var(--slate-500);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.06em;">col-4 + col-4 + col-4 (tiga bagian sama rata)</p>
+      <div class="grid-visual">
+        <div class="grid-col c3 w-4" style="font-size:13px;">col-4</div>
+        <div class="grid-col c4 w-4" style="font-size:13px;">col-4</div>
+        <div class="grid-col c5 w-4" style="font-size:13px;">col-4</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 5 — ATURAN DASAR GRID
+  ══════════════════════════════════════════ -->
+  <div class="section" id="grid-rules">
+    <p class="section-label">Section 5</p>
+    <h2 class="section-title">📏 Aturan Dasar Grid</h2>
+    <p class="section-desc">Pahami tiga elemen utama yang wajib ada dalam setiap penggunaan Grid Bootstrap.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="diagram">
+          <div class="d-container">container</div>
+          <div class="d-row">└── row</div>
+          <div class="d-col">├── col-*</div>
+          <div class="d-col">├── col-*</div>
+          <div class="d-col">└── col-*</div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="card card-sm" style="border-left:4px solid var(--blue-600);">
+            <div class="card-title" style="font-size:13px;">📦 <code>.container</code></div>
+            <p style="font-size:12.5px;color:var(--slate-600);">Membungkus seluruh grid. Memberikan margin kiri-kanan otomatis dan membatasi lebar konten.</p>
+          </div>
+          <div class="card card-sm" style="border-left:4px solid var(--green-600);">
+            <div class="card-title" style="font-size:13px;">📐 <code>.row</code></div>
+            <p style="font-size:12.5px;color:var(--slate-600);">Satu baris horizontal. Berisi kumpulan kolom. Gunakan satu <code>.row</code> untuk satu baris.</p>
+          </div>
+          <div class="card card-sm" style="border-left:4px solid var(--col-c);">
+            <div class="card-title" style="font-size:13px;">📊 <code>.col-*</code></div>
+            <p style="font-size:12.5px;color:var(--slate-600);">Kolom berisi konten. Angka * diisi 1–12 sesuai lebar yang diinginkan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box-penting">
+      <strong>⭐ Penting</strong>
+      Jumlah angka kolom dalam satu <code>.row</code> harus berjumlah <strong>tepat 12</strong> (atau kurang dari 12 jika tidak ingin memenuhi baris).
+    </div>
+
+    <div class="box-error">
+      <strong>⚠️ Kesalahan Umum Mahasiswa</strong>
+      <ul>
+        <li>Meletakkan <code>.col</code> langsung di dalam <code>.container</code> tanpa <code>.row</code></li>
+        <li>Lupa menambahkan <code>.row</code> sehingga kolom tidak sejajar</li>
+        <li>Menjumlahkan kolom melebihi 12 dalam satu baris (misal: col-7 + col-7)</li>
+        <li>Menggunakan <code>.container</code> di dalam <code>.container</code> tanpa alasan</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 6 — CONTOH PENGGUNAAN GRID
+  ══════════════════════════════════════════ -->
+  <div class="section" id="grid-examples">
+    <p class="section-label">Section 6</p>
+    <h2 class="section-title">🎨 Contoh Penggunaan Grid</h2>
+    <p class="section-desc">Tiga pola layout paling umum yang akan sering kamu gunakan.</p>
+
+    <!-- Contoh 1: 2 Kolom -->
+    <div class="accordion open" id="acc-2col">
+      <div class="accordion-header" onclick="toggleAcc('acc-2col')">
+        <span>🔷 Layout 2 Kolom (col-6 + col-6)</span>
+        <div class="accordion-arrow">▼</div>
+      </div>
+      <div class="accordion-body">
+        <div class="two-col mt-12">
+          <div>
+            <div class="preview-box">
+              <div class="preview-label"></div>
+              <div style="display:flex;gap:6px;">
+                <div class="grid-col c3 w-6" style="flex:1;padding:18px 8px;font-size:14px;">Kolom Kiri<br><small style="font-size:11px;font-weight:400;color:rgba(255,255,255,.8);">col-6</small></div>
+                <div class="grid-col c4 w-6" style="flex:1;padding:18px 8px;font-size:14px;">Kolom Kanan<br><small style="font-size:11px;font-weight:400;color:rgba(255,255,255,.8);">col-6</small></div>
+              </div>
+            </div>
+            <p style="font-size:12.5px;color:var(--slate-500);margin-top:8px;">✅ Cocok untuk: artikel + sidebar, form + info, produk berdampingan</p>
+          </div>
+          <div>
+            <div class="code-block"><span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"row"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-6"</span><span class="kw">&gt;</span>
+    Kolom Kiri
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-6"</span><span class="kw">&gt;</span>
+    Kolom Kanan
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contoh 2: 3 Kolom -->
+    <div class="accordion" id="acc-3col">
+      <div class="accordion-header" onclick="toggleAcc('acc-3col')">
+        <span>🔶 Layout 3 Kolom (col-4 + col-4 + col-4)</span>
+        <div class="accordion-arrow">▼</div>
+      </div>
+      <div class="accordion-body">
+        <div class="two-col mt-12">
+          <div>
+            <div class="preview-box">
+              <div class="preview-label"></div>
+              <div style="display:flex;gap:6px;">
+                <div class="grid-col c3" style="flex:1;padding:18px 6px;font-size:13px;">Kolom 1<br><small style="font-size:10px;font-weight:400;color:rgba(255,255,255,.8);">col-4</small></div>
+                <div class="grid-col c4" style="flex:1;padding:18px 6px;font-size:13px;">Kolom 2<br><small style="font-size:10px;font-weight:400;color:rgba(255,255,255,.8);">col-4</small></div>
+                <div class="grid-col c5" style="flex:1;padding:18px 6px;font-size:13px;">Kolom 3<br><small style="font-size:10px;font-weight:400;color:rgba(255,255,255,.8);">col-4</small></div>
+              </div>
+            </div>
+            <p style="font-size:12.5px;color:var(--slate-500);margin-top:8px;">✅ Cocok untuk: kartu produk, fitur website, portofolio 3 kolom</p>
+          </div>
+          <div>
+            <div class="code-block"><span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"row"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-4"</span><span class="kw">&gt;</span>Kol 1<span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-4"</span><span class="kw">&gt;</span>Kol 2<span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-4"</span><span class="kw">&gt;</span>Kol 3<span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contoh 3: Besar + Kecil -->
+    <div class="accordion" id="acc-besar">
+      <div class="accordion-header" onclick="toggleAcc('acc-besar')">
+        <span>🟣 Layout Tidak Simetris (col-8 + col-4)</span>
+        <div class="accordion-arrow">▼</div>
+      </div>
+      <div class="accordion-body">
+        <div class="two-col mt-12">
+          <div>
+            <div class="preview-box">
+              <div class="preview-label"></div>
+              <div style="display:flex;gap:6px;">
+                <div class="grid-col c3" style="flex:2;padding:18px 10px;font-size:13px;">Konten Utama<br><small style="font-size:10px;font-weight:400;color:rgba(255,255,255,.8);">col-8</small></div>
+                <div class="grid-col c5" style="flex:1;padding:18px 6px;font-size:13px;">Sidebar<br><small style="font-size:10px;font-weight:400;color:rgba(255,255,255,.8);">col-4</small></div>
+              </div>
+            </div>
+            <p style="font-size:12.5px;color:var(--slate-500);margin-top:8px;">✅ Cocok untuk: blog, artikel panjang + sidebar info</p>
+          </div>
+          <div>
+            <div class="code-block"><span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"row"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-8"</span><span class="kw">&gt;</span>
+    Konten Utama
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-4"</span><span class="kw">&gt;</span>
+    Sidebar
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 7 — OFFSET
+  ══════════════════════════════════════════ -->
+  <div class="section" id="offset">
+    <p class="section-label">Section 7</p>
+    <h2 class="section-title">↔️ Offset Column</h2>
+    <p class="section-desc">Memberi jarak kosong di sebelah kiri kolom untuk menggeser posisinya.</p>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="card-icon">📖</span> Apa itu Offset?</div>
+        <p style="font-size:13px;color:var(--slate-600);">Offset menambahkan ruang kosong di sebelah kiri kolom. Gunakan <code style="background:var(--blue-100);padding:1px 6px;border-radius:4px;">.offset-*</code> untuk menggeser kolom ke kanan.</p>
+        <div class="box-info mt-12" style="font-size:13px;">
+          <strong>Format:</strong> <code>offset-{jumlah}</code><br>
+          Contoh: <code>col-4 offset-4</code> artinya kolom selebar 4 unit, dimulai dari tengah.
+        </div>
+      </div>
+      <div>
+        <div class="preview-box">
+          <div class="preview-label"></div>
+          <div class="grid-visual" style="margin-bottom:8px;">
+            <div class="grid-col offset-col w-4" style="padding:14px 6px;font-size:11px;">offset-4<br>(kosong)</div>
+            <div class="grid-col c3 w-4" style="padding:14px 6px;font-size:12px;">col-4</div>
+            <div class="grid-col offset-col w-4" style="padding:14px 6px;font-size:11px;">sisa 4</div>
+          </div>
+          <div class="grid-visual">
+            <div class="grid-col offset-col w-2" style="padding:14px 4px;font-size:10px;">offset-2</div>
+            <div class="grid-col c4 w-8" style="padding:14px 6px;font-size:12px;">col-8</div>
+            <div class="grid-col offset-col w-2" style="padding:14px 4px;font-size:10px;">sisa 2</div>
+          </div>
+        </div>
+        <div class="code-block mt-12"><span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-4 offset-4"</span><span class="kw">&gt;</span>
+  Tengah
+<span class="kw">&lt;/div&gt;</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 8 — NESTING
+  ══════════════════════════════════════════ -->
+  <div class="section" id="nesting">
+    <p class="section-label">Section 8</p>
+    <h2 class="section-title">🪆 Nesting Column</h2>
+    <p class="section-desc">Kolom di dalam kolom — membuat layout yang lebih kompleks dengan cara yang tetap terstruktur.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="card-title"><span class="card-icon">📦</span> Bagaimana Cara Kerjanya?</div>
+          <p style="font-size:13px;color:var(--slate-600);">Di dalam sebuah kolom, kamu bisa menambahkan <code>.row</code> baru dan kolom lagi di dalamnya. Angka kolom dihitung ulang dari 12 di dalam parent column.</p>
+        </div>
+        <div class="code-block mt-12"><span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"row"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-8"</span><span class="kw">&gt;</span>
+    <span class="cm">&lt;!-- Nested row di dalam col-8 --&gt;</span>
+    <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"row"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-6"</span><span class="kw">&gt;</span>A<span class="kw">&lt;/div&gt;</span>
+      <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-6"</span><span class="kw">&gt;</span>B<span class="kw">&lt;/div&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-4"</span><span class="kw">&gt;</span>Sidebar<span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+      </div>
+      <div>
+        <div class="preview-box">
+          <div class="preview-label"></div>
+          <div style="display:flex;gap:8px;">
+            <div class="nest-outer" style="flex:2;">
+              <div style="font-size:11px;font-weight:700;color:var(--blue-800);margin-bottom:6px;">col-8 (parent)</div>
+              <div class="nest-inner">
+                <div class="nest-cell">col-6<br><span style="font-size:10px;font-weight:400;color:var(--slate-500);">di dalam col-8</span></div>
+                <div class="nest-cell">col-6<br><span style="font-size:10px;font-weight:400;color:var(--slate-500);">di dalam col-8</span></div>
+              </div>
+            </div>
+            <div class="grid-col c5" style="flex:1;padding:18px 6px;font-size:12px;">col-4<br><small style="font-size:10px;font-weight:400;">Sidebar</small></div>
+          </div>
+        </div>
+        <div class="box-penting mt-12">
+          <strong>⭐ Ingat</strong>
+          Di dalam kolom yang bersarang (nested), sistem 12 kolom <strong>dimulai ulang</strong> dari awal.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 9 — ORDERING
+  ══════════════════════════════════════════ -->
+  <div class="section" id="ordering">
+    <p class="section-label">Section 9</p>
+    <h2 class="section-title">🔀 Mengurutkan Kolom (Order)</h2>
+    <p class="section-desc">Urutan tampilan kolom bisa diubah tanpa mengubah urutan HTML-nya.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="card-title"><span class="card-icon">🔧</span> Kelas Order</div>
+          <p style="font-size:13px;color:var(--slate-600);margin-bottom:10px;">Gunakan <code style="background:var(--blue-100);padding:1px 6px;border-radius:4px;">.order-*</code> untuk mengubah urutan visual kolom.</p>
+          <p style="font-size:12.5px;font-weight:700;color:var(--slate-600);margin-bottom:6px;">HTML (urutan asli):</p>
+          <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <div class="order-cell order-a" style="flex:1;">A (HTML pertama)</div>
+            <div class="order-cell order-b" style="flex:1;">B (HTML kedua)</div>
+          </div>
+          <p style="font-size:12.5px;font-weight:700;color:var(--slate-600);margin-bottom:6px;">Tampilan dengan order-2 dan order-1:</p>
+          <div style="display:flex;gap:8px;">
+            <div class="order-cell order-b" style="flex:1;order:1;">B tampil duluan</div>
+            <div class="order-cell order-a" style="flex:1;order:2;">A tampil belakangan</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="code-block"><span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"row"</span><span class="kw">&gt;</span>
+  <span class="cm">&lt;!-- A di HTML tapi tampil ke-2 --&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-6 order-2"</span><span class="kw">&gt;</span>
+    Kolom A
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="cm">&lt;!-- B di HTML tapi tampil ke-1 --&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-6 order-1"</span><span class="kw">&gt;</span>
+    Kolom B
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+        <div class="box-info mt-12" style="font-size:13px;">
+          <strong>Kapan dipakai?</strong> Berguna saat desain mobile perlu urutan berbeda dari desain desktop.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 10 — MASALAH TEKS BIASA
+  ══════════════════════════════════════════ -->
+  <div class="section" id="masalah-teks">
+    <p class="section-label">Section 10</p>
+    <h2 class="section-title">📄 Masalah Teks HTML Biasa</h2>
+    <p class="section-desc">Teks default HTML tanpa styling sering terlihat polos dan kurang profesional.</p>
+
+    <div class="card">
+      <div class="card-title"><span class="card-icon">😐</span> Contoh Teks HTML Tanpa Styling</div>
+      <div style="border: 1.5px solid var(--slate-200); border-radius:8px; padding: 16px; background: var(--slate-50); font-family: serif;">
+        <h1 style="font-size:2em;font-family:serif;">Judul Halaman</h1>
+        <h2 style="font-size:1.5em;font-family:serif;">Sub Judul</h2>
+        <p style="font-family:serif;">Ini adalah paragraf biasa. Lorem ipsum dolor sit amet consectetur adipiscing elit. Teks ini tidak memiliki styling khusus, terlihat datar dan tidak menarik.</p>
+        <p style="font-family:serif;"><b>Teks tebal</b> dan <i>teks miring</i> serta <small>teks kecil</small>.</p>
+      </div>
+      <p style="font-size:12.5px;color:var(--red-600);margin-top:10px;">⚠️ Terlihat polos, ukuran heading tidak konsisten, tidak ada kontrol visual yang memadai.</p>
+    </div>
+
+    <div class="box-question">Bagaimana membuat teks lebih rapi, konsisten, dan enak dibaca tanpa menulis CSS sendiri?</div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 11 — PENGENALAN TIPOGRAFI
+  ══════════════════════════════════════════ -->
+  <div class="section" id="typo">
+    <p class="section-label">Section 11</p>
+    <h2 class="section-title">🖋️ Pengenalan Tipografi Bootstrap</h2>
+    <p class="section-desc">Bootstrap menyediakan kelas-kelas siap pakai untuk mengatur tampilan teks secara konsisten dan profesional.</p>
+
+    <div class="three-col">
+      <div class="recall-item">
+        <h4>📝 Heading</h4>
+        <p>h1 s/d h6 dengan ukuran dan bobot yang konsisten. Bisa juga gunakan <code>.h1</code> dst.</p>
+      </div>
+      <div class="recall-item">
+        <h4>📄 Body Copy</h4>
+        <p>Teks paragraf biasa dengan line-height dan font-size yang nyaman dibaca.</p>
+      </div>
+      <div class="recall-item">
+        <h4>🔷 Lead Body Copy</h4>
+        <p>Paragraf pembuka yang lebih besar. Gunakan class <code>.lead</code></p>
+      </div>
+      <div class="recall-item">
+        <h4>✏️ Text Formatting</h4>
+        <p>bold, italic, muted, small, mark, del, ins, abbr</p>
+      </div>
+      <div class="recall-item">
+        <h4>↔️ Alignment</h4>
+        <p>Rata kiri, tengah, kanan, justify dengan class text-left, text-center, text-right</p>
+      </div>
+      <div class="recall-item">
+        <h4>🔤 Transform</h4>
+        <p>Ubah huruf jadi uppercase, lowercase, atau capitalize dengan satu class</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 12 — VISUAL TIPOGRAFI
+  ══════════════════════════════════════════ -->
+  <div class="section" id="typo-demo">
+    <p class="section-label">Section 12</p>
+    <h2 class="section-title">👁️ Visual Contoh Tipografi</h2>
+    <p class="section-desc">Klik tab di bawah untuk melihat contoh masing-masing kelas tipografi Bootstrap.</p>
+
+    <div class="example-tabs" id="typoTabs">
+      <button class="ex-tab active" onclick="showTypo('heading')">Heading</button>
+      <button class="ex-tab" onclick="showTypo('body')">Body Copy</button>
+      <button class="ex-tab" onclick="showTypo('lead')">Lead</button>
+      <button class="ex-tab" onclick="showTypo('format')">Formatting</button>
+      <button class="ex-tab" onclick="showTypo('align')">Alignment</button>
+      <button class="ex-tab" onclick="showTypo('transform')">Transform</button>
+    </div>
+
+    <!-- Heading -->
+    <div id="typo-heading" class="card">
+      <div class="card-title"><span class="card-icon">📌</span> Heading — h1 sampai h6</div>
+      <div class="typo-demo">
+        <div class="typo-row">
+          <span class="typo-label">h1</span>
+          <h1 style="font-size:2rem;font-weight:700;margin:0;line-height:1.2;">Heading Level 1</h1>
+          <span class="typo-class">h1 / .h1</span>
+        </div>
+        <div class="typo-row">
+          <span class="typo-label">h2</span>
+          <h2 style="font-size:1.6rem;font-weight:700;margin:0;line-height:1.2;">Heading Level 2</h2>
+          <span class="typo-class">h2 / .h2</span>
+        </div>
+        <div class="typo-row">
+          <span class="typo-label">h3</span>
+          <h3 style="font-size:1.3rem;font-weight:700;margin:0;line-height:1.2;">Heading Level 3</h3>
+          <span class="typo-class">h3 / .h3</span>
+        </div>
+        <div class="typo-row">
+          <span class="typo-label">h4</span>
+          <h4 style="font-size:1.1rem;font-weight:700;margin:0;line-height:1.2;">Heading Level 4</h4>
+          <span class="typo-class">h4 / .h4</span>
+        </div>
+        <div class="typo-row">
+          <span class="typo-label">h5</span>
+          <h5 style="font-size:.95rem;font-weight:700;margin:0;line-height:1.2;">Heading Level 5</h5>
+          <span class="typo-class">h5 / .h5</span>
+        </div>
+        <div class="typo-row">
+          <span class="typo-label">h6</span>
+          <h6 style="font-size:.85rem;font-weight:700;margin:0;line-height:1.2;">Heading Level 6</h6>
+          <span class="typo-class">h6 / .h6</span>
+        </div>
+      </div>
+      <div class="code-block mt-12"><span class="kw">&lt;h1&gt;</span>Heading 1<span class="kw">&lt;/h1&gt;</span>
+<span class="kw">&lt;h2&gt;</span>Heading 2<span class="kw">&lt;/h2&gt;</span>
+<span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"h3"</span><span class="kw">&gt;</span>Gaya h3 di paragraf<span class="kw">&lt;/p&gt;</span></div>
+    </div>
+
+    <!-- Body -->
+    <div id="typo-body" class="card" style="display:none;">
+      <div class="card-title"><span class="card-icon">📝</span> Body Copy — Paragraf Biasa</div>
+      <div class="typo-demo">
+        <div class="typo-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <span class="typo-class">p (default)</span>
+          <p style="margin:0;font-size:15px;color:var(--slate-700);">Ini adalah paragraf biasa menggunakan tag &lt;p&gt;. Bootstrap memberikan margin bawah dan line-height yang nyaman untuk dibaca. Font size default Bootstrap adalah 16px untuk body text.</p>
+        </div>
+      </div>
+      <div class="code-block mt-12"><span class="kw">&lt;p&gt;</span>Ini paragraf biasa dengan styling default Bootstrap.<span class="kw">&lt;/p&gt;</span></div>
+    </div>
+
+    <!-- Lead -->
+    <div id="typo-lead" class="card" style="display:none;">
+      <div class="card-title"><span class="card-icon">🌟</span> Lead Body Copy</div>
+      <div class="typo-demo">
+        <div class="typo-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:4px;">
+            <span class="typo-label" style="width:auto;">Normal</span>
+            <p style="margin:0;font-size:15px;color:var(--slate-600);">Ini adalah paragraf biasa, terlihat normal.</p>
+          </div>
+          <div style="width:100%;border-top:1px dashed var(--slate-200);padding-top:12px;">
+            <span class="typo-class">.lead</span>
+            <p style="margin:8px 0 0;font-size:1.25rem;font-weight:300;color:var(--slate-700);">Ini adalah paragraf lead — lebih besar dan menonjol. Cocok untuk intro atau kalimat pembuka utama.</p>
+          </div>
+        </div>
+      </div>
+      <div class="code-block mt-12"><span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"lead"</span><span class="kw">&gt;</span>
+  Paragraf pembuka yang lebih menonjol.
+<span class="kw">&lt;/p&gt;</span></div>
+    </div>
+
+    <!-- Format -->
+    <div id="typo-format" class="card" style="display:none;">
+      <div class="card-title"><span class="card-icon">✏️</span> Text Formatting</div>
+      <div class="typo-demo">
+        <div class="typo-row"><span class="typo-label">Bold</span><strong style="font-size:15px;">Teks tebal — sangat penting</strong><span class="typo-class">&lt;strong&gt; / &lt;b&gt;</span></div>
+        <div class="typo-row"><span class="typo-label">Italic</span><em style="font-size:15px;">Teks miring — penekanan</em><span class="typo-class">&lt;em&gt; / &lt;i&gt;</span></div>
+        <div class="typo-row"><span class="typo-label">Muted</span><span style="font-size:15px;color:#6c757d;">Teks abu-abu / tidak aktif</span><span class="typo-class">.text-muted</span></div>
+        <div class="typo-row"><span class="typo-label">Small</span><small style="font-size:13px;">Teks lebih kecil 85%</small><span class="typo-class">&lt;small&gt; / .small</span></div>
+        <div class="typo-row"><span class="typo-label">Mark</span><mark style="background:#fff3cd;padding:2px 4px;">Teks disorot kuning</mark><span class="typo-class">&lt;mark&gt;</span></div>
+        <div class="typo-row"><span class="typo-label">Del</span><del style="font-size:15px;">Teks dicoret</del><span class="typo-class">&lt;del&gt; / &lt;s&gt;</span></div>
+      </div>
+    </div>
+
+    <!-- Align -->
+    <div id="typo-align" class="card" style="display:none;">
+      <div class="card-title"><span class="card-icon">↔️</span> Text Alignment</div>
+      <div class="typo-demo">
+        <div class="typo-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+          <div style="width:100%;">
+            <span class="typo-class" style="margin-bottom:6px;display:inline-block;">.text-left</span>
+            <div style="padding:10px;background:#fff;border:1px solid var(--slate-200);border-radius:6px;text-align:left;font-size:14px;">Teks rata kiri — ini adalah default yang paling umum digunakan.</div>
+          </div>
+          <div style="width:100%;">
+            <span class="typo-class" style="margin-bottom:6px;display:inline-block;">.text-center</span>
+            <div style="padding:10px;background:#fff;border:1px solid var(--slate-200);border-radius:6px;text-align:center;font-size:14px;">Teks rata tengah — cocok untuk judul, caption, atau tombol CTA.</div>
+          </div>
+          <div style="width:100%;">
+            <span class="typo-class" style="margin-bottom:6px;display:inline-block;">.text-right</span>
+            <div style="padding:10px;background:#fff;border:1px solid var(--slate-200);border-radius:6px;text-align:right;font-size:14px;">Teks rata kanan — cocok untuk harga, tanggal, atau label.</div>
+          </div>
+        </div>
+      </div>
+      <div class="code-block mt-12"><span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"text-left"</span><span class="kw">&gt;</span>Rata kiri<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"text-center"</span><span class="kw">&gt;</span>Rata tengah<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"text-right"</span><span class="kw">&gt;</span>Rata kanan<span class="kw">&lt;/p&gt;</span></div>
+    </div>
+
+    <!-- Transform -->
+    <div id="typo-transform" class="card" style="display:none;">
+      <div class="card-title"><span class="card-icon">🔤</span> Text Transform</div>
+      <div class="typo-demo">
+        <div class="typo-row"><span class="typo-label">Uppercase</span><span style="font-size:15px;text-transform:uppercase;font-weight:600;letter-spacing:.05em;">semua huruf besar</span><span class="typo-class">.text-uppercase</span></div>
+        <div class="typo-row"><span class="typo-label">Lowercase</span><span style="font-size:15px;text-transform:lowercase;">SEMUA HURUF KECIL</span><span class="typo-class">.text-lowercase</span></div>
+        <div class="typo-row"><span class="typo-label">Capitalize</span><span style="font-size:15px;text-transform:capitalize;">huruf pertama tiap kata kapital</span><span class="typo-class">.text-capitalize</span></div>
+      </div>
+      <div class="code-block mt-12"><span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"text-uppercase"</span><span class="kw">&gt;</span>teks ini jadi kapital semua<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"text-lowercase"</span><span class="kw">&gt;</span>TEKS INI JADI KECIL SEMUA<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"text-capitalize"</span><span class="kw">&gt;</span>kapital tiap awal kata<span class="kw">&lt;/p&gt;</span></div>
+    </div>
+
+    <div class="box-error mt-16">
+      <strong>⚠️ Kesalahan Umum Tipografi</strong>
+      <ul>
+        <li>Menggunakan inline style untuk mengatur alignment padahal Bootstrap sudah punya class-nya</li>
+        <li>Memakai <code>&lt;b&gt;</code> untuk semua bold, padahal <code>&lt;strong&gt;</code> lebih semantik</li>
+        <li>Lupa bahwa <code>.text-muted</code> sudah mencakup warna abu-abu — tidak perlu tambah CSS manual</li>
+        <li>Menggunakan spasi non-breaking (&amp;nbsp;) untuk mengatur jarak teks</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 13 — MINI CHALLENGE
+  ══════════════════════════════════════════ -->
+  <div class="section" id="challenge">
+    <p class="section-label">Section 13</p>
+    <h2 class="section-title">🏆 Mini Challenge</h2>
+    <p class="section-desc">Saatnya praktik! Buat layout sederhana menggunakan Grid dan Tipografi Bootstrap.</p>
+
+    <div class="challenge-box">
+      <h3>🎯 Tugas Kelas</h3>
+      <p style="font-size:14px;color:var(--slate-600);">Buat <strong>1 section informasi sederhana</strong> menggunakan Bootstrap 4 yang berisi:</p>
+
+      <div class="challenge-task">
+        <ul>
+          <li>📌 <strong>Judul utama</strong> section menggunakan tag heading</li>
+          <li>📝 <strong>Deskripsi singkat</strong> menggunakan paragraf</li>
+          <li>📊 <strong>3 kolom konten</strong> — masing-masing berisi judul kecil dan teks pendek</li>
+        </ul>
+      </div>
+
+      <div class="card card-blue" style="margin-top:14px;">
+        <div class="card-title" style="font-size:13px;">📦 Komponen Bootstrap yang Boleh Dipakai</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
+          <span class="badge badge-blue">.container</span>
+          <span class="badge badge-green">.row</span>
+          <span class="badge badge-green">.col-4</span>
+          <span class="badge badge-amber">h2, h3, h4</span>
+          <span class="badge badge-amber">&lt;p&gt;</span>
+          <span class="badge badge-purple">.text-center</span>
+          <span class="badge badge-purple">.lead</span>
+          <span class="badge badge-blue">.text-muted</span>
+        </div>
+      </div>
+
+      <div class="code-block mt-16" style="font-size:12px;"><span class="cm">&lt;!-- Struktur dasar yang harus dibuat --&gt;</span>
+<span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"container"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;h2</span> <span class="cl">class</span>=<span class="st">"text-center"</span><span class="kw">&gt;</span>Judul Section<span class="kw">&lt;/h2&gt;</span>
+  <span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"lead text-center"</span><span class="kw">&gt;</span>Deskripsi singkat...<span class="kw">&lt;/p&gt;</span>
+  <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"row"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> <span class="cl">class</span>=<span class="st">"col-4"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;h4&gt;</span>Kolom 1<span class="kw">&lt;/h4&gt;</span>
+      <span class="kw">&lt;p</span> <span class="cl">class</span>=<span class="st">"text-muted"</span><span class="kw">&gt;</span>Konten...<span class="kw">&lt;/p&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+    <span class="cm">&lt;!-- Tambahkan 2 kolom lagi --&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></div>
+
+      <div class="box-penting mt-16">
+        <strong>⏱️ Waktu</strong>
+        Kerjakan dalam <strong>15 menit</strong>. Coba dulu sendiri sebelum melihat contoh!
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════
+       SECTION 14 — KESIMPULAN
+  ══════════════════════════════════════════ -->
+  <div class="section" id="summary">
+    <p class="section-label">Section 14</p>
+    <h2 class="section-title">🎯 Kesimpulan</h2>
+    <p class="section-desc">Rangkuman materi yang telah dipelajari hari ini.</p>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-icon">🧩</div>
+        <h4>Grid = Layout Mudah</h4>
+        <p>Sistem 12 kolom Bootstrap membantu membagi halaman menjadi beberapa bagian secara cepat, konsisten, dan tanpa banyak CSS manual.</p>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">🖋️</div>
+        <h4>Typography = Teks Profesional</h4>
+        <p>Kelas tipografi Bootstrap mengatur heading, paragraf, alignment, dan transformasi teks dengan satu class saja — tidak perlu tulis CSS dari nol.</p>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">⚡</div>
+        <h4>Bootstrap = Lebih Cepat & Rapi</h4>
+        <p>Kombinasi Grid + Typography Bootstrap memungkinkan kamu membangun halaman yang rapi dan responsif jauh lebih cepat dibandingkan CSS manual.</p>
+      </div>
+    </div>
+
+    <div class="card card-blue mt-16">
+      <div class="card-title"><span class="card-icon">📚</span> Yang Sudah Dipelajari Hari Ini</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+        <span class="badge badge-blue">Sistem 12 Kolom Grid</span>
+        <span class="badge badge-blue">container → row → col</span>
+        <span class="badge badge-green">Layout 2 Kolom</span>
+        <span class="badge badge-green">Layout 3 Kolom</span>
+        <span class="badge badge-green">Layout Asimetris</span>
+        <span class="badge badge-amber">Offset Column</span>
+        <span class="badge badge-amber">Nesting Column</span>
+        <span class="badge badge-amber">Order Column</span>
+        <span class="badge badge-purple">Heading h1–h6</span>
+        <span class="badge badge-purple">Lead Paragraph</span>
+        <span class="badge badge-purple">Text Formatting</span>
+        <span class="badge badge-purple">Alignment & Transform</span>
+      </div>
+    </div>
+
+    <div class="card mt-16" style="background:linear-gradient(135deg,var(--blue-700),var(--blue-500));color:#fff;border:none;">
+      <div style="font-size:22px;margin-bottom:8px;">🚀</div>
+      <h3 style="font-size:18px;font-weight:800;margin-bottom:8px;">Pertemuan Berikutnya</h3>
+      <p style="opacity:.9;font-size:14px;">Kita akan melanjutkan ke komponen Bootstrap lainnya — Button, Card, Navbar, dan Form. Pastikan kamu sudah berlatih menggunakan Grid dan Typography dari materi hari ini!</p>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Web Design II · Pertemuan 5 · Grid dan Tipografi Bootstrap 4<br>
+    Materi pembelajaran interaktif untuk kelas
+  </div>
+
+</div><!-- end page-wrap -->
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progressBar').style.width = (scrolled / total * 100) + '%';
+  });
+
+  // Accordion toggle
+  function toggleAcc(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+
+  // Typography tabs
+  const typoSections = ['heading','body','lead','format','align','transform'];
+  function showTypo(name) {
+    typoSections.forEach(s => {
+      document.getElementById('typo-' + s).style.display = s === name ? 'block' : 'none';
+    });
+    document.querySelectorAll('#typoTabs .ex-tab').forEach((btn, i) => {
+      btn.classList.toggle('active', btn.textContent.toLowerCase().trim() === {
+        heading:'heading', body:'body copy', lead:'lead',
+        format:'formatting', align:'alignment', transform:'transform'
+      }[name] || typoSections[i] === name);
+    });
+    // simpler active logic
+    document.querySelectorAll('#typoTabs .ex-tab').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('onclick') === `showTypo('${name}')`) btn.classList.add('active');
+    });
+  }
+</script>
+</body>
+</html>

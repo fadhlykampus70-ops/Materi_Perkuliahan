@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Web Design - Lengkap: Sejarah, Konsep & Praktik</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .navbar h1 { font-size: 1.5rem; }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .nav-menu a:hover { background: rgba(255,255,255,0.2); }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; max-width: 800px; margin: 0 auto; }
+
+        /* CONTAINER */
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+        .section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #667eea;
+            padding-left: 1rem;
+        }
+
+        .subsection-title {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #764ba2;
+            padding-bottom: 0.5rem;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+
+        .timeline-year {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* FOUNDER CARDS */
+        .founder-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .founder-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .founder-card:hover { transform: translateY(-5px); }
+
+        .founder-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            border: 5px solid #e3f2fd;
+        }
+
+        .founder-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .founder-role {
+            color: #764ba2;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        /* INFO BOXES */
+        .explanation-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .explanation-box h4 { color: #1565c0; margin-bottom: 1rem; }
+
+        .info-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .info-box h4 { color: #e65100; margin-bottom: 1rem; }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .success-box h4 { color: #2e7d32; margin-bottom: 1rem; }
+
+        /* CONCEPT CARDS */
+        .concept-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .concept-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .concept-card h3 { color: #667eea; margin-bottom: 1rem; }
+        .concept-card .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        /* DEVICE SIMULATOR */
+        .device-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .device-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .device-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .device-btn.active {
+            background: #764ba2;
+        }
+
+        .device-frame {
+            border: 3px solid #333;
+            border-radius: 20px;
+            margin: 2rem auto;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .device-frame.mobile { max-width: 375px; height: 667px; }
+        .device-frame.tablet { max-width: 768px; height: 600px; }
+        .device-frame.desktop { max-width: 100%; height: 600px; }
+
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .demo-content { padding: 1rem; }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .demo-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* GRID EXAMPLES */
+        .grid-examples { margin-top: 2rem; }
+
+        .grid-example-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .grid-example-item h4 { color: #667eea; margin-bottom: 1rem; }
+
+        .grid-demo-container {
+            border: 2px dashed #667eea;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .grid-responsive {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .grid-item-demo {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* LAYOUT COMPARISON */
+        .layout-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .layout-example {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        .layout-example h3 {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .layout-preview { padding: 1.5rem; }
+
+        /* CODE EXAMPLE */
+        .code-example {
+            background: #263238;
+            color: #aed581;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-example .comment { color: #808080; }
+        .code-example .tag { color: #ff5370; }
+        .code-example .attribute { color: #c792ea; }
+        .code-example .value { color: #c3e88d; }
+
+        /* COMPARISON TABLE */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table tr:hover { background: #f5f5f5; }
+
+        /* BREAKPOINT INDICATOR */
+        .breakpoint-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(102, 126, 234, 0.95);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #263238;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer p { margin: 0.5rem 0; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-menu { width: 100%; margin-top: 1rem; }
+            .navbar h1 { font-size: 1.2rem; }
+            .hero h2 { font-size: 1.8rem; }
+            .section-title { font-size: 1.5rem; }
+            .founder-photo { width: 120px; height: 120px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1rem; }
+            .section { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Breakpoint Indicator -->
+    <div class="breakpoint-indicator" id="breakpointIndicator">Desktop View</div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <h1>📱 Responsive Web Design</h1>
+            <ul class="nav-menu">
+                <li><a href="#sejarah">Sejarah</a></li>
+                <li><a href="#konsep">Konsep</a></li>
+                <li><a href="#perangkat">Perangkat</a></li>
+                <li><a href="#grid">Grid</a></li>
+                <li><a href="#layout">Layout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="hero">
+        <h2>Responsive Web Design</h2>
+        <p>Panduan Lengkap: Sejarah, Tokoh Penting, Konsep & Implementasi</p>
+    </div>
+
+    <div class="container">
+
+        <!-- SEJARAH RWD -->
+        <section id="sejarah" class="section">
+            <h2 class="section-title">📜 Sejarah Responsive Web Design</h2>
+            
+            <div class="explanation-box">
+                <h4>🎯 Apa Itu RWD?</h4>
+                <p style="font-size: 1.05rem; line-height: 1.8;">
+                    <strong>Responsive Web Design (RWD)</strong> adalah pendekatan desain web yang membuat halaman web 
+                    beradaptasi secara otomatis terhadap berbagai ukuran layar dan perangkat. Istilah ini pertama kali 
+                    diperkenalkan oleh <strong>Ethan Marcotte</strong> pada tahun <strong>2010</strong> melalui 
+                    artikelnya yang terkenal di A List Apart.
+                </p>
+            </div>
+
+            <h3 class="subsection-title">⏳ Timeline Perkembangan</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2007</div>
+                    <p><strong>iPhone Diluncurkan</strong> - Apple merilis iPhone pertama, mengubah cara orang mengakses internet. Ini menjadi titik awal kebutuhan akan web yang mobile-friendly.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2010</div>
+                    <p><strong>Istilah "Responsive Web Design" Lahir</strong> - Ethan Marcotte menerbitkan artikel "Responsive Web Design" di A List Apart, memperkenalkan tiga komponen utama: flexible grids, flexible images, dan media queries.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2011</div>
+                    <p><strong>Buku RWD Diterbitkan</strong> - Ethan Marcotte menerbitkan buku "Responsive Web Design" yang menjadi panduan standar industri.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2012</div>
+                    <p><strong>Bootstrap Diluncurkan</strong> - Twitter merilis Bootstrap framework yang mempopulerkan responsive design dengan grid system yang mudah digunakan.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2015</div>
+                    <p><strong>Google Mobile-Friendly Update</strong> - Google mulai memberikan ranking lebih tinggi untuk website mobile-friendly, membuat RWD menjadi standar industri.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2019</div>
+                    <p><strong>Mobile-First Indexing</strong> - Google menggunakan versi mobile website sebagai primary version untuk indexing dan ranking.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2020-Sekarang</div>
+                    <p><strong>Era Modern</strong> - RWD menjadi standar absolut. Hampir semua website modern menggunakan responsive design. CSS Grid dan Flexbox membuat implementasi lebih mudah.</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">👨‍💻 Tokoh-Tokoh Penting dalam RWD</h3>
+            <div class="founder-section">
+                <div class="founder-card">
+                    <div class="founder-photo">EM</div>
+                    <div class="founder-name">Ethan Marcotte</div>
+                    <div class="founder-role">Bapak Responsive Web Design</div>
+                    <p style="text-align: left; color: #666; line-height: 1.6;">
+                        <strong>Kontribusi:</strong><br>
+                        • Menciptakan istilah "Responsive Web Design" (2010)<br>
+                        • Penulis buku "Responsive Web Design"<br>
+                        • Designer & Developer asal Amerika<br>
+                        • Pembicara di berbagai konferensi web<br><br>
+                        <strong>Filosofi:</strong><br>
+                        "Responsive design is not about designing for mobile, tablet, and desktop. It's about designing for any device."
+                    </p>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-photo">LW</div>
+                    <div class="founder-name">Luke Wroblewski</div>
+                    <div class="founder-role">Pioneer Mobile First</div>
+                    <p style="text-align: left; color: #666; line-height: 1.6;">
+                        <strong>Kontribusi:</strong><br>
+                        • Mempopulerkan konsep "Mobile First" (2009)<br>
+                        • Penulis buku "Mobile First"<br>
+                        • Product Director di Google<br>
+                        • Expert dalam UX/UI design<br><br>
+                        <strong>Filosofi:</strong><br>
+                        "Mobile first forces you to focus on the most important data and actions."
+                    </p>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-photo">JZ</div>
+                    <div class="founder-name">Jeffrey Zeldman</div>
+                    <div class="founder-role">Web Standards Advocate</div>
+                    <p style="text-align: left; color: #666; line-height: 1.6;">
+                        <strong>Kontribusi:</strong><br>
+                        • Founder A List Apart magazine<br>
+                        • Mempublikasikan artikel Ethan Marcotte<br>
+                        • Web designer & entrepreneur<br>
+                        • Advokat web standards<br><br>
+                        <strong>Filosofi:</strong><br>
+                        "Content precedes design. Design in the absence of content is decoration."
+                    </p>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-photo">BF</div>
+                    <div class="founder-name">Brad Frost</div>
+                    <div class="founder-role">Atomic Design Creator</div>
+                    <p style="text-align: left; color: #666; line-height: 1.6;">
+                        <strong>Kontribusi:</strong><br>
+                        • Menciptakan metodologi Atomic Design<br>
+                        • Pengembang Pattern Lab<br>
+                        • Author "Atomic Design" book<br>
+                        • Konsultan design systems<br><br>
+                        <strong>Filosofi:</strong><br>
+                        "We're not designing pages, we're designing systems of components."
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>📊 Statistik Penting</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li><strong>2023:</strong> 58.99% traffic internet berasal dari mobile devices</li>
+                    <li><strong>Google:</strong> 61% users tidak akan kembali ke website mobile yang sulit diakses</li>
+                    <li><strong>Loading Speed:</strong> 53% mobile users meninggalkan website yang loading lebih dari 3 detik</li>
+                    <li><strong>Conversion:</strong> Responsive design meningkatkan conversion rate hingga 10.9%</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- KONSEP DASAR -->
+        <section id="konsep" class="section">
+            <h2 class="section-title">1. Konsep Dasar Responsive Web Design</h2>
+            
+            <div class="explanation-box">
+                <h4>📱 Definisi RWD</h4>
+                <p style="font-size: 1.05rem; line-height: 1.8;">
+                    RWD adalah pendekatan desain yang membuat halaman web dapat menyesuaikan layout, konten, 
+                    dan fungsionalitas secara otomatis berdasarkan ukuran layar, platform, dan orientasi device. 
+                    Satu website yang sama dapat memberikan pengalaman optimal di smartphone, tablet, laptop, 
+                    desktop, hingga smart TV.
+                </p>
+            </div>
+
+            <h3 class="subsection-title">🎯 Tiga Pilar Utama RWD</h3>
+            <div class="concept-cards">
+                <div class="concept-card">
+                    <div class="icon">📐</div>
+                    <h3>1. Flexible Grid Layouts</h3>
+                    <p>Menggunakan unit relatif (%, em, rem, fr) bukan pixel tetap untuk membuat grid yang fleksibel.</p>
+                    <div style="background: #f5f5f5; padding: 0.8rem; border-radius: 5px; font-family: monospace; font-size: 0.85rem; margin-top: 1rem;">
+                        width: 50%; ✓<br>
+                        width: 500px; ✗
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <div class="icon">🖼️</div>
+                    <h3>2. Flexible Images/Media</h3>
+                    <p>Gambar dan media menyesuaikan ukuran container tanpa overflow atau merusak aspect ratio.</p>
+                    <div style="background: #f5f5f5; padding: 0.8rem; border-radius: 5px; font-family: monospace; font-size: 0.85rem; margin-top: 1rem;">
+                        img { max-width: 100%; }<br>
+                        height: auto;
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <div class="icon">📱</div>
+                    <h3>3. Media Queries</h3>
+                    <p>CSS conditionals yang mengaplikasikan styling berbeda berdasarkan karakteristik device.</p>
+                    <div style="background: #f5f5f5; padding: 0.8rem; border-radius: 5px; font-family: monospace; font-size: 0.85rem; margin-top: 1rem;">
+                        @media (max-width: 768px) {<br>
+                        &nbsp;&nbsp;/* Mobile CSS */<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BAGAIMANA RWD BEKERJA -->
+        <section id="perangkat" class="section">
+            <h2 class="section-title">2. Bagaimana RWD Bekerja pada Berbagai Perangkat?</h2>
+            
+            <div class="explanation-box">
+                <h4>🔍 Mekanisme Kerja RWD</h4>
+                <p style="font-size: 1.05rem; line-height: 1.8;">
+                    RWD bekerja dengan mendeteksi karakteristik device (ukuran layar, resolusi, orientasi) menggunakan 
+                    <strong>Media Queries</strong> di CSS, kemudian mengaplikasikan styling yang sesuai. Browser membaca 
+                    viewport width, membandingkan dengan breakpoint yang didefinisikan, dan merender layout optimal.
+                </p>
+            </div>
+
+            <h3 class="subsection-title">📏 Breakpoint Standar</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>Viewport Width</th>
+                        <th>Layout</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>📱 Mobile</strong></td>
+                        <td>320px - 767px</td>
+                        <td>1 kolom, stack vertical</td>
+                    </tr>
+                    <tr>
+                        <td><strong>📱 Tablet</strong></td>
+                        <td>768px - 1023px</td>
+                        <td>2-3 kolom</td>
+                    </tr>
+                    <tr>
+                        <td><strong>💻 Desktop</strong></td>
+                        <td>1024px+</td>
+                        <td>4+ kolom</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-title">🎮 Simulator Interaktif</h3>
+            <div class="device-controls">
+                <button class="device-btn active" onclick="changeDevice('desktop')">
+                    🖥️ Desktop (1200px+)
+                </button>
+                <button class="device-btn" onclick="changeDevice('tablet')">
+                    📱 Tablet (768px)
+                </button>
+                <button class="device-btn" onclick="changeDevice('mobile')">
+                    📱 Mobile (375px)
+                </button>
+            </div>
+
+            <div class="device-frame desktop" id="deviceFrame">
+                <div class="device-screen">
+                    <div class="demo-header">
+                        <h3>Responsive Layout Demo</h3>
+                        <p>Perhatikan perubahan jumlah kolom</p>
+                    </div>
+                    <div class="demo-content">
+                        <div class="demo-grid">
+                            <div class="demo-box">Box 1</div>
+                            <div class="demo-box">Box 2</div>
+                            <div class="demo-box">Box 3</div>
+                            <div class="demo-box">Box 4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-example">
+<span class="comment">/* Mobile First Approach */</span>
+<span class="attribute">.grid</span> {
+    <span class="attribute">display</span>: <span class="value">grid</span>;
+    <span class="attribute">grid-template-columns</span>: <span class="value">1fr</span>; <span class="comment">/* Mobile: 1 kolom */</span>
+}
+
+<span class="attribute">@media</span> (min-width: <span class="value">768px</span>) {
+    <span class="attribute">.grid</span> { <span class="attribute">grid-template-columns</span>: <span class="value">repeat(2, 1fr)</span>; } <span class="comment">/* Tablet: 2 kolom */</span>
+}
+
+<span class="attribute">@media</span> (min-width: <span class="value">1024px</span>) {
+    <span class="attribute">.grid</span> { <span class="attribute">grid-template-columns</span>: <span class="value">repeat(4, 1fr)</span>; } <span class="comment">/* Desktop: 4 kolom */</span>
+}
+            </div>
+        </section>
+
+        <!-- FLEXIBLE GRID -->
+        <section id="grid" class="section">
+            <h2 class="section-title">3. Konsep Flexible Grid Layout</h2>
+            
+            <div class="explanation-box">
+                <h4>📐 Apa Itu Flexible Grid?</h4>
+                <p style="font-size: 1.05rem; line-height: 1.8;">
+                    Flexible Grid adalah sistem layout yang menggunakan unit relatif (%, fr) instead of fixed pixels. 
+                    Grid dapat menyesuaikan ukuran proporsional berdasarkan ukuran container atau viewport.
+                </p>
+            </div>
+
+            <h3 class="subsection-title">✅ Contoh Grid Responsive (Best Practice)</h3>
+            <div class="grid-examples">
+                <div class="grid-example-item">
+                    <h4>Auto-fit Grid dengan minmax()</h4>
+                    <p>Grid otomatis menyesuaikan jumlah kolom tanpa media queries!</p>
+                    <div class="grid-demo-container">
+                        <div class="grid-responsive">
+                            <div class="grid-item-demo">Item 1</div>
+                            <div class="grid-item-demo">Item 2</div>
+                            <div class="grid-item-demo">Item 3</div>
+                            <div class="grid-item-demo">Item 4</div>
+                            <div class="grid-item-demo">Item 5</div>
+                            <div class="grid-item-demo">Item 6</div>
+                        </div>
+                    </div>
+                    <div class="code-example">
+<span class="attribute">.grid</span> {
+    <span class="attribute">display</span>: <span class="value">grid</span>;
+    <span class="attribute">grid-template-columns</span>: <span class="value">repeat(auto-fit, minmax(180px, 1fr))</span>;
+    <span class="attribute">gap</span>: <span class="value">1rem</span>;
+}
+
+<span class="comment">/* auto-fit: otomatis adjust jumlah kolom
+   minmax(180px, 1fr): minimal 180px, maksimal flexible
+   Tidak perlu media queries! */</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Keuntungan Auto-fit Grid:</h4>
+                <ul style="margin-left: 1.5rem;">
+                    <li>Otomatis responsive tanpa media queries</li>
+                    <li>Item tidak lebih kecil dari minimum yang ditentukan</li>
+                    <li>Mengisi ruang available secara optimal</li>
+                    <li>Works di semua screen sizes</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- CONTOH LAYOUT -->
+        <section id="layout" class="section">
+            <h2 class="section-title">4. Contoh Perubahan Layout</h2>
+            
+            <h3 class="subsection-title">🛍️ Real-World Example: E-commerce Grid</h3>
+            <div class="grid-demo-container">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                    <div style="background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="background: #e3f2fd; height: 120px; border-radius: 5px; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">📱</div>
+                        <h5>Product 1</h5>
+                        <p style="color: #667eea; font-weight: bold;">$99</p>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="background: #e3f2fd; height: 120px; border-radius: 5px; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">💻</div>
+                        <h5>Product 2</h5>
+                        <p style="color: #667eea; font-weight: bold;">$299</p>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="background: #e3f2fd; height: 120px; border-radius: 5px; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">⌚</div>
+                        <h5>Product 3</h5>
+                        <p style="color: #667eea; font-weight: bold;">$199</p>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="background: #e3f2fd; height: 120px; border-radius: 5px; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🎧</div>
+                        <h5>Product 4</h5>
+                        <p style="color: #667eea; font-weight: bold;">$149</p>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 5px;">
+                <strong>📱 Responsive Behavior:</strong> Desktop = 4 kolom | Tablet = 2-3 kolom | Mobile = 1-2 kolom
+            </p>
+
+            <div class="success-box">
+                <h4>💡 Best Practices Layout Responsive:</h4>
+                <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Mobile First:</strong> Mulai dari layout mobile, enhance untuk desktop</li>
+                    <li><strong>Content Priority:</strong> Konten penting di atas</li>
+                    <li><strong>Touch Targets:</strong> Minimum 44x44px untuk buttons di mobile</li>
+                    <li><strong>Typography:</strong> Font size minimal 16px untuk body text</li>
+                    <li><strong>Testing:</strong> Test di real devices, bukan hanya emulator</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- KESIMPULAN -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 3rem 2rem; border-radius: 10px; text-align: center; margin-top: 3rem;">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">🎓 Kesimpulan</h3>
+            <p style="font-size: 1.1rem; line-height: 1.8; max-width: 800px; margin: 0 auto;">
+                Responsive Web Design adalah <strong>standar wajib</strong> untuk web modern. Dengan memahami 
+                sejarah, konsep flexible grid, media queries, dan best practices, Anda dapat membuat website 
+                yang memberikan pengalaman optimal di SEMUA device.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p><strong>📱 Responsive Web Design - Panduan Lengkap</strong></p>
+        <p>Sejarah, Tokoh Penting, Konsep Detail, Grid Layout & Praktik</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem; opacity: 0.8;">
+            "The future of the web is responsive. The future is now." - Ethan Marcotte
+        </p>
+    </footer>
+
+    <script>
+        // Device Simulator
+        function changeDevice(device) {
+            const frame = document.getElementById('deviceFrame');
+            const buttons = document.querySelectorAll('.device-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            frame.className = 'device-frame ' + device;
+        }
+
+        // Breakpoint Indicator
+        function updateBreakpoint() {
+            const indicator = document.getElementById('breakpointIndicator');
+            const width = window.innerWidth;
+            
+            if (width < 480) {
+                indicator.textContent = '📱 Mobile (' + width + 'px)';
+                indicator.style.background = 'rgba(244, 67, 54, 0.95)';
+            } else if (width < 768) {
+                indicator.textContent = '📱 Mobile Large (' + width + 'px)';
+                indicator.style.background = 'rgba(255, 152, 0, 0.95)';
+            } else if (width < 1024) {
+                indicator.textContent = '📱 Tablet (' + width + 'px)';
+                indicator.style.background = 'rgba(33, 150, 243, 0.95)';
+            } else {
+                indicator.textContent = '🖥️ Desktop (' + width + 'px)';
+                indicator.style.background = 'rgba(76, 175, 80, 0.95)';
+            }
+        }
+
+        window.addEventListener('load', updateBreakpoint);
+        window.addEventListener('resize', updateBreakpoint);
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

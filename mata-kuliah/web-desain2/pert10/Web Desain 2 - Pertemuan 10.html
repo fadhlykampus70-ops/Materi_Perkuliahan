@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pemrograman Web – Pertemuan 10 | Helper Class Bootstrap 4</title>
+
+<!-- Bootstrap 4 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ===== CSS VARIABLES ===== */
+  :root {
+    --sidebar-width: 260px;
+    --header-height: 64px;
+    --bg-main: #0f1117;
+    --bg-sidebar: #161b27;
+    --bg-card: #1a2035;
+    --bg-code: #0d1117;
+    --accent: #4f8ef7;
+    --accent-glow: rgba(79,142,247,0.25);
+    --accent2: #7c5cfc;
+    --success: #22d3a0;
+    --warning: #f59e0b;
+    --danger: #f87171;
+    --text-main: #e2e8f0;
+    --text-muted: #8892a4;
+    --text-code: #c9d1d9;
+    --border: rgba(255,255,255,0.07);
+    --sidebar-item-hover: rgba(79,142,247,0.12);
+    --sidebar-item-active: rgba(79,142,247,0.2);
+    --preview-bg: #f8fafc;
+    --preview-border: #e2e8f0;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    position: fixed; top:0; left:0; right:0; z-index:1000;
+    height: var(--header-height);
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 1.5rem;
+    gap: 1rem;
+    backdrop-filter: blur(12px);
+  }
+  .header-brand {
+    display: flex; align-items: center; gap: 0.75rem;
+    flex: 1;
+  }
+  .header-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: #fff; flex-shrink: 0;
+    box-shadow: 0 0 16px var(--accent-glow);
+  }
+  .header-text { line-height: 1.2; }
+  .header-text .course { font-size: 0.65rem; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; }
+  .header-text .title { font-size: 0.92rem; font-weight: 700; color: var(--text-main); }
+  .header-badge {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; font-size: 0.68rem; font-weight: 700;
+    padding: 0.25rem 0.7rem; border-radius: 20px;
+    letter-spacing: 0.05em; white-space: nowrap;
+  }
+  .sidebar-toggle {
+    display: none;
+    background: none; border: 1px solid var(--border);
+    color: var(--text-main); width: 36px; height: 36px;
+    border-radius: 8px; cursor: pointer; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.2s;
+  }
+  .sidebar-toggle:hover { background: var(--sidebar-item-hover); }
+
+  /* ===== LAYOUT ===== */
+  .app-layout {
+    display: flex;
+    padding-top: var(--header-height);
+    min-height: 100vh;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position: fixed; top: var(--header-height); left: 0; bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    overflow-y: auto; overflow-x: hidden;
+    z-index: 900;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .sidebar-section-label {
+    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--text-muted); padding: 1.2rem 1.2rem 0.4rem;
+    font-weight: 700;
+  }
+
+  .nav-item-btn {
+    display: flex; align-items: center; gap: 0.75rem;
+    width: 100%; padding: 0.62rem 1.2rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-family: 'Sora', sans-serif;
+    font-size: 0.82rem; font-weight: 500;
+    border-left: 2px solid transparent;
+    transition: all 0.18s; text-align: left;
+  }
+  .nav-item-btn:hover {
+    color: var(--text-main);
+    background: var(--sidebar-item-hover);
+    border-left-color: var(--accent);
+  }
+  .nav-item-btn.active {
+    color: var(--accent);
+    background: var(--sidebar-item-active);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  .nav-item-btn .nav-num {
+    font-size: 0.68rem; font-weight: 700;
+    width: 20px; height: 20px; border-radius: 6px;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background 0.18s;
+  }
+  .nav-item-btn.active .nav-num { background: var(--accent); color: #fff; }
+  .nav-item-btn.task-btn { color: var(--warning); }
+  .nav-item-btn.task-btn.active { color: var(--warning); border-left-color: var(--warning); background: rgba(245,158,11,0.12); }
+  .nav-item-btn.task-btn .nav-num { background: rgba(245,158,11,0.2); color: var(--warning); }
+  .nav-item-btn.task-btn.active .nav-num { background: var(--warning); color: #000; }
+
+  /* ===== MAIN CONTENT ===== */
+  .main-content {
+    margin-left: var(--sidebar-width);
+    flex: 1; min-width: 0;
+    padding: 2rem 2.5rem 4rem;
+  }
+
+  /* ===== SECTIONS ===== */
+  .content-section { display: none; animation: fadeSlideIn 0.35s ease; }
+  .content-section.active { display: block; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-eyebrow {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--accent); font-weight: 700; margin-bottom: 0.4rem;
+  }
+  .section-title {
+    font-size: 1.75rem; font-weight: 800; color: var(--text-main);
+    line-height: 1.2; margin-bottom: 0.5rem;
+  }
+  .section-subtitle { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ===== CONTENT CARDS ===== */
+  .content-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .content-card-title {
+    font-size: 1rem; font-weight: 700; color: var(--text-main);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .content-card-title i { color: var(--accent); font-size: 0.9rem; }
+
+  p { color: var(--text-muted); line-height: 1.8; margin-bottom: 0.75rem; font-size: 0.88rem; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text-main); }
+
+  ul.styled, ol.styled {
+    color: var(--text-muted); font-size: 0.88rem; line-height: 1.8;
+    padding-left: 1.5rem; margin-bottom: 0.75rem;
+  }
+  ul.styled li, ol.styled li { margin-bottom: 0.3rem; }
+
+  /* ===== CLASS TABLE ===== */
+  .class-table { width: 100%; border-collapse: collapse; margin-bottom: 0; font-size: 0.83rem; }
+  .class-table th {
+    background: rgba(79,142,247,0.1); color: var(--accent);
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 0.6rem 1rem; text-align: left; font-weight: 700;
+  }
+  .class-table td { padding: 0.55rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  .class-table tr:last-child td { border-bottom: none; }
+  .class-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .class-table code { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: rgba(79,142,247,0.1); padding: 0.1rem 0.4rem; border-radius: 4px; }
+
+  /* ===== CODE BLOCK ===== */
+  .code-block-wrap { margin-bottom: 1.5rem; }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #161b27; border: 1px solid var(--border);
+    border-bottom: none; border-radius: 10px 10px 0 0;
+    padding: 0.55rem 1rem;
+  }
+  .code-lang { font-size: 0.7rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; }
+  .copy-btn {
+    background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.3);
+    color: var(--accent); font-size: 0.72rem; font-weight: 600;
+    padding: 0.25rem 0.7rem; border-radius: 6px; cursor: pointer;
+    font-family: 'Sora', sans-serif; transition: all 0.18s;
+    display: flex; align-items: center; gap: 0.35rem;
+  }
+  .copy-btn:hover { background: rgba(79,142,247,0.25); }
+  .copy-btn.copied { background: rgba(34,211,160,0.15); border-color: rgba(34,211,160,0.4); color: var(--success); }
+  pre.code-content {
+    background: var(--bg-code); border: 1px solid var(--border);
+    border-radius: 0 0 10px 10px; padding: 1.2rem;
+    overflow-x: auto; margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; line-height: 1.8; color: var(--text-code);
+    white-space: pre;
+  }
+  pre.code-content .kw { color: #ff7b72; }
+  pre.code-content .at { color: #79c0ff; }
+  pre.code-content .val { color: #a5d6ff; }
+  pre.code-content .cm { color: #8b949e; font-style: italic; }
+  pre.code-content .cl { color: #7ee787; }
+  pre.code-content .tx { color: #e6edf3; }
+  pre.code-content .tg { color: #ff7b72; }
+
+  /* ===== PREVIEW BOX ===== */
+  .preview-box { margin-bottom: 1.5rem; }
+  .preview-label {
+    font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .preview-frame {
+    border: 1px solid var(--preview-border);
+    border-radius: 10px; background: var(--preview-bg);
+    overflow: hidden;
+  }
+  .preview-frame iframe {
+    width: 100%; border: none; display: block;
+    background: #fff;
+  }
+
+  /* ===== TASK PAGE ===== */
+  .task-header {
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(124,92,252,0.1));
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 16px; padding: 2rem; margin-bottom: 2rem;
+    text-align: center;
+  }
+  .task-header .task-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .task-header h2 { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; }
+  .task-header p { color: var(--text-muted); font-size: 0.88rem; margin: 0; }
+
+  .case-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .case-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; }
+  .case-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 0.75rem 0; border-bottom: 1px solid var(--border);
+  }
+  .case-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .case-num {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 800; color: #fff;
+  }
+  .case-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+  .case-text strong { color: var(--text-main); }
+
+  .penilaian-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .penilaian-table th { background: rgba(79,142,247,0.1); color: var(--accent); padding: 0.65rem 1rem; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  .penilaian-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  .penilaian-table tr:last-child td { border-bottom: none; }
+  .bobot-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+  .bobot-40 { background: rgba(34,211,160,0.15); color: var(--success); }
+  .bobot-25 { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .bobot-20 { background: rgba(124,92,252,0.15); color: #a78bfa; }
+  .bobot-15 { background: rgba(245,158,11,0.15); color: var(--warning); }
+
+  .info-row {
+    display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
+  }
+  .info-chip {
+    background: var(--bg-code); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.5rem 1rem;
+    font-size: 0.8rem; color: var(--text-muted);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .info-chip i { color: var(--accent); }
+  .info-chip strong { color: var(--text-main); }
+
+  /* ===== FOOTER ===== */
+  .site-footer {
+    text-align: center; padding: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted); font-size: 0.78rem;
+    margin-top: 2rem;
+  }
+  .site-footer span { color: var(--accent); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .sidebar-toggle { display: flex; }
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+    .main-content { margin-left: 0; padding: 1.25rem 1rem 3rem; }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 850; }
+    .overlay.active { display: block; }
+    .section-title { font-size: 1.3rem; }
+  }
+
+  /* ===== CALLOUT ===== */
+  .callout {
+    border-radius: 10px; padding: 0.9rem 1.1rem;
+    font-size: 0.84rem; line-height: 1.7; margin-bottom: 1rem;
+    display: flex; gap: 0.75rem; align-items: flex-start;
+  }
+  .callout i { margin-top: 0.1rem; flex-shrink: 0; }
+  .callout.info { background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.25); color: #93c5fd; }
+  .callout.info i { color: var(--accent); }
+  .callout.warning { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: #fcd34d; }
+  .callout.warning i { color: var(--warning); }
+  .callout.success { background: rgba(34,211,160,0.1); border: 1px solid rgba(34,211,160,0.25); color: #6ee7b7; }
+  .callout.success i { color: var(--success); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="header-brand">
+    <div class="header-icon"><i class="fab fa-bootstrap"></i></div>
+    <div class="header-text">
+      <div class="course">Pemrograman Web</div>
+      <div class="title">Helper Class Bootstrap 4.0</div>
+    </div>
+  </div>
+  <div class="header-badge">Pertemuan 10</div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section-label">Materi</div>
+    <button class="nav-item-btn active" data-target="sec-color" onclick="showSection('sec-color', this)">
+      <span class="nav-num">1</span> Contextual Color
+    </button>
+    <button class="nav-item-btn" data-target="sec-bg" onclick="showSection('sec-bg', this)">
+      <span class="nav-num">2</span> Contextual Background
+    </button>
+    <button class="nav-item-btn" data-target="sec-icon" onclick="showSection('sec-icon', this)">
+      <span class="nav-num">3</span> Icon
+    </button>
+    <button class="nav-item-btn" data-target="sec-clearfix" onclick="showSection('sec-clearfix', this)">
+      <span class="nav-num">4</span> Clearfix
+    </button>
+    <button class="nav-item-btn" data-target="sec-display" onclick="showSection('sec-display', this)">
+      <span class="nav-num">5</span> Menampilkan & Menyembunyikan
+    </button>
+    <button class="nav-item-btn" data-target="sec-sr" onclick="showSection('sec-sr', this)">
+      <span class="nav-num">6</span> Screen Reader
+    </button>
+    <button class="nav-item-btn" data-target="sec-imgr" onclick="showSection('sec-imgr', this)">
+      <span class="nav-num">7</span> Image Replacement
+    </button>
+    <button class="nav-item-btn" data-target="sec-responsive" onclick="showSection('sec-responsive', this)">
+      <span class="nav-num">8</span> Responsive Utility
+    </button>
+    <div class="sidebar-section-label" style="margin-top:0.5rem;">Evaluasi</div>
+    <button class="nav-item-btn task-btn" data-target="sec-tugas" onclick="showSection('sec-tugas', this)">
+      <span class="nav-num">📋</span> Tugas Praktik
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- ==================== SECTION 1: CONTEXTUAL COLOR ==================== -->
+    <section class="content-section active" id="sec-color">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 1</div>
+        <h1 class="section-title">Contextual Color</h1>
+        <p class="section-subtitle">Kelas Bootstrap untuk mengatur warna teks sesuai konteks semantik.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p>Bootstrap 4 menyediakan serangkaian class utilitas untuk mengubah warna teks secara langsung menggunakan sistem warna semantik. Class-class ini sangat berguna untuk menyampaikan makna atau status informasi kepada pengguna secara visual.</p>
+        <p>Warna yang digunakan mengikuti palet warna Bootstrap yang konsisten, sehingga tampilan tetap harmonis tanpa perlu menulis CSS tambahan.</p>
+        <table class="class-table">
+          <thead><tr><th>Class</th><th>Keterangan</th><th>Contoh Warna</th></tr></thead>
+          <tbody>
+            <tr><td><code>.text-primary</code></td><td>Biru – aksi utama, link penting</td><td style="color:#007bff">■ Primary</td></tr>
+            <tr><td><code>.text-secondary</code></td><td>Abu – informasi sekunder</td><td style="color:#6c757d">■ Secondary</td></tr>
+            <tr><td><code>.text-success</code></td><td>Hijau – berhasil, positif</td><td style="color:#28a745">■ Success</td></tr>
+            <tr><td><code>.text-danger</code></td><td>Merah – error, peringatan kritis</td><td style="color:#dc3545">■ Danger</td></tr>
+            <tr><td><code>.text-warning</code></td><td>Kuning – peringatan, perhatian</td><td style="color:#ffc107">■ Warning</td></tr>
+            <tr><td><code>.text-info</code></td><td>Cyan – informasi tambahan</td><td style="color:#17a2b8">■ Info</td></tr>
+            <tr><td><code>.text-light</code></td><td>Putih muda – untuk latar gelap</td><td style="color:#f8f9fa;background:#888;padding:0 4px">■ Light</td></tr>
+            <tr><td><code>.text-dark</code></td><td>Hitam – teks standar kuat</td><td style="color:#343a40">■ Dark</td></tr>
+            <tr><td><code>.text-muted</code></td><td>Abu redup – teks pendukung</td><td style="color:#6c757d">■ Muted</td></tr>
+            <tr><td><code>.text-white</code></td><td>Putih – untuk latar warna</td><td style="color:#fff;background:#888;padding:0 4px">■ White</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content">&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-primary"</span>&gt;Teks warna Primary (Biru)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-secondary"</span>&gt;Teks warna Secondary (Abu)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-success"</span>&gt;Teks warna Success (Hijau)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-danger"</span>&gt;Teks warna Danger (Merah)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-warning"</span>&gt;Teks warna Warning (Kuning)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-info"</span>&gt;Teks warna Info (Cyan)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-muted"</span>&gt;Teks warna Muted (Abu Redup)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"text-dark"</span>&gt;Teks warna Dark (Hitam)&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"bg-dark text-white"</span>&gt;Teks White pada background gelap&lt;/<span class="kw">p</span>&gt;
+&lt;<span class="kw">p</span> <span class="at">class</span>=<span class="val">"bg-dark text-light"</span>&gt;Teks Light pada background gelap&lt;/<span class="kw">p</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><style>body{padding:16px;font-family:sans-serif}</style></head><body><p class="text-primary">Teks warna Primary (Biru)</p><p class="text-secondary">Teks warna Secondary (Abu)</p><p class="text-success">Teks warna Success (Hijau)</p><p class="text-danger">Teks warna Danger (Merah)</p><p class="text-warning">Teks warna Warning (Kuning)</p><p class="text-info">Teks warna Info (Cyan)</p><p class="text-muted">Teks warna Muted (Abu Redup)</p><p class="text-dark">Teks warna Dark (Hitam)</p><p class="bg-dark text-white">Teks White pada background gelap</p><p class="bg-dark text-light">Teks Light pada background gelap</p></body></html>' style="height:290px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <i class="fas fa-lightbulb"></i>
+        <div>Class <strong>.text-white</strong> dan <strong>.text-light</strong> sebaiknya digunakan bersama background berwarna seperti <code>.bg-dark</code> atau <code>.bg-primary</code> agar teks tetap terbaca.</div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 2: CONTEXTUAL BACKGROUND ==================== -->
+    <section class="content-section" id="sec-bg">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 2</div>
+        <h1 class="section-title">Contextual Background</h1>
+        <p class="section-subtitle">Kelas Bootstrap untuk mengatur warna latar belakang elemen sesuai konteks.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p>Selain warna teks, Bootstrap 4 juga menyediakan class utilitas untuk mengatur warna <strong>background (latar belakang)</strong> elemen. Class-class ini menggunakan awalan <code>bg-</code> diikuti nama warna semantik.</p>
+        <p>Sangat berguna untuk membuat section, card, badge, atau komponen lain dengan latar warna yang bermakna tanpa menulis CSS tambahan.</p>
+        <table class="class-table">
+          <thead><tr><th>Class</th><th>Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><code>.bg-primary</code></td><td>Background biru – aksi/elemen utama</td></tr>
+            <tr><td><code>.bg-secondary</code></td><td>Background abu – elemen sekunder</td></tr>
+            <tr><td><code>.bg-success</code></td><td>Background hijau – sukses/positif</td></tr>
+            <tr><td><code>.bg-danger</code></td><td>Background merah – error/kritis</td></tr>
+            <tr><td><code>.bg-warning</code></td><td>Background kuning – peringatan</td></tr>
+            <tr><td><code>.bg-info</code></td><td>Background cyan – informasi</td></tr>
+            <tr><td><code>.bg-light</code></td><td>Background putih muda – netral terang</td></tr>
+            <tr><td><code>.bg-dark</code></td><td>Background hitam – netral gelap</td></tr>
+            <tr><td><code>.bg-white</code></td><td>Background putih murni</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content">&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-primary text-white p-2 mb-1"</span>&gt;bg-primary&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-secondary text-white p-2 mb-1"</span>&gt;bg-secondary&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-success text-white p-2 mb-1"</span>&gt;bg-success&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-danger text-white p-2 mb-1"</span>&gt;bg-danger&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-warning text-dark p-2 mb-1"</span>&gt;bg-warning&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-info text-white p-2 mb-1"</span>&gt;bg-info&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-light text-dark p-2 mb-1 border"</span>&gt;bg-light&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-dark text-white p-2 mb-1"</span>&gt;bg-dark&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-white text-dark p-2 border"</span>&gt;bg-white&lt;/<span class="kw">div</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><style>body{padding:16px;font-family:sans-serif}</style></head><body><div class="bg-primary text-white p-2 mb-1">bg-primary</div><div class="bg-secondary text-white p-2 mb-1">bg-secondary</div><div class="bg-success text-white p-2 mb-1">bg-success</div><div class="bg-danger text-white p-2 mb-1">bg-danger</div><div class="bg-warning text-dark p-2 mb-1">bg-warning</div><div class="bg-info text-white p-2 mb-1">bg-info</div><div class="bg-light text-dark p-2 mb-1 border">bg-light</div><div class="bg-dark text-white p-2 mb-1">bg-dark</div><div class="bg-white text-dark p-2 border">bg-white</div></body></html>' style="height:290px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>Pastikan selalu kombinasikan <code>bg-warning</code> dengan <code>text-dark</code> karena latar kuning kurang kontras dengan teks putih dan dapat sulit dibaca.</div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 3: ICON ==================== -->
+    <section class="content-section" id="sec-icon">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 3</div>
+        <h1 class="section-title">Icon</h1>
+        <p class="section-subtitle">Menggunakan Font Awesome sebagai alternatif icon di Bootstrap 4.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p>Berbeda dengan Bootstrap 3 yang menyertakan <strong>Glyphicon</strong> secara bawaan, Bootstrap 4 <strong>tidak lagi menyertakan icon secara default</strong>. Keputusan ini diambil untuk mengurangi ukuran framework dan memberikan fleksibilitas kepada developer untuk memilih library icon sesuai kebutuhan.</p>
+        <p>Alternatif yang paling populer dan direkomendasikan adalah <strong>Font Awesome</strong>, yang dapat dimuat melalui CDN tanpa instalasi tambahan. Font Awesome menyediakan ribuan icon SVG dan font-based yang dapat digunakan secara gratis.</p>
+        <div class="callout info">
+          <i class="fas fa-info-circle"></i>
+          <div>Tambahkan CDN berikut di dalam tag <code>&lt;head&gt;</code> untuk menggunakan Font Awesome:<br>
+          <code style="color:#7ee787">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"&gt;</code></div>
+        </div>
+        <p>Cara penggunaan: cukup tambahkan tag <code>&lt;i&gt;</code> atau <code>&lt;span&gt;</code> dengan class yang sesuai. Class dimulai dengan <code>fas</code> (solid), <code>far</code> (regular), atau <code>fab</code> (brand).</p>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content"><span class="cm">&lt;!-- Icon Dasar --&gt;</span>
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-home"</span>&gt;&lt;/<span class="kw">i</span>&gt; Home
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-user"</span>&gt;&lt;/<span class="kw">i</span>&gt; User
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-envelope"</span>&gt;&lt;/<span class="kw">i</span>&gt; Email
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-check"</span>&gt;&lt;/<span class="kw">i</span>&gt; Ceklis
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-times"</span>&gt;&lt;/<span class="kw">i</span>&gt; Tutup
+
+<span class="cm">&lt;!-- Ubah Ukuran dengan fa-lg, fa-2x, fa-3x --&gt;</span>
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-star fa-lg"</span>&gt;&lt;/<span class="kw">i</span>&gt;
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-star fa-2x"</span>&gt;&lt;/<span class="kw">i</span>&gt;
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-star fa-3x"</span>&gt;&lt;/<span class="kw">i</span>&gt;
+
+<span class="cm">&lt;!-- Kombinasi dengan class Bootstrap --&gt;</span>
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-bell text-warning fa-2x"</span>&gt;&lt;/<span class="kw">i</span>&gt;
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-shield-alt text-success fa-2x"</span>&gt;&lt;/<span class="kw">i</span>&gt;
+&lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fab fa-github text-dark fa-2x"</span>&gt;&lt;/<span class="kw">i</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>body{padding:16px;font-family:sans-serif}.icon-row{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:16px;align-items:center}.icon-item{text-align:center;min-width:60px}.icon-item span{display:block;font-size:11px;color:#666;margin-top:6px}</style></head><body><p><strong>Icon Dasar:</strong></p><div class="icon-row"><div class="icon-item"><i class="fas fa-home fa-2x text-primary"></i><span>fa-home</span></div><div class="icon-item"><i class="fas fa-user fa-2x text-success"></i><span>fa-user</span></div><div class="icon-item"><i class="fas fa-envelope fa-2x text-info"></i><span>fa-envelope</span></div><div class="icon-item"><i class="fas fa-check fa-2x text-success"></i><span>fa-check</span></div><div class="icon-item"><i class="fas fa-times fa-2x text-danger"></i><span>fa-times</span></div><div class="icon-item"><i class="fas fa-phone fa-2x text-warning"></i><span>fa-phone</span></div></div><p><strong>Ukuran Icon:</strong></p><div style="display:flex;align-items:center;gap:16px;margin-bottom:16px"><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning fa-lg"></i><i class="fas fa-star text-warning fa-2x"></i><i class="fas fa-star text-warning fa-3x"></i></div><p><strong>Kombinasi Warna:</strong></p><div class="icon-row"><i class="fas fa-bell text-warning fa-2x"></i>&nbsp;<i class="fas fa-shield-alt text-success fa-2x"></i>&nbsp;<i class="fab fa-github text-dark fa-2x"></i>&nbsp;<i class="fas fa-heart text-danger fa-2x"></i>&nbsp;<i class="fas fa-rocket text-primary fa-2x"></i></div></body></html>' style="height:300px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 4: CLEARFIX ==================== -->
+    <section class="content-section" id="sec-clearfix">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 4</div>
+        <h1 class="section-title">Clearfix</h1>
+        <p class="section-subtitle">Mengatasi masalah float collapse pada elemen yang menggunakan float.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p>Ketika elemen anak (child) menggunakan properti CSS <code>float</code>, elemen induk (parent) tidak otomatis menyesuaikan tingginya. Hal ini menyebabkan <strong>float collapse</strong> – di mana container parent seolah "runtuh" karena tidak mengenali tinggi anak float-nya.</p>
+        <p>Bootstrap 4 menyediakan class <code>.clearfix</code> yang dapat ditambahkan pada elemen <strong>parent/container</strong> untuk mengatasi masalah ini. Class ini bekerja dengan teknik CSS <em>clearfix hack</em> menggunakan pseudo-element <code>::after</code>.</p>
+        <div class="callout success">
+          <i class="fas fa-check-circle"></i>
+          <div><strong>Kapan pakai clearfix?</strong> Gunakan saat elemen-elemen di dalam container menggunakan <code>float: left</code> atau <code>float: right</code> dan container tidak "memeluk" elemen tersebut.</div>
+        </div>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML – Tanpa Clearfix (Bermasalah)</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content"><span class="cm">&lt;!-- ❌ Tanpa clearfix: container "runtuh" --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">style</span>=<span class="val">"border: 2px solid red;"</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">style</span>=<span class="val">"float: left; background: #cce5ff; padding: 10px;"</span>&gt;Float Kiri&lt;/<span class="kw">div</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">style</span>=<span class="val">"float: right; background: #d4edda; padding: 10px;"</span>&gt;Float Kanan&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- ✅ Dengan clearfix: container mengikuti tinggi isi --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"clearfix"</span> <span class="at">style</span>=<span class="val">"border: 2px solid green;"</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">style</span>=<span class="val">"float: left; background: #cce5ff; padding: 10px;"</span>&gt;Float Kiri&lt;/<span class="kw">div</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">style</span>=<span class="val">"float: right; background: #d4edda; padding: 10px;"</span>&gt;Float Kanan&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><style>body{padding:16px;font-family:sans-serif}.label{font-size:12px;font-weight:bold;margin-bottom:6px;margin-top:16px}</style></head><body><div class="label">❌ Tanpa Clearfix (border merah tidak memeluk konten):</div><div style="border:2px solid red;margin-bottom:8px"><div style="float:left;background:#cce5ff;padding:10px;margin:4px">Float Kiri</div><div style="float:right;background:#d4edda;padding:10px;margin:4px">Float Kanan</div></div><div style="clear:both;padding:4px;background:#fff3cd;font-size:12px">⚠️ Container di atas hanya setinggi border (kolaps!)</div><div class="label">✅ Dengan Clearfix (border hijau memeluk konten):</div><div class="clearfix" style="border:2px solid green"><div style="float:left;background:#cce5ff;padding:10px;margin:4px">Float Kiri</div><div style="float:right;background:#d4edda;padding:10px;margin:4px">Float Kanan</div></div><div style="padding:4px;background:#d4edda;font-size:12px">✅ Container menyesuaikan tinggi isi dengan benar</div></body></html>' style="height:280px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 5: DISPLAY ==================== -->
+    <section class="content-section" id="sec-display">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 5</div>
+        <h1 class="section-title">Menampilkan & Menyembunyikan Konten</h1>
+        <p class="section-subtitle">Utility class Bootstrap untuk mengontrol visibilitas dan tipe display elemen.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p>Bootstrap 4 menyediakan class <strong>display utility</strong> yang sangat fleksibel untuk mengontrol tampilan elemen. Class-class ini menggunakan format <code>d-{value}</code> atau <code>d-{breakpoint}-{value}</code> untuk kontrol responsif per ukuran layar.</p>
+        <table class="class-table">
+          <thead><tr><th>Class</th><th>Setara CSS</th><th>Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><code>.d-none</code></td><td>display: none</td><td>Sembunyikan elemen di semua ukuran</td></tr>
+            <tr><td><code>.d-block</code></td><td>display: block</td><td>Tampilkan sebagai block</td></tr>
+            <tr><td><code>.d-inline</code></td><td>display: inline</td><td>Tampilkan sebagai inline</td></tr>
+            <tr><td><code>.d-inline-block</code></td><td>display: inline-block</td><td>Gabungan inline dan block</td></tr>
+            <tr><td><code>.d-flex</code></td><td>display: flex</td><td>Aktifkan flexbox</td></tr>
+            <tr><td><code>.d-sm-none</code></td><td>— (≥576px)</td><td>Sembunyikan di layar ≥ SM</td></tr>
+            <tr><td><code>.d-md-block</code></td><td>— (≥768px)</td><td>Tampilkan block di layar ≥ MD</td></tr>
+            <tr><td><code>.d-lg-none</code></td><td>— (≥992px)</td><td>Sembunyikan di layar ≥ LG</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:0.75rem">Pola umum untuk <strong>hanya tampil di mobile</strong>: <code>d-block d-md-none</code><br>
+        Pola umum untuk <strong>hanya tampil di desktop</strong>: <code>d-none d-md-block</code></p>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content"><span class="cm">&lt;!-- Hanya tampil di mobile (layar kecil) --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-block d-md-none alert alert-warning"</span>&gt;
+  Konten ini hanya tampil di layar mobile! 📱
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- Hanya tampil di desktop (md ke atas) --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-none d-md-block alert alert-success"</span>&gt;
+  Konten ini hanya tampil di desktop! 🖥️
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- d-flex untuk membuat layout flex --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-flex justify-content-between"</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-primary text-white p-2"</span>&gt;Kiri&lt;/<span class="kw">div</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-success text-white p-2"</span>&gt;Tengah&lt;/<span class="kw">div</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"bg-danger text-white p-2"</span>&gt;Kanan&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- d-inline-block untuk item berjajar --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-inline-block bg-info text-white p-2"</span>&gt;Item 1&lt;/<span class="kw">div</span>&gt;
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-inline-block bg-warning text-dark p-2"</span>&gt;Item 2&lt;/<span class="kw">div</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><style>body{padding:16px;font-family:sans-serif}p{font-size:13px;font-weight:bold;margin:12px 0 4px}</style></head><body><p>Elemen ini hanya tampil di mobile (resize browser untuk melihat efek):</p><div class="d-block d-md-none alert alert-warning">📱 Konten ini hanya tampil di layar mobile!</div><div class="d-none d-md-block alert alert-success">🖥️ Konten ini hanya tampil di desktop!</div><p>d-flex dengan justify-content-between:</p><div class="d-flex justify-content-between mb-2"><div class="bg-primary text-white p-2">Kiri</div><div class="bg-success text-white p-2">Tengah</div><div class="bg-danger text-white p-2">Kanan</div></div><p>d-inline-block (berjajar):</p><div class="d-inline-block bg-info text-white p-2">Item 1</div><div class="d-inline-block bg-warning text-dark p-2">Item 2</div><div class="d-inline-block bg-secondary text-white p-2">Item 3</div></body></html>' style="height:330px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 6: SCREEN READER ==================== -->
+    <section class="content-section" id="sec-sr">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 6</div>
+        <h1 class="section-title">Screen Reader</h1>
+        <p class="section-subtitle">Kelas aksesibilitas Bootstrap untuk mendukung pengguna dengan screen reader.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p><strong>Aksesibilitas web</strong> (web accessibility) adalah praktik membuat halaman web yang dapat digunakan oleh semua orang, termasuk pengguna dengan disabilitas visual yang menggunakan alat bantu seperti <strong>screen reader</strong> (pembaca layar).</p>
+        <p>Screen reader membaca konten halaman web secara tekstual kepada pengguna. Kadang kita ingin menambahkan teks keterangan yang <strong>hanya dibaca oleh screen reader</strong> tanpa ditampilkan secara visual.</p>
+        <table class="class-table">
+          <thead><tr><th>Class</th><th>Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><code>.sr-only</code></td><td>Sembunyikan elemen secara visual, tapi tetap dapat dibaca screen reader. Menggunakan teknik CSS khusus (bukan display:none yang akan menyembunyikan dari semua)</td></tr>
+            <tr><td><code>.sr-only-focusable</code></td><td>Sama seperti .sr-only, tetapi elemen akan muncul kembali saat difokus (misalnya saat navigasi keyboard). Berguna untuk "skip to content" link.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info">
+          <i class="fas fa-info-circle"></i>
+          <div>Perbedaan penting: <code>display: none</code> atau <code>visibility: hidden</code> menyembunyikan elemen dari SEMUA pengguna termasuk screen reader. Sedangkan <code>.sr-only</code> hanya menyembunyikan secara visual.</div>
+        </div>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content"><span class="cm">&lt;!-- Tombol dengan icon saja + keterangan untuk screen reader --&gt;</span>
+&lt;<span class="kw">button</span> <span class="at">class</span>=<span class="val">"btn btn-primary"</span>&gt;
+  &lt;<span class="kw">i</span> <span class="at">class</span>=<span class="val">"fas fa-search"</span>&gt;&lt;/<span class="kw">i</span>&gt;
+  &lt;<span class="kw">span</span> <span class="at">class</span>=<span class="val">"sr-only"</span>&gt;Tombol Cari&lt;/<span class="kw">span</span>&gt;
+&lt;/<span class="kw">button</span>&gt;
+
+<span class="cm">&lt;!-- Skip to content link (focusable saat navigasi keyboard) --&gt;</span>
+&lt;<span class="kw">a</span> <span class="at">class</span>=<span class="val">"sr-only sr-only-focusable"</span> <span class="at">href</span>=<span class="val">"#main-content"</span>&gt;
+  Skip ke konten utama
+&lt;/<span class="kw">a</span>&gt;
+
+<span class="cm">&lt;!-- Label form tersembunyi untuk screen reader --&gt;</span>
+&lt;<span class="kw">form</span>&gt;
+  &lt;<span class="kw">label</span> <span class="at">class</span>=<span class="val">"sr-only"</span> <span class="at">for</span>=<span class="val">"searchInput"</span>&gt;Kolom Pencarian&lt;/<span class="kw">label</span>&gt;
+  &lt;<span class="kw">input</span> <span class="at">type</span>=<span class="val">"text"</span> <span class="at">id</span>=<span class="val">"searchInput"</span> 
+         <span class="at">class</span>=<span class="val">"form-control"</span> 
+         <span class="at">placeholder</span>=<span class="val">"Cari..."</span>&gt;
+&lt;/<span class="kw">form</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>body{padding:16px;font-family:sans-serif}.note{font-size:12px;color:#666;background:#f8f9fa;padding:8px;border-radius:4px;margin-top:8px}</style></head><body><p><strong>Tombol dengan icon + teks sr-only (teks "Tombol Cari" tidak terlihat, hanya dibaca screen reader):</strong></p><button class="btn btn-primary"><i class="fas fa-search"></i><span class="sr-only">Tombol Cari</span></button><div class="note">👁️ Secara visual hanya terlihat icon. Screen reader akan membaca "Tombol Cari".</div><hr><p><strong>Form dengan label sr-only:</strong></p><form><label class="sr-only" for="si">Kolom Pencarian</label><div class="input-group"><input type="text" id="si" class="form-control" placeholder="Cari..."><div class="input-group-append"><button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button></div></div></form><div class="note">👁️ Label "Kolom Pencarian" tidak terlihat secara visual namun tetap dibaca oleh screen reader untuk aksesibilitas.</div></body></html>' style="height:300px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 7: IMAGE REPLACEMENT ==================== -->
+    <section class="content-section" id="sec-imgr">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 7</div>
+        <h1 class="section-title">Image Replacement</h1>
+        <p class="section-subtitle">Teknik aksesibilitas untuk menggantikan teks dengan gambar secara visual.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p><strong>Image Replacement</strong> adalah teknik di mana teks pada elemen HTML digantikan secara visual oleh sebuah gambar (misalnya logo), namun teks aslinya tetap ada dalam kode HTML agar dapat dibaca oleh screen reader dan mesin pencari (SEO).</p>
+        <p>Bootstrap 4 menyediakan class <code>.text-hide</code> untuk keperluan ini. Class ini menyembunyikan teks menggunakan teknik CSS khusus (bukan display:none) sambil tetap menampilkan background-image yang ditetapkan.</p>
+        <table class="class-table">
+          <thead><tr><th>Class</th><th>Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><code>.text-hide</code></td><td>Sembunyikan teks elemen secara visual, biasanya dipakai bersama background-image untuk menampilkan logo atau gambar.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div><strong>Catatan:</strong> Sejak Bootstrap 5, class <code>.text-hide</code> telah dihapus karena tidak lagi dianggap praktik terbaik. Untuk Bootstrap 4, class ini masih tersedia namun penggunaannya disarankan hati-hati.</div>
+        </div>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML + CSS</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content"><span class="cm">&lt;!-- CSS --&gt;</span>
+&lt;<span class="kw">style</span>&gt;
+  .<span class="cl">logo-header</span> {
+    <span class="at">background-image</span>: url(<span class="val">'logo.png'</span>);
+    <span class="at">background-size</span>: contain;
+    <span class="at">background-repeat</span>: no-repeat;
+    <span class="at">width</span>: <span class="val">150px</span>;
+    <span class="at">height</span>: <span class="val">50px</span>;
+    <span class="at">display</span>: <span class="val">block</span>;
+  }
+&lt;/<span class="kw">style</span>&gt;
+
+<span class="cm">&lt;!-- HTML: Teks "Nama Website" disembunyikan, logo tampil --&gt;</span>
+&lt;<span class="kw">a</span> <span class="at">href</span>=<span class="val">"/"</span> <span class="at">class</span>=<span class="val">"logo-header text-hide"</span>&gt;
+  Nama Website
+&lt;/<span class="kw">a</span>&gt;
+
+<span class="cm">&lt;!-- Contoh dengan heading --&gt;</span>
+&lt;<span class="kw">h1</span> <span class="at">class</span>=<span class="val">"logo-header text-hide"</span>&gt;Nama Website&lt;/<span class="kw">h1</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><style>body{padding:16px;font-family:sans-serif}.logo-demo{background:linear-gradient(135deg,#007bff,#6f42c1);width:200px;height:60px;display:block;border-radius:8px}.note{font-size:12px;color:#666;background:#f8f9fa;padding:8px;border-radius:4px;margin-top:8px;border-left:3px solid #007bff}</style></head><body><p><strong>Tanpa .text-hide (teks terlihat):</strong></p><a href="#" style="background:linear-gradient(135deg,#007bff,#6f42c1);width:200px;height:60px;display:block;border-radius:8px;text-decoration:none;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold">Nama Website</a><hr><p><strong>Dengan .text-hide (teks disembunyikan, gambar/background tampil):</strong></p><a href="#" class="logo-demo text-hide">Nama Website</a><div class="note">👁️ Secara visual hanya tampil kotak berwarna (pengganti logo). Namun di dalam HTML, teks "Nama Website" tetap ada → dapat dibaca screen reader dan mesin pencari.</div></body></html>' style="height:290px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 8: RESPONSIVE UTILITY ==================== -->
+    <section class="content-section" id="sec-responsive">
+      <div class="section-header">
+        <div class="section-eyebrow">Topik 8</div>
+        <h1 class="section-title">Responsive Utility</h1>
+        <p class="section-subtitle">Sistem breakpoint Bootstrap 4 untuk tampilan yang adaptif di berbagai ukuran layar.</p>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title"><i class="fas fa-book-open"></i> Penjelasan Teori</div>
+        <p>Bootstrap 4 menggunakan sistem <strong>breakpoint</strong> untuk menentukan batas ukuran layar. Class-class responsive memungkinkan kita menampilkan atau menyembunyikan elemen berdasarkan ukuran layar pengguna.</p>
+        <table class="class-table">
+          <thead><tr><th>Breakpoint</th><th>Prefix</th><th>Lebar Layar</th></tr></thead>
+          <tbody>
+            <tr><td>Extra Small</td><td><code>-</code> (default)</td><td>&lt; 576px (HP kecil)</td></tr>
+            <tr><td>Small</td><td><code>-sm-</code></td><td>≥ 576px (HP besar)</td></tr>
+            <tr><td>Medium</td><td><code>-md-</code></td><td>≥ 768px (Tablet)</td></tr>
+            <tr><td>Large</td><td><code>-lg-</code></td><td>≥ 992px (Laptop)</td></tr>
+            <tr><td>Extra Large</td><td><code>-xl-</code></td><td>≥ 1200px (Monitor)</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:1rem">Pola penggunaan umum:</p>
+        <ul class="styled">
+          <li><code>d-none d-md-block</code> → Hanya tampil di layar MD ke atas (tablet/desktop)</li>
+          <li><code>d-block d-md-none</code> → Hanya tampil di layar di bawah MD (mobile)</li>
+          <li><code>d-none d-sm-block d-lg-none</code> → Tampil hanya di SM – LG</li>
+        </ul>
+      </div>
+
+      <div class="code-block-wrap">
+        <div class="code-block-header">
+          <span class="code-lang">HTML</span>
+          <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre class="code-content"><span class="cm">&lt;!-- Hanya muncul di mobile --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-block d-sm-none alert alert-info"</span>&gt;
+  📱 Tampilan Mobile (XS)
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- Hanya muncul di SM –– MD --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-none d-sm-block d-md-none alert alert-success"</span>&gt;
+  📲 Tampilan Small (SM) — Tablet kecil
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- Hanya muncul di MD ke atas --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-none d-md-block alert alert-warning"</span>&gt;
+  🖥️ Tampilan Medium (MD) ke atas — Tablet / Desktop
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- Hanya muncul di LG ke atas --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"d-none d-lg-block alert alert-danger"</span>&gt;
+  🖥️ Tampilan Large (LG) — Laptop / Desktop besar
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- Grid responsif --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"row"</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"col-12 col-md-6 col-lg-4"</span>&gt;Kolom A&lt;/<span class="kw">div</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"col-12 col-md-6 col-lg-4"</span>&gt;Kolom B&lt;/<span class="kw">div</span>&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="val">"col-12 col-md-12 col-lg-4"</span>&gt;Kolom C&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-label"><i class="fas fa-map-pin"></i> Preview Hasil</div>
+        <div class="preview-frame">
+          <iframe srcdoc='<!DOCTYPE html><html><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"><style>body{padding:16px;font-family:sans-serif;font-size:14px}.note{font-size:12px;color:#555;background:#f8f9fa;padding:8px 12px;border-radius:4px;margin-bottom:12px}</style></head><body><div class="note">💡 Resize jendela browser untuk melihat elemen muncul/hilang berdasarkan breakpoint</div><div class="d-block d-sm-none alert alert-info mb-2">📱 Tampilan Mobile (XS &lt;576px)</div><div class="d-none d-sm-block d-md-none alert alert-success mb-2">📲 Tampilan Small (SM ≥576px)</div><div class="d-none d-md-block alert alert-warning mb-2">🖥️ Tampilan Medium+ (MD ≥768px)</div><hr><p><strong>Grid Responsif:</strong></p><div class="row"><div class="col-12 col-md-6 col-lg-4 mb-2"><div class="bg-primary text-white p-3 text-center rounded">Kolom A<br><small>col-12 / md-6 / lg-4</small></div></div><div class="col-12 col-md-6 col-lg-4 mb-2"><div class="bg-success text-white p-3 text-center rounded">Kolom B<br><small>col-12 / md-6 / lg-4</small></div></div><div class="col-12 col-md-12 col-lg-4 mb-2"><div class="bg-info text-white p-3 text-center rounded">Kolom C<br><small>col-12 / md-12 / lg-4</small></div></div></div></body></html>' style="height:350px" onload="autoHeight(this)"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 9: TUGAS ==================== -->
+    <section class="content-section" id="sec-tugas">
+      <div class="section-header">
+        <div class="section-eyebrow">Evaluasi</div>
+        <h1 class="section-title">Tugas Praktik</h1>
+        <p class="section-subtitle">Pertemuan 10 – Helper Class Bootstrap 4.0</p>
+      </div>
+
+      <div class="task-header">
+        <div class="task-icon">📋</div>
+        <h2>Tugas Praktik Pertemuan 10</h2>
+        <p>Helper Class Bootstrap 4.0 · Pemrograman Web</p>
+      </div>
+
+      <div class="case-card">
+        <h4><i class="fas fa-clipboard-list" style="color:var(--accent)"></i> Studi Kasus</h4>
+        <p>Buatlah sebuah <strong>halaman web profil mahasiswa</strong> menggunakan Bootstrap 4 yang mencakup semua helper class yang telah dipelajari, dengan ketentuan sebagai berikut:</p>
+      </div>
+
+      <div class="case-card">
+        <h4><i class="fas fa-list-ol" style="color:var(--accent)"></i> Ketentuan Tugas</h4>
+        <div class="case-item">
+          <div class="case-num">1</div>
+          <div class="case-text">Gunakan <strong>Contextual Color</strong> untuk menampilkan nama, jurusan, dan status mahasiswa dengan warna yang berbeda sesuai konteks. (contoh: nama dengan <code>text-primary</code>, status aktif dengan <code>text-success</code>)</div>
+        </div>
+        <div class="case-item">
+          <div class="case-num">2</div>
+          <div class="case-text">Gunakan <strong>Contextual Background</strong> untuk membuat card/section informasi dengan background berwarna. (contoh: card nilai dengan <code>bg-success</code>, card peringatan dengan <code>bg-warning</code>)</div>
+        </div>
+        <div class="case-item">
+          <div class="case-num">3</div>
+          <div class="case-text">Tambahkan minimal <strong>5 Icon Font Awesome</strong> yang relevan dengan konten profil. Contoh: icon untuk email (<code>fa-envelope</code>), telepon (<code>fa-phone</code>), lokasi (<code>fa-map-marker-alt</code>), jurusan (<code>fa-graduation-cap</code>), media sosial (<code>fab fa-instagram</code>), dll.</div>
+        </div>
+        <div class="case-item">
+          <div class="case-num">4</div>
+          <div class="case-text">Gunakan <strong>Clearfix</strong> untuk mengatur layout yang menggunakan float. Misalnya foto profil di-float ke kiri dan teks biodata di sebelah kanannya, container diberi class <code>.clearfix</code>.</div>
+        </div>
+        <div class="case-item">
+          <div class="case-num">5</div>
+          <div class="case-text">Terapkan fitur <strong>Menampilkan dan Menyembunyikan Konten</strong> — buat minimal 1 elemen yang hanya tampil di layar tertentu. Contoh: tombol lengkap hanya tampil di desktop (<code>d-none d-md-block</code>), tombol icon tampil di mobile (<code>d-block d-md-none</code>).</div>
+        </div>
+        <div class="case-item">
+          <div class="case-num">6</div>
+          <div class="case-text">Tambahkan elemen <strong>Screen Reader</strong> menggunakan <code>.sr-only</code> minimal 1 buah untuk keperluan aksesibilitas. Contoh: label tersembunyi pada tombol icon, atau keterangan tambahan pada elemen navigasi.</div>
+        </div>
+        <div class="case-item">
+          <div class="case-num">7</div>
+          <div class="case-text">Gunakan <strong>Image Replacement</strong> (<code>.text-hide</code>) pada logo atau header halaman — teks judul disembunyikan secara visual namun tetap ada di kode HTML untuk screen reader dan SEO.</div>
+        </div>
+        <div class="case-item">
+          <div class="case-num">8</div>
+          <div class="case-text">Terapkan <strong>Responsive Utility</strong> agar layout halaman menyesuaikan tampilan di mobile dan desktop. Gunakan kombinasi class display seperti <code>d-none d-md-block</code> dan grid system Bootstrap yang responsif.</div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <h4><i class="fas fa-upload" style="color:var(--accent)"></i> Format Pengumpulan</h4>
+        <div class="info-row">
+          <div class="info-chip"><i class="fas fa-file-code"></i> <strong>File:</strong> index.html (single file)</div>
+          <div class="info-chip"><i class="fas fa-cloud-upload-alt"></i> <strong>Media:</strong> LMS / Google Classroom</div>
+          <div class="info-chip"><i class="fas fa-clock"></i> <strong>Deadline:</strong> Sesuai jadwal dosen</div>
+        </div>
+        <div class="callout info">
+          <i class="fas fa-info-circle"></i>
+          <div>Seluruh CSS dan JavaScript harus ditulis dalam <strong>satu file HTML</strong>. CDN Bootstrap 4 dan Font Awesome diperbolehkan. Tidak ada file eksternal lainnya.</div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <h4><i class="fas fa-star" style="color:var(--warning)"></i> Kriteria Penilaian</h4>
+        <table class="penilaian-table">
+          <thead>
+            <tr><th>No</th><th>Kriteria</th><th>Bobot</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Kelengkapan fitur (semua 8 helper class diimplementasikan)</td>
+              <td><span class="bobot-badge bobot-40">40%</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Kerapian kode (indentasi, penamaan class, struktur HTML)</td>
+              <td><span class="bobot-badge bobot-20">20%</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Tampilan / Desain (estetika, warna harmonis, keterbacaan)</td>
+              <td><span class="bobot-badge bobot-25">25%</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Responsivitas (tampilan di mobile dan desktop berfungsi baik)</td>
+              <td><span class="bobot-badge bobot-15">15%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Pemrograman Web &nbsp;·&nbsp; Pertemuan 10 &nbsp;·&nbsp; <span>Helper Class Bootstrap 4.0</span></p>
+      <p style="margin-top:4px;font-size:0.72rem">Materi kuliah ini dibuat untuk keperluan pembelajaran</p>
+    </footer>
+
+  </main>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ===== SECTION NAVIGATION =====
+  function showSection(id, btn) {
+    // Hide all sections
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    // Remove active from all nav buttons
+    document.querySelectorAll('.nav-item-btn').forEach(b => b.classList.remove('active'));
+    // Show selected section
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    // Close sidebar on mobile
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('active');
+    }
+    // Scroll to top
+    document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===== SIDEBAR TOGGLE =====
+  document.getElementById('sidebarToggle').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('active');
+  });
+  document.getElementById('overlay').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.remove('open');
+    this.classList.remove('active');
+  });
+
+  // ===== COPY CODE =====
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block-wrap').querySelector('pre.code-content');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ===== AUTO HEIGHT IFRAME =====
+  function autoHeight(iframe) {
+    try {
+      const h = iframe.contentDocument.documentElement.scrollHeight;
+      iframe.style.height = Math.min(Math.max(h + 20, 120), 500) + 'px';
+    } catch(e) {}
+  }
+</script>
+</body>
+</html>

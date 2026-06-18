@@ -1,0 +1,183 @@
+/* ================================================
+   Web Desain II — Demo Project
+   File: css/style.css
+   Keterangan: CSS custom untuk melengkapi Bootstrap
+   ================================================ */
+
+
+/* ------------------------------------------------
+   PERTEMUAN 2: Responsive Web Design
+   CSS ini bekerja BERSAMA Bootstrap, bukan mengganti
+   ------------------------------------------------ */
+
+/* Reset dasar */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Smooth scroll saat klik link navigasi */
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* ------------------------------------------------
+   PERTEMUAN 4: Kustomisasi komponen Bootstrap
+   Kita bisa override style Bootstrap dari sini
+   ------------------------------------------------ */
+
+/* Navbar — tambah shadow agar terlihat lebih profesional */
+.navbar {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Navbar brand (nama/logo) */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+
+
+/* ------------------------------------------------
+   HERO SECTION
+   Jumbotron dengan warna gradient custom
+   ------------------------------------------------ */
+.bg-hero {
+  /* PERTEMUAN 2: Contoh CSS yang bisa diubah sesuai kebutuhan */
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 80px 0;
+}
+
+.bg-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+}
+
+.bg-hero .lead {
+  font-size: 1.3rem;
+  opacity: 0.9;
+}
+
+
+/* ------------------------------------------------
+   PERTEMUAN 5: Elemen Grid — Card Statistik
+   Tampilan card angka pada section Tentang
+   ------------------------------------------------ */
+.card-stat {
+  border-radius: 10px;
+  transition: transform 0.2s ease;  /* efek hover halus */
+}
+
+/* Efek hover: card naik sedikit */
+.card-stat:hover {
+  transform: translateY(-4px);
+}
+
+.card-stat h4 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+
+/* ------------------------------------------------
+   PERTEMUAN 5 & 6: Tipografi — Section judul
+   Garis bawah dekoratif pada heading section
+   ------------------------------------------------ */
+section h2 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+/* Garis aksen bawah heading */
+section h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #0f3460;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* PERTEMUAN 6: Blockquote kustom */
+.blockquote {
+  border-left: 4px solid #0f3460;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #555;
+}
+
+
+/* ------------------------------------------------
+   PERTEMUAN 7: Tabel dan Form — tambahan style
+   ------------------------------------------------ */
+
+/* Tabel — header lebih menonjol */
+.table thead th {
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Form card — tambah border radius */
+.card {
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Input focus — warna border custom */
+.form-control:focus {
+  border-color: #0f3460;
+  box-shadow: 0 0 0 0.2rem rgba(15, 52, 96, 0.2);
+}
+
+
+/* ------------------------------------------------
+   PERTEMUAN 2: MEDIA QUERY — Responsive Custom
+   Menyesuaikan tampilan di berbagai ukuran layar
+   Ini TAMBAHAN dari responsive Bootstrap
+   ------------------------------------------------ */
+
+/* Layar tablet ke bawah (max 768px) */
+@media (max-width: 768px) {
+  .bg-hero h1 {
+    font-size: 2rem;  /* heading lebih kecil di HP */
+  }
+
+  .bg-hero {
+    padding: 50px 0;  /* padding lebih kecil di HP */
+  }
+
+  /* Tabel di HP: font lebih kecil agar muat */
+  .table {
+    font-size: 0.85rem;
+  }
+}
+
+/* Layar HP kecil (max 480px) */
+@media (max-width: 480px) {
+  .bg-hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .navbar-brand {
+    font-size: 1rem;
+  }
+}
+
+
+/* ------------------------------------------------
+   FOOTER
+   ------------------------------------------------ */
+footer {
+  margin-top: 0;
+}
+
+footer p {
+  font-size: 0.9rem;
+}

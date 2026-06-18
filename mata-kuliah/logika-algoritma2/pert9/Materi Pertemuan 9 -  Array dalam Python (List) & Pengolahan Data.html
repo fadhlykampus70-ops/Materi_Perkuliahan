@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Array dalam Python (List) — Pertemuan 9</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --surface2: #222540;
+    --surface3: #2a2f4a;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --accent3: #38d9a9;
+    --accent4: #f7a84f;
+    --accent5: #f76f6f;
+    --text: #e8eaf6;
+    --text2: #9ba5c9;
+    --text3: #5a6290;
+    --border: #2e3357;
+    --glow: rgba(79,142,247,0.15);
+    --glow2: rgba(124,92,252,0.12);
+    --card-radius: 16px;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Sora', sans-serif;
+    --body: 'Space Grotesk', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    padding: 80px 24px 60px;
+    text-align: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(79,142,247,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 20%, rgba(124,92,252,0.12) 0%, transparent 60%);
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 39px, var(--border) 39px, var(--border) 40px
+    ), repeating-linear-gradient(
+      90deg, transparent, transparent 39px, var(--border) 39px, var(--border) 40px
+    );
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  header h1 {
+    font-family: var(--sans);
+    font-size: clamp(28px, 5vw, 54px);
+    font-weight: 800;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 70%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+
+  header p {
+    font-size: clamp(15px, 2vw, 18px);
+    color: var(--text2);
+    max-width: 560px;
+    margin: 0 auto 28px;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .header-meta span {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 14px;
+    font-size: 13px;
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,17,23,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  nav::-webkit-scrollbar { height: 3px; }
+
+  .nav-inner {
+    display: inline-flex;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  nav a {
+    display: inline-block;
+    padding: 14px 18px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text3);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── SECTION ── */
+  section {
+    margin-bottom: 60px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 10px;
+  }
+
+  section h2 {
+    font-family: var(--sans);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 24px;
+    margin-bottom: 18px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--accent2); }
+
+  .card-accent { border-left: 3px solid var(--accent); }
+  .card-purple { border-left: 3px solid var(--accent2); }
+  .card-green  { border-left: 3px solid var(--accent3); }
+  .card-orange { border-left: 3px solid var(--accent4); }
+  .card-red    { border-left: 3px solid var(--accent5); }
+
+  .card h3 {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .card p, .card li { color: var(--text2); font-size: 15px; }
+  .card ul { padding-left: 20px; }
+  .card li { margin-bottom: 6px; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #0a0c14;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 14px 0;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-header span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot:nth-child(1) { background: #f76f6f; }
+  .dot:nth-child(2) { background: #f7a84f; }
+  .dot:nth-child(3) { background: #38d9a9; }
+
+  .copy-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  pre {
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.8;
+    color: #c9d1d9;
+  }
+
+  pre .kw  { color: #ff7b72; } /* keyword */
+  pre .fn  { color: #d2a8ff; } /* function */
+  pre .str { color: #a5d6ff; } /* string */
+  pre .num { color: #79c0ff; } /* number */
+  pre .cm  { color: #5a6290; font-style: italic; } /* comment */
+  pre .var { color: #ffa657; } /* variable */
+  pre .op  { color: #ff7b72; } /* operator */
+  pre .idx { color: #38d9a9; } /* index highlight */
+
+  /* ── VISUAL ARRAY ── */
+  .array-visual {
+    display: flex;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 14px 0;
+    border: 1px solid var(--border);
+  }
+
+  .array-cell {
+    flex: 1;
+    text-align: center;
+    padding: 14px 8px;
+    background: var(--surface2);
+    border-right: 1px solid var(--border);
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .array-cell:last-child { border-right: none; }
+
+  .array-cell .val {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+
+  .array-cell .idx-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    margin-top: 4px;
+    display: block;
+  }
+
+  .array-cell.highlight { background: rgba(79,142,247,0.2); border-color: var(--accent); }
+  .array-cell.active    { background: rgba(56,217,169,0.2); animation: pulse 0.5s ease; }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── 2D VISUAL ── */
+  .matrix-visual {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 2px solid var(--accent2);
+    border-radius: 10px;
+    padding: 10px;
+    background: var(--surface2);
+    margin: 14px 0;
+  }
+
+  .matrix-row {
+    display: flex;
+    gap: 3px;
+  }
+
+  .matrix-cell {
+    width: 60px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+    transition: all 0.3s;
+  }
+
+  .matrix-cell.str-cell { color: var(--accent3); font-size: 13px; }
+  .matrix-cell.highlight-row { background: rgba(124,92,252,0.2); border-color: var(--accent2); }
+  .matrix-cell.highlight-col { background: rgba(79,142,247,0.2); border-color: var(--accent); }
+
+  /* ── ARROW ── */
+  .traversal-arrow {
+    display: inline-block;
+    font-size: 22px;
+    color: var(--accent3);
+    animation: moveRight 1.5s ease-in-out infinite;
+    margin: 0 8px;
+  }
+
+  @keyframes moveRight {
+    0%   { transform: translateX(-4px); opacity: 0.4; }
+    50%  { transform: translateX(4px);  opacity: 1; }
+    100% { transform: translateX(-4px); opacity: 0.4; }
+  }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    background: rgba(79,142,247,0.08);
+    border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .info-box .info-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .info-box p { color: var(--text2); font-size: 14.5px; }
+
+  .warn-box {
+    background: rgba(247,168,79,0.08);
+    border: 1px solid rgba(247,168,79,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .warn-box p { color: var(--text2); font-size: 14.5px; }
+
+  /* ── STEP BOX ── */
+  .step-list { list-style: none; padding: 0; margin: 14px 0; }
+  .step-list li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding: 14px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .step-list li:hover { border-color: var(--accent2); }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-content strong { color: #fff; display: block; margin-bottom: 4px; }
+  .step-content p { color: var(--text2); font-size: 14px; margin: 0; }
+
+  /* ── BEFORE AFTER ── */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 14px 0;
+  }
+
+  @media (max-width: 540px) { .before-after { grid-template-columns: 1fr; } }
+
+  .ba-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .ba-box .ba-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: var(--mono);
+  }
+
+  .ba-box.before .ba-label { color: var(--accent5); }
+  .ba-box.after  .ba-label { color: var(--accent3); }
+
+  /* ── INTERACTIVE SECTION ── */
+  .interactive-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 28px;
+    margin-bottom: 18px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  input[type="number"], input[type="text"] {
+    flex: 1;
+    min-width: 160px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus { border-color: var(--accent); }
+
+  .btn {
+    padding: 12px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: var(--body);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79,142,247,0.3); }
+
+  .btn-danger {
+    background: rgba(247,111,111,0.15);
+    color: var(--accent5);
+    border: 1px solid rgba(247,111,111,0.3);
+  }
+
+  .btn-danger:hover { background: rgba(247,111,111,0.25); }
+
+  .btn-orange {
+    background: rgba(247,168,79,0.15);
+    color: var(--accent4);
+    border: 1px solid rgba(247,168,79,0.3);
+  }
+
+  .btn-orange:hover { background: rgba(247,168,79,0.25); }
+
+  .btn-green {
+    background: rgba(56,217,169,0.15);
+    color: var(--accent3);
+    border: 1px solid rgba(56,217,169,0.3);
+  }
+
+  .btn-green:hover { background: rgba(56,217,169,0.25); }
+
+  #array-display {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    min-height: 58px;
+    align-items: center;
+    padding: 12px;
+    background: #0a0c14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 14px;
+  }
+
+  .arr-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .arr-item .val-bubble {
+    background: var(--surface3);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .arr-item .idx-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  .arr-item.removing .val-bubble {
+    animation: popOut 0.3s ease forwards;
+    border-color: var(--accent5);
+    color: var(--accent5);
+  }
+
+  @keyframes popOut {
+    to { transform: scale(0); opacity: 0; }
+  }
+
+  .arr-item.traversing .val-bubble {
+    background: rgba(56,217,169,0.2);
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+
+  #array-info {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text3);
+    padding: 8px 12px;
+    background: var(--surface2);
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  #log-output {
+    background: #0a0c14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent3);
+    min-height: 80px;
+    max-height: 150px;
+    overflow-y: auto;
+    white-space: pre;
+  }
+
+  /* ── LATIHAN ── */
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .quiz-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent4);
+    margin-bottom: 12px;
+    display: flex; gap: 8px; align-items: center;
+  }
+
+  .quiz-card p { color: var(--text2); font-size: 14.5px; margin-bottom: 14px; }
+
+  .show-answer-btn {
+    background: transparent;
+    border: 1px dashed var(--text3);
+    color: var(--text3);
+    font-family: var(--body);
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .show-answer-btn:hover { border-color: var(--accent4); color: var(--accent4); }
+
+  .answer-block {
+    display: none;
+    margin-top: 14px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .answer-block.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── STUDY CASE ── */
+  .studi-kasus-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+
+  .studi-kasus-table th {
+    background: var(--surface3);
+    color: var(--accent3);
+    padding: 10px 16px;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+
+  .studi-kasus-table td {
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+  }
+
+  .studi-kasus-table tr:hover td { background: var(--surface2); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 40px 0;
+  }
+
+  /* ── HIGHLIGHT INLINE ── */
+  code {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    background: var(--surface3);
+    color: var(--accent);
+    padding: 2px 7px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── INDEX LABEL ── */
+  .idx-row {
+    display: flex;
+    gap: 0;
+    margin-top: -4px;
+    margin-bottom: 8px;
+  }
+
+  .idx-row .idx-label-cell {
+    flex: 1;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    padding: 4px;
+    border-right: 1px solid transparent;
+  }
+
+  /* ── LOOP VISUAL ── */
+  .loop-visual {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 14px 0;
+    flex-wrap: wrap;
+  }
+
+  .loop-ptr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .loop-ptr .arrow-up { color: var(--accent3); font-size: 14px; }
+  .loop-ptr .label { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 30px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text3);
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+
+  /* ── GRID 2 COL ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ── PROGRESS BAR ── */
+  .progress-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--surface);
+    z-index: 200;
+  }
+  #progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3));
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* ── TOOLTIP ── */
+  [data-tip] { position: relative; cursor: help; }
+  [data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-family: var(--body);
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .tag-new { background: rgba(56,217,169,0.15); color: var(--accent3); border: 1px solid rgba(56,217,169,0.3); }
+  .tag-key { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+
+  /* ── ANNOTATION ── */
+  .annotation {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin: 4px 0;
+    padding-left: 8px;
+    border-left: 2px solid var(--surface3);
+  }
+  .annotation .ln { color: var(--text3); font-family: var(--mono); font-size: 12px; min-width: 28px; }
+  .annotation .note { color: var(--text2); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-section"><div id="progress-bar"></div></div>
+
+<!-- HEADER -->
+<header id="top">
+  <div class="badge">📚 Pertemuan 9 · Logika & Algoritma 2</div>
+  <h1>Array dalam Python (List)<br>&amp; Pengolahan Data</h1>
+  <p>Dari Nol ke Studi Kasus — Panduan lengkap untuk mahasiswa yang baru pertama kali belajar Python</p>
+  <div class="header-meta">
+    <span>🎓 D3 Manajemen Informatika</span>
+    <span>📅 Semester 2</span>
+    <span>🐍 Python / Google Colab</span>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#icebreaking">🧊 Pembuka</a>
+    <a href="#bridging">🐍 Python Dasar</a>
+    <a href="#konsep">📦 Konsep Array</a>
+    <a href="#akses">🎯 Akses Data</a>
+    <a href="#traversal">🔄 Traversal</a>
+    <a href="#operasi">⚙️ Operasi</a>
+    <a href="#array2d">🗂️ Array 2D</a>
+    <a href="#studikasus">💼 Studi Kasus</a>
+    <a href="#latihan">✏️ Latihan</a>
+    <a href="#interaktif">🚀 Interaktif</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 1. ICEBREAKING -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="icebreaking">
+  <div class="section-label">01 · Ice Breaking</div>
+  <h2><span class="icon" style="background:rgba(247,168,79,0.15);color:var(--accent4);">🤔</span>Coba kita bayangkan dulu...</h2>
+
+  <div class="card card-orange">
+    <h3>❓ Pertanyaan untuk kita semua</h3>
+    <p>Kalau kita punya data nilai 30 mahasiswa, apakah harus buat <strong style="color:#fff;">30 variabel berbeda</strong>?</p>
+    <div style="margin:16px 0;padding:14px;background:var(--surface3);border-radius:10px;font-family:var(--mono);font-size:13px;color:var(--accent5);">
+      nilai1 = 80<br>
+      nilai2 = 90<br>
+      nilai3 = 75<br>
+      <span style="color:var(--text3);"># ... sampai nilai30 = 85 ← 😩 Capek banget!</span>
+    </div>
+    <p>Tentu <strong style="color:var(--accent5);">TIDAK!</strong> Ada cara yang jauh lebih efisien. Namanya <strong style="color:var(--accent3);">Array</strong>!</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-accent">
+      <h3>📦 Tanpa Array</h3>
+      <p>1 variabel = 1 kotak kecil</p>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <div style="width:48px;height:48px;background:var(--surface3);border:2px solid var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--accent);">80</div>
+        <div style="width:48px;height:48px;background:var(--surface3);border:2px solid var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--accent);">90</div>
+        <div style="width:48px;height:48px;background:var(--surface3);border:2px solid var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--accent);">75</div>
+        <div style="width:36px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:18px;">···</div>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:var(--accent5);">❌ Harus buat variabel satu-satu, susah dikelola</p>
+    </div>
+
+    <div class="card card-green">
+      <h3>🗃️ Dengan Array</h3>
+      <p>1 variabel = 1 kotak besar berisi banyak data</p>
+      <div style="margin-top:12px;background:#0a0c14;border-radius:8px;border:2px solid var(--accent3);padding:10px;display:flex;gap:0;overflow:hidden;border-radius:8px;">
+        <div style="flex:1;text-align:center;padding:8px;border-right:1px solid var(--border);font-family:var(--mono);font-size:15px;font-weight:700;color:var(--accent3);">80</div>
+        <div style="flex:1;text-align:center;padding:8px;border-right:1px solid var(--border);font-family:var(--mono);font-size:15px;font-weight:700;color:var(--accent3);">90</div>
+        <div style="flex:1;text-align:center;padding:8px;border-right:1px solid var(--border);font-family:var(--mono);font-size:15px;font-weight:700;color:var(--accent3);">75</div>
+        <div style="flex:1;text-align:center;padding:8px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--accent3);">85</div>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:var(--accent3);">✅ Semua data dalam 1 variabel, mudah dikelola!</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <span class="info-icon">💡</span>
+    <p><strong style="color:#fff;">Analogi sehari-hari:</strong> Bayangkan lemari pakaian. Daripada kamu taruh baju di mana-mana di lantai, mending taruh semua di lemari — teratur, gampang cari, dan hemat tempat. Itulah fungsi array!</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 2. BRIDGING PYTHON -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="bridging">
+  <div class="section-label">02 · Bridging</div>
+  <h2><span class="icon" style="background:rgba(56,217,169,0.15);color:var(--accent3);">🐍</span>Kenalan Dulu sama Python</h2>
+
+  <p style="color:var(--text2);margin-bottom:18px;">Sebelum masuk ke array, kita kenalan dulu dengan Python. Tenang, ini sangat mudah!</p>
+
+  <div class="grid-2">
+    <div class="card card-green">
+      <h3>✅ Python TIDAK pakai titik koma <code>;</code></h3>
+      <p>Di Python, setiap baris kode sudah berakhir otomatis. Tidak seperti bahasa lain yang harus pakai <code>;</code> di setiap akhir baris.</p>
+    </div>
+    <div class="card card-accent">
+      <h3>🖨️ <code>print()</code> untuk menampilkan output</h3>
+      <p>Untuk melihat hasil kode kita, gunakan fungsi <code>print()</code>. Apapun yang ada di dalam kurung, akan tampil di layar.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <span>PYTHON · Dasar-Dasar</span>
+      <button class="copy-btn" onclick="copyCode(this)">copy</button>
+    </div>
+    <pre><span class="cm"># Ini adalah komentar — tidak dijalankan Python</span>
+<span class="cm"># Tanda # digunakan untuk komentar/penjelasan</span>
+
+<span class="cm"># Membuat variabel (tidak perlu deklarasi tipe data!)</span>
+<span class="var">nama</span> = <span class="str">"Budi"</span>
+<span class="var">umur</span> = <span class="num">20</span>
+<span class="var">nilai</span> = <span class="num">85.5</span>
+
+<span class="cm"># Menampilkan output dengan print()</span>
+<span class="fn">print</span>(<span class="var">nama</span>)        <span class="cm"># Output: Budi</span>
+<span class="fn">print</span>(<span class="var">umur</span>)        <span class="cm"># Output: 20</span>
+<span class="fn">print</span>(<span class="var">nilai</span>)       <span class="cm"># Output: 85.5</span>
+
+<span class="cm"># Gabungkan teks dengan variabel</span>
+<span class="fn">print</span>(<span class="str">"Nama saya:"</span>, <span class="var">nama</span>)   <span class="cm"># Output: Nama saya: Budi</span></pre>
+  </div>
+
+  <div style="margin:14px 0;">
+    <p style="font-size:14px;color:var(--text2);margin-bottom:10px;font-weight:600;">📖 Penjelasan setiap baris:</p>
+    <div class="annotation"><span class="ln">#</span><span class="note">Baris dengan tanda <code>#</code> adalah komentar — Python mengabaikannya, tapi sangat berguna untuk kita baca</span></div>
+    <div class="annotation"><span class="ln">nama=</span><span class="note">Membuat variabel bernama <code>nama</code>, langsung diisi dengan nilai <code>"Budi"</code> (teks harus pakai tanda kutip)</span></div>
+    <div class="annotation"><span class="ln">umur=</span><span class="note">Variabel <code>umur</code> berisi angka bulat (integer) — tidak perlu tanda kutip</span></div>
+    <div class="annotation"><span class="ln">print()</span><span class="note">Fungsi ajaib! Isi kurungnya akan ditampilkan ke layar. Bisa diisi variabel, teks, atau keduanya sekaligus</span></div>
+  </div>
+
+  <div class="warn-box">
+    <span class="info-icon">⚠️</span>
+    <p><strong style="color:var(--accent4);">Ingat!</strong> Python sangat memperhatikan <strong style="color:#fff;">indentasi (spasi/tab)</strong>. Gunakan 4 spasi atau 1 tab untuk kode di dalam blok (loop, fungsi, dll). Ini akan kita lihat nanti saat belajar perulangan.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 3. KONSEP ARRAY -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="konsep">
+  <div class="section-label">03 · Konsep Utama</div>
+  <h2><span class="icon" style="background:rgba(124,92,252,0.15);color:var(--accent2);">📦</span>Array (List) di Python</h2>
+
+  <div class="card card-purple">
+    <h3>🧠 Apa itu List/Array?</h3>
+    <p>Di Python, array disebut <strong style="color:#fff;">list</strong>. List adalah <strong style="color:var(--accent2);">kumpulan data yang disimpan dalam satu variabel</strong>. Datanya terurut, bisa diubah, dan bisa berisi tipe data apa saja.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <span>PYTHON · Membuat List</span>
+      <button class="copy-btn" onclick="copyCode(this)">copy</button>
+    </div>
+    <pre><span class="cm"># Cara membuat list di Python</span>
+<span class="cm"># Gunakan kurung siku [ ] dan pisahkan dengan koma</span>
+
+<span class="var">nilai</span> = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">75</span>, <span class="num">85</span>]
+
+<span class="cm"># List juga bisa berisi teks (string)</span>
+<span class="var">nama</span> = [<span class="str">"Budi"</span>, <span class="str">"Siti"</span>, <span class="str">"Andi"</span>]
+
+<span class="cm"># List bisa berisi campuran tipe data</span>
+<span class="var">data</span> = [<span class="str">"Budi"</span>, <span class="num">20</span>, <span class="num">85.5</span>]
+
+<span class="cm"># Tampilkan semua isi list</span>
+<span class="fn">print</span>(<span class="var">nilai</span>)   <span class="cm"># Output: [80, 90, 75, 85]</span></pre>
+  </div>
+
+  <p style="color:var(--text2);margin-bottom:12px;">Coba kita visualisasikan seperti ini — setiap data punya <strong style="color:#fff;">nomor urut</strong> yang disebut <strong style="color:var(--accent);">index</strong>:</p>
+
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <p style="font-family:var(--mono);font-size:12px;color:var(--text3);margin-bottom:8px;">nilai = [80, 90, 75, 85]</p>
+    <div class="array-visual" id="static-array">
+      <div class="array-cell"><span class="val">80</span><span class="idx-label">index [0]</span></div>
+      <div class="array-cell"><span class="val">90</span><span class="idx-label">index [1]</span></div>
+      <div class="array-cell"><span class="val">75</span><span class="idx-label">index [2]</span></div>
+      <div class="array-cell"><span class="val">85</span><span class="idx-label">index [3]</span></div>
+    </div>
+    <div class="info-box" style="margin-top:12px;">
+      <span class="info-icon">💡</span>
+      <p>Index dimulai dari <strong style="color:var(--accent);">0</strong>, bukan 1! Jadi data pertama ada di index 0, kedua di index 1, dan seterusnya. Ini penting banget!</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <h3>🔢 Berapa panjang list kita?</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <span>PYTHON</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="var">nilai</span> = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">75</span>, <span class="num">85</span>]
+
+<span class="cm"># len() = length = panjang/jumlah elemen</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="var">nilai</span>))   <span class="cm"># Output: 4</span></pre>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 4. AKSES DATA -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="akses">
+  <div class="section-label">04 · Mengambil Data</div>
+  <h2><span class="icon" style="background:rgba(79,142,247,0.15);color:var(--accent);">🎯</span>Akses Data dengan Index</h2>
+
+  <p style="color:var(--text2);margin-bottom:18px;">Kalau datanya banyak, gimana cara kita ambil satu data tertentu? Gunakan <strong style="color:#fff;">index</strong>!</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <span>PYTHON · Akses dengan Index</span>
+      <button class="copy-btn" onclick="copyCode(this)">copy</button>
+    </div>
+    <pre><span class="var">nilai</span> = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">75</span>, <span class="num">85</span>]
+
+<span class="fn">print</span>(<span class="var">nilai</span>[<span class="idx">0</span>])   <span class="cm"># Output: 80 ← data pertama</span>
+<span class="fn">print</span>(<span class="var">nilai</span>[<span class="idx">1</span>])   <span class="cm"># Output: 90 ← data kedua</span>
+<span class="fn">print</span>(<span class="var">nilai</span>[<span class="idx">2</span>])   <span class="cm"># Output: 75 ← data ketiga</span>
+<span class="fn">print</span>(<span class="var">nilai</span>[<span class="idx">3</span>])   <span class="cm"># Output: 85 ← data keempat</span>
+
+<span class="cm"># Index negatif = dari belakang!</span>
+<span class="fn">print</span>(<span class="var">nilai</span>[<span class="idx">-1</span>])  <span class="cm"># Output: 85 ← data terakhir</span></pre>
+  </div>
+
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;">
+    <p style="font-family:var(--mono);font-size:12px;color:var(--text3);margin-bottom:8px;">Klik salah satu untuk melihat cara aksesnya:</p>
+    <div class="array-visual" id="access-array">
+      <div class="array-cell" onclick="highlightCell(0)" style="cursor:pointer;" data-tip="nilai[0] → 80">
+        <span class="val">80</span><span class="idx-label">[0]</span>
+      </div>
+      <div class="array-cell" onclick="highlightCell(1)" style="cursor:pointer;" data-tip="nilai[1] → 90">
+        <span class="val">90</span><span class="idx-label">[1]</span>
+      </div>
+      <div class="array-cell" onclick="highlightCell(2)" style="cursor:pointer;" data-tip="nilai[2] → 75">
+        <span class="val">75</span><span class="idx-label">[2]</span>
+      </div>
+      <div class="array-cell" onclick="highlightCell(3)" style="cursor:pointer;" data-tip="nilai[3] → 85">
+        <span class="val">85</span><span class="idx-label">[3]</span>
+      </div>
+    </div>
+    <p id="access-info" style="font-family:var(--mono);font-size:13px;color:var(--text3);margin-top:10px;padding:8px 12px;background:#0a0c14;border-radius:8px;">👆 Klik cell di atas untuk melihat cara mengakses nilainya</p>
+  </div>
+
+  <div class="warn-box">
+    <span class="info-icon">⚠️</span>
+    <p><strong style="color:var(--accent4);">Hati-hati!</strong> Kalau kita akses index yang tidak ada (misal <code>nilai[10]</code> padahal cuma ada 4 data), Python akan kasih error: <code>IndexError: list index out of range</code>. Pastikan index tidak melebihi panjang list!</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 5. TRAVERSAL -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="traversal">
+  <div class="section-label">05 · Perulangan</div>
+  <h2><span class="icon" style="background:rgba(56,217,169,0.15);color:var(--accent3);">🔄</span>Traversal — Keliling Semua Data</h2>
+
+  <p style="color:var(--text2);margin-bottom:18px;">Kalau datanya banyak, kita tidak mau print satu-satu kan? Gunakan <strong style="color:#fff;">for loop</strong> untuk keliling semua elemen list!</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <span>PYTHON · For Loop pada List</span>
+      <button class="copy-btn" onclick="copyCode(this)">copy</button>
+    </div>
+    <pre><span class="var">nilai</span> = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">75</span>, <span class="num">85</span>]
+
+<span class="cm"># Cara 1: Loop langsung — "n" berisi nilai satu per satu</span>
+<span class="kw">for</span> <span class="var">n</span> <span class="kw">in</span> <span class="var">nilai</span>:
+    <span class="fn">print</span>(<span class="var">n</span>)
+<span class="cm"># Output: 80, 90, 75, 85 (masing-masing baris sendiri)</span>
+
+<span class="cm"># Cara 2: Pakai index (enumerate) — tahu posisinya juga</span>
+<span class="kw">for</span> <span class="var">i</span>, <span class="var">n</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="var">nilai</span>):
+    <span class="fn">print</span>(<span class="str">f"Index {<span class="var">i</span>}: {<span class="var">n</span>}"</span>)
+<span class="cm"># Output: Index 0: 80, Index 1: 90, dst.</span>
+
+<span class="cm"># Cara 3: Pakai range — klasik seperti C/Java</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">nilai</span>)):
+    <span class="fn">print</span>(<span class="var">nilai</span>[<span class="var">i</span>])</pre>
+  </div>
+
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;">
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px;font-weight:600;">🎬 Visualisasi traversal — panah bergerak kiri ke kanan:</p>
+    <div class="loop-visual" id="traversal-visual">
+      <div class="loop-ptr" id="ptr-0"><span class="arrow-up">↑</span><div class="array-cell" style="width:60px;"><span class="val">80</span><span class="idx-label">[0]</span></div><span class="label">i=0</span></div>
+      <div style="font-size:12px;color:var(--text3);align-self:center;margin-top:-16px;">→</div>
+      <div class="loop-ptr" id="ptr-1"><span class="arrow-up">↑</span><div class="array-cell" style="width:60px;"><span class="val">90</span><span class="idx-label">[1]</span></div><span class="label">i=1</span></div>
+      <div style="font-size:12px;color:var(--text3);align-self:center;margin-top:-16px;">→</div>
+      <div class="loop-ptr" id="ptr-2"><span class="arrow-up">↑</span><div class="array-cell" style="width:60px;"><span class="val">75</span><span class="idx-label">[2]</span></div><span class="label">i=2</span></div>
+      <div style="font-size:12px;color:var(--text3);align-self:center;margin-top:-16px;">→</div>
+      <div class="loop-ptr" id="ptr-3"><span class="arrow-up">↑</span><div class="array-cell" style="width:60px;"><span class="val">85</span><span class="idx-label">[3]</span></div><span class="label">i=3</span></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:10px;">
+      <button class="btn btn-green" onclick="animateTraversal()">▶ Animasi Traversal</button>
+      <button class="btn" style="background:var(--surface3);color:var(--text2);" onclick="resetTraversal()">↺ Reset</button>
+    </div>
+    <div id="traversal-log" style="margin-top:12px;font-family:var(--mono);font-size:13px;color:var(--accent3);background:#0a0c14;padding:10px 14px;border-radius:8px;min-height:36px;"></div>
+  </div>
+
+  <div class="info-box">
+    <span class="info-icon">💡</span>
+    <p><strong style="color:#fff;">Logika for loop:</strong> Setiap iterasi (putaran), variabel <code>n</code> berisi satu elemen dari list. Loop akan terus jalan sampai semua elemen habis dikunjungi. Python yang atur semuanya — kita tidak perlu mengelola index secara manual!</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 6. OPERASI ARRAY -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="operasi">
+  <div class="section-label">06 · Operasi CRUD</div>
+  <h2><span class="icon" style="background:rgba(247,168,79,0.15);color:var(--accent4);">⚙️</span>Operasi pada Array</h2>
+
+  <p style="color:var(--text2);margin-bottom:18px;">Ada 3 operasi dasar yang wajib kita kuasai: <strong style="color:#fff;">Tambah (Insert)</strong>, <strong style="color:#fff;">Hapus (Delete)</strong>, dan <strong style="color:#fff;">Ubah (Update)</strong>.</p>
+
+  <!-- INSERT -->
+  <div class="card card-green" style="margin-bottom:18px;">
+    <h3>➕ INSERT — Tambah Data <span class="tag tag-new">.append()</span></h3>
+    <p>Untuk menambahkan data <strong style="color:#fff;">di akhir</strong> list, gunakan <code>.append()</code>. Namanya "append" yang artinya menambahkan ke ujung.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <span>PYTHON · Insert / Append</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="var">nilai</span> = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">75</span>, <span class="num">85</span>]
+
+<span class="cm"># Tambah di akhir</span>
+<span class="var">nilai</span>.<span class="fn">append</span>(<span class="num">100</span>)
+<span class="fn">print</span>(<span class="var">nilai</span>)  <span class="cm"># [80, 90, 75, 85, 100]</span>
+
+<span class="cm"># Tambah di posisi tertentu — .insert(index, nilai)</span>
+<span class="var">nilai</span>.<span class="fn">insert</span>(<span class="num">1</span>, <span class="num">95</span>)
+<span class="fn">print</span>(<span class="var">nilai</span>)  <span class="cm"># [80, 95, 90, 75, 85, 100]</span></pre>
+    </div>
+
+    <div class="before-after">
+      <div class="ba-box before">
+        <div class="ba-label">SEBELUM append(100)</div>
+        <div class="array-visual">
+          <div class="array-cell"><span class="val">80</span><span class="idx-label">[0]</span></div>
+          <div class="array-cell"><span class="val">90</span><span class="idx-label">[1]</span></div>
+          <div class="array-cell"><span class="val">75</span><span class="idx-label">[2]</span></div>
+          <div class="array-cell"><span class="val">85</span><span class="idx-label">[3]</span></div>
+        </div>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">SESUDAH append(100)</div>
+        <div class="array-visual">
+          <div class="array-cell"><span class="val">80</span><span class="idx-label">[0]</span></div>
+          <div class="array-cell"><span class="val">90</span><span class="idx-label">[1]</span></div>
+          <div class="array-cell"><span class="val">75</span><span class="idx-label">[2]</span></div>
+          <div class="array-cell"><span class="val">85</span><span class="idx-label">[3]</span></div>
+          <div class="array-cell" style="background:rgba(56,217,169,0.2);border-color:var(--accent3);"><span class="val" style="color:var(--accent3);">100</span><span class="idx-label">[4] ← baru!</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE -->
+  <div class="card card-red" style="margin-bottom:18px;">
+    <h3>🗑️ DELETE — Hapus Data <span class="tag" style="background:rgba(247,111,111,0.15);color:var(--accent5);border:1px solid rgba(247,111,111,0.3);">.remove()</span></h3>
+    <p>Untuk menghapus data berdasarkan <strong style="color:#fff;">nilainya</strong>, gunakan <code>.remove()</code>. Kalau mau hapus berdasarkan <strong style="color:#fff;">index</strong>, gunakan <code>.pop()</code> atau <code>del</code>.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <span>PYTHON · Delete / Remove</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="var">nilai</span> = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">75</span>, <span class="num">85</span>]
+
+<span class="cm"># Hapus berdasarkan nilai (angka 75 dihapus)</span>
+<span class="var">nilai</span>.<span class="fn">remove</span>(<span class="num">75</span>)
+<span class="fn">print</span>(<span class="var">nilai</span>)  <span class="cm"># [80, 90, 85]</span>
+
+<span class="cm"># Hapus berdasarkan index — .pop(index)</span>
+<span class="var">nilai</span>.<span class="fn">pop</span>(<span class="num">0</span>)   <span class="cm"># Hapus index ke-0 (angka 80)</span>
+<span class="fn">print</span>(<span class="var">nilai</span>)  <span class="cm"># [90, 85]</span>
+
+<span class="cm"># Hapus dengan del</span>
+<span class="kw">del</span> <span class="var">nilai</span>[<span class="idx">0</span>]
+<span class="fn">print</span>(<span class="var">nilai</span>)  <span class="cm"># [85]</span></pre>
+    </div>
+
+    <div class="before-after">
+      <div class="ba-box before">
+        <div class="ba-label">SEBELUM remove(75)</div>
+        <div class="array-visual">
+          <div class="array-cell"><span class="val">80</span><span class="idx-label">[0]</span></div>
+          <div class="array-cell"><span class="val">90</span><span class="idx-label">[1]</span></div>
+          <div class="array-cell" style="background:rgba(247,111,111,0.15);border-color:var(--accent5);"><span class="val" style="color:var(--accent5);">75</span><span class="idx-label">[2] ← dihapus</span></div>
+          <div class="array-cell"><span class="val">85</span><span class="idx-label">[3]</span></div>
+        </div>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">SESUDAH remove(75)</div>
+        <div class="array-visual">
+          <div class="array-cell"><span class="val">80</span><span class="idx-label">[0]</span></div>
+          <div class="array-cell"><span class="val">90</span><span class="idx-label">[1]</span></div>
+          <div class="array-cell"><span class="val">85</span><span class="idx-label">[2] ← geser!</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPDATE -->
+  <div class="card card-accent" style="margin-bottom:18px;">
+    <h3>✏️ UPDATE — Ubah Data <span class="tag tag-key">nilai[i] = x</span></h3>
+    <p>Untuk mengubah nilai di index tertentu, langsung akses indexnya dan beri nilai baru!</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <span>PYTHON · Update</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="var">nilai</span> = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">75</span>, <span class="num">85</span>]
+
+<span class="cm"># Ubah nilai di index 1 (dari 90 → 95)</span>
+<span class="var">nilai</span>[<span class="idx">1</span>] = <span class="num">95</span>
+<span class="fn">print</span>(<span class="var">nilai</span>)  <span class="cm"># [80, 95, 75, 85]</span>
+
+<span class="cm"># Ubah nilai di index 2 (dari 75 → 88)</span>
+<span class="var">nilai</span>[<span class="idx">2</span>] = <span class="num">88</span>
+<span class="fn">print</span>(<span class="var">nilai</span>)  <span class="cm"># [80, 95, 88, 85]</span></pre>
+    </div>
+
+    <div class="before-after">
+      <div class="ba-box before">
+        <div class="ba-label">SEBELUM nilai[1] = 95</div>
+        <div class="array-visual">
+          <div class="array-cell"><span class="val">80</span><span class="idx-label">[0]</span></div>
+          <div class="array-cell" style="background:rgba(247,111,111,0.15);border-color:var(--accent5);"><span class="val" style="color:var(--accent5);">90</span><span class="idx-label">[1] ← lama</span></div>
+          <div class="array-cell"><span class="val">75</span><span class="idx-label">[2]</span></div>
+          <div class="array-cell"><span class="val">85</span><span class="idx-label">[3]</span></div>
+        </div>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">SESUDAH nilai[1] = 95</div>
+        <div class="array-visual">
+          <div class="array-cell"><span class="val">80</span><span class="idx-label">[0]</span></div>
+          <div class="array-cell" style="background:rgba(56,217,169,0.2);border-color:var(--accent3);"><span class="val" style="color:var(--accent3);">95</span><span class="idx-label">[1] ← baru!</span></div>
+          <div class="array-cell"><span class="val">75</span><span class="idx-label">[2]</span></div>
+          <div class="array-cell"><span class="val">85</span><span class="idx-label">[3]</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 7. ARRAY 2D -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="array2d">
+  <div class="section-label">07 · Dimensi Dua</div>
+  <h2><span class="icon" style="background:rgba(247,168,79,0.15);color:var(--accent4);">🗂️</span>Array 2 Dimensi (2D)</h2>
+
+  <div class="card card-orange">
+    <h3>🧠 Apa itu Array 2D?</h3>
+    <p>Array 2D adalah <strong style="color:#fff;">list di dalam list</strong> — seperti tabel atau spreadsheet. Baris adalah list luar, kolom adalah list dalam.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <span>PYTHON · Array 2D</span>
+      <button class="copy-btn" onclick="copyCode(this)">copy</button>
+    </div>
+    <pre><span class="cm"># Array 2D = list di dalam list</span>
+<span class="cm"># Bayangkan seperti tabel dengan baris & kolom</span>
+
+<span class="var">nilai</span> = [
+    [<span class="num">80</span>, <span class="num">90</span>],   <span class="cm"># baris 0: kolom 0=80, kolom 1=90</span>
+    [<span class="num">75</span>, <span class="num">85</span>],   <span class="cm"># baris 1: kolom 0=75, kolom 1=85</span>
+    [<span class="num">92</span>, <span class="num">78</span>]    <span class="cm"># baris 2: kolom 0=92, kolom 1=78</span>
+]
+
+<span class="fn">print</span>(<span class="var">nilai</span>)
+<span class="cm"># Output: [[80, 90], [75, 85], [92, 78]]</span></pre>
+  </div>
+
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;">
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;font-weight:600;">📊 Visualisasi sebagai tabel:</p>
+
+    <div style="overflow-x:auto;">
+      <table style="border-collapse:collapse;font-family:var(--mono);font-size:14px;width:100%;">
+        <thead>
+          <tr>
+            <th style="padding:10px 16px;background:var(--surface3);border:1px solid var(--border);color:var(--text3);font-weight:400;"></th>
+            <th style="padding:10px 16px;background:var(--surface3);border:1px solid var(--border);color:var(--accent);font-size:12px;">Kolom [0]</th>
+            <th style="padding:10px 16px;background:var(--surface3);border:1px solid var(--border);color:var(--accent);font-size:12px;">Kolom [1]</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:10px 16px;background:var(--surface3);border:1px solid var(--border);color:var(--accent2);font-size:12px;">Baris [0]</td>
+            <td style="padding:10px 20px;border:1px solid var(--border);color:var(--accent4);font-weight:700;text-align:center;">80</td>
+            <td style="padding:10px 20px;border:1px solid var(--border);color:var(--accent4);font-weight:700;text-align:center;">90</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 16px;background:var(--surface3);border:1px solid var(--border);color:var(--accent2);font-size:12px;">Baris [1]</td>
+            <td style="padding:10px 20px;border:1px solid var(--border);color:var(--accent4);font-weight:700;text-align:center;">75</td>
+            <td style="padding:10px 20px;border:1px solid var(--border);color:var(--accent4);font-weight:700;text-align:center;">85</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 16px;background:var(--surface3);border:1px solid var(--border);color:var(--accent2);font-size:12px;">Baris [2]</td>
+            <td style="padding:10px 20px;border:1px solid var(--border);color:var(--accent4);font-weight:700;text-align:center;">92</td>
+            <td style="padding:10px 20px;border:1px solid var(--border);color:var(--accent4);font-weight:700;text-align:center;">78</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:16px;padding:14px;background:#0a0c14;border-radius:10px;">
+      <p style="font-family:var(--mono);font-size:12px;color:var(--text3);">nilai[baris][kolom]</p>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+        <code style="cursor:pointer;" onclick="show2DAccess('nilai[0][0]','80')" title="Klik!">nilai[0][0] = 80</code>
+        <code style="cursor:pointer;" onclick="show2DAccess('nilai[0][1]','90')">nilai[0][1] = 90</code>
+        <code style="cursor:pointer;" onclick="show2DAccess('nilai[1][0]','75')">nilai[1][0] = 75</code>
+        <code style="cursor:pointer;" onclick="show2DAccess('nilai[1][1]','85')">nilai[1][1] = 85</code>
+        <code style="cursor:pointer;" onclick="show2DAccess('nilai[2][0]','92')">nilai[2][0] = 92</code>
+        <code style="cursor:pointer;" onclick="show2DAccess('nilai[2][1]','78')">nilai[2][1] = 78</code>
+      </div>
+      <p id="access-2d-info" style="font-family:var(--mono);font-size:13px;color:var(--accent3);margin-top:10px;">👆 Klik salah satu untuk melihat penjelasannya</p>
+    </div>
+  </div>
+
+  <!-- NESTED LOOP -->
+  <div class="card card-purple" style="margin-top:18px;">
+    <h3>🔁 Nested Loop — Loop di dalam Loop</h3>
+    <p>Untuk keliling semua elemen array 2D, kita butuh 2 loop: loop luar untuk baris, loop dalam untuk kolom.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <span>PYTHON · Nested Loop (2D)</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="var">nilai</span> = [[<span class="num">80</span>, <span class="num">90</span>], [<span class="num">75</span>, <span class="num">85</span>], [<span class="num">92</span>, <span class="num">78</span>]]
+
+<span class="cm"># Loop luar → satu "baris" per iterasi</span>
+<span class="kw">for</span> <span class="var">baris</span> <span class="kw">in</span> <span class="var">nilai</span>:
+    <span class="cm">    # Loop dalam → satu "nilai" per iterasi</span>
+    <span class="kw">    for</span> <span class="var">kolom</span> <span class="kw">in</span> <span class="var">baris</span>:
+        <span class="fn">        print</span>(<span class="var">kolom</span>, <span class="var">end</span>=<span class="str">" "</span>)
+    <span class="fn">    print</span>()  <span class="cm"># pindah baris setelah satu baris selesai</span>
+
+<span class="cm"># Output:</span>
+<span class="cm"># 80 90</span>
+<span class="cm"># 75 85</span>
+<span class="cm"># 92 78</span></pre>
+    </div>
+
+    <div style="margin:14px 0;padding:16px;background:var(--surface3);border-radius:10px;">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600;">Alur logika nested loop:</p>
+      <ul class="step-list">
+        <li>
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <strong>Loop luar mulai: baris = [80, 90]</strong>
+            <p>Loop pertama ambil baris pertama: list [80, 90]</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <strong>Loop dalam: kolom = 80, lalu 90</strong>
+            <p>Loop dalam keliling isi baris: print 80, lalu print 90</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div class="step-content">
+            <strong>Pindah baris: baris = [75, 85]</strong>
+            <p>Loop luar lanjut ke baris berikutnya, ulangi proses yang sama</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <div class="step-content">
+            <strong>Selesai saat semua baris habis</strong>
+            <p>Total iterasi = jumlah baris × jumlah kolom = 3 × 2 = 6</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 8. STUDI KASUS -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="studikasus">
+  <div class="section-label">08 · Studi Kasus Lengkap</div>
+  <h2><span class="icon" style="background:rgba(56,217,169,0.15);color:var(--accent3);">💼</span>Data Nilai Mahasiswa</h2>
+
+  <div class="card card-green">
+    <h3>📋 Deskripsi Kasus</h3>
+    <p>Kita punya data nilai 3 mahasiswa. Kita ingin: <strong style="color:#fff;">tampilkan semua data</strong>, <strong style="color:#fff;">hitung rata-rata nilai</strong>, dan <strong style="color:#fff;">cari nilai tertinggi</strong>.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <span>PYTHON · Studi Kasus Lengkap</span>
+      <button class="copy-btn" onclick="copyCode(this)">copy</button>
+    </div>
+    <pre><span class="cm"># ============================</span>
+<span class="cm"># DATA NILAI MAHASISWA</span>
+<span class="cm"># Format: [nama, nilai]</span>
+<span class="cm"># ============================</span>
+
+<span class="var">data</span> = [
+    [<span class="str">"Budi"</span>,  <span class="num">80</span>],
+    [<span class="str">"Siti"</span>,  <span class="num">90</span>],
+    [<span class="str">"Andi"</span>,  <span class="num">75</span>],
+    [<span class="str">"Dewi"</span>,  <span class="num">88</span>],
+    [<span class="str">"Reza"</span>,  <span class="num">95</span>]
+]
+
+<span class="cm"># ============================</span>
+<span class="cm"># LANGKAH 1: Tampilkan semua data</span>
+<span class="cm"># ============================</span>
+<span class="fn">print</span>(<span class="str">"=== DATA NILAI MAHASISWA ==="</span>)
+<span class="fn">print</span>(<span class="str">f"{'Nama':<span class="num">10</span>} | Nilai"</span>)
+<span class="fn">print</span>(<span class="str">"-" * 20</span>)
+
+<span class="kw">for</span> <span class="var">mahasiswa</span> <span class="kw">in</span> <span class="var">data</span>:
+    <span class="var">nama</span>  = <span class="var">mahasiswa</span>[<span class="idx">0</span>]   <span class="cm"># kolom 0 = nama</span>
+    <span class="var">nilai</span> = <span class="var">mahasiswa</span>[<span class="idx">1</span>]   <span class="cm"># kolom 1 = nilai</span>
+    <span class="fn">    print</span>(<span class="str">f"{<span class="var">nama</span>:<span class="num">10</span>} | {<span class="var">nilai</span>}"</span>)
+
+<span class="cm"># ============================</span>
+<span class="cm"># LANGKAH 2: Hitung total & rata-rata</span>
+<span class="cm"># ============================</span>
+<span class="var">total</span> = <span class="num">0</span>
+
+<span class="kw">for</span> <span class="var">mahasiswa</span> <span class="kw">in</span> <span class="var">data</span>:
+    <span class="var">    total</span> = <span class="var">total</span> + <span class="var">mahasiswa</span>[<span class="idx">1</span>]   <span class="cm"># akumulasi nilai</span>
+
+<span class="var">rata_rata</span> = <span class="var">total</span> / <span class="fn">len</span>(<span class="var">data</span>)
+<span class="fn">print</span>(<span class="str">f"\nTotal  : {<span class="var">total</span>}"</span>)
+<span class="fn">print</span>(<span class="str">f"Rata²  : {<span class="var">rata_rata</span>:.1f}"</span>)
+
+<span class="cm"># ============================</span>
+<span class="cm"># LANGKAH 3: Cari nilai tertinggi</span>
+<span class="cm"># ============================</span>
+<span class="var">nilai_max</span> = <span class="var">data</span>[<span class="idx">0</span>][<span class="idx">1</span>]   <span class="cm"># anggap nilai pertama sebagai max awal</span>
+<span class="var">nama_max</span>  = <span class="var">data</span>[<span class="idx">0</span>][<span class="idx">0</span>]
+
+<span class="kw">for</span> <span class="var">mahasiswa</span> <span class="kw">in</span> <span class="var">data</span>:
+    <span class="kw">    if</span> <span class="var">mahasiswa</span>[<span class="idx">1</span>] > <span class="var">nilai_max</span>:
+        <span class="var">        nilai_max</span> = <span class="var">mahasiswa</span>[<span class="idx">1</span>]
+        <span class="var">        nama_max</span>  = <span class="var">mahasiswa</span>[<span class="idx">0</span>]
+
+<span class="fn">print</span>(<span class="str">f"Nilai tertinggi: {<span class="var">nama_max</span>} ({<span class="var">nilai_max</span>})"</span>)</pre>
+  </div>
+
+  <div style="margin-top:18px;">
+    <p style="font-size:14px;color:var(--text2);margin-bottom:14px;font-weight:600;">📖 Penjelasan langkah demi langkah:</p>
+
+    <ul class="step-list">
+      <li>
+        <span class="step-num">1</span>
+        <div class="step-content">
+          <strong>Mendefinisikan data 2D</strong>
+          <p><code>data</code> adalah list yang berisi list. Setiap elemen dalam <code>data</code> adalah list [nama, nilai]. Jadi <code>data[0]</code> → <code>["Budi", 80]</code>, dan <code>data[0][0]</code> → <code>"Budi"</code></p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <div class="step-content">
+          <strong>Loop untuk tampilkan data</strong>
+          <p>Setiap iterasi, variabel <code>mahasiswa</code> berisi satu baris data (mis. <code>["Budi", 80]</code>). Kita ambil index 0 untuk nama dan index 1 untuk nilai.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <div class="step-content">
+          <strong>Hitung rata-rata dengan akumulasi</strong>
+          <p>Variabel <code>total</code> dimulai dari 0, lalu di setiap iterasi kita tambahkan nilai mahasiswa. Setelah loop selesai, bagi total dengan jumlah data (<code>len(data)</code>).</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <div class="step-content">
+          <strong>Cari nilai tertinggi</strong>
+          <p>Trik klasik! Anggap dulu data pertama sebagai maksimum. Lalu bandingkan satu-satu dengan <code>if</code>. Jika ketemu yang lebih besar, update variabel <code>nilai_max</code>.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:18px;">
+    <p style="font-size:14px;color:var(--text2);margin-bottom:14px;font-weight:600;">📊 Simulasi Output:</p>
+    <table class="studi-kasus-table">
+      <thead>
+        <tr><th>Nama</th><th>Nilai</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Budi</td><td>80</td></tr>
+        <tr><td>Siti</td><td>90</td></tr>
+        <tr><td>Andi</td><td>75</td></tr>
+        <tr><td>Dewi</td><td>88</td></tr>
+        <tr><td style="color:var(--accent3);font-weight:700;">Reza ⭐</td><td style="color:var(--accent3);font-weight:700;">95 (tertinggi)</td></tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td style="color:var(--accent4);font-weight:600;">Total</td>
+          <td style="color:var(--accent4);font-weight:600;">428</td>
+        </tr>
+        <tr>
+          <td style="color:var(--accent);font-weight:600;">Rata-rata</td>
+          <td style="color:var(--accent);font-weight:600;">85.6</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 9. LATIHAN -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="latihan">
+  <div class="section-label">09 · Latihan Mandiri</div>
+  <h2><span class="icon" style="background:rgba(247,168,79,0.15);color:var(--accent4);">✏️</span>Saatnya Latihan!</h2>
+
+  <div class="info-box" style="margin-bottom:20px;">
+    <span class="info-icon">🎯</span>
+    <p>Coba kerjakan dulu sebelum lihat contoh jawaban! Buka Google Colab dan coba tulis sendiri. Jangan langsung copy-paste — latihan adalah kunci!</p>
+  </div>
+
+  <!-- Latihan 1 -->
+  <div class="quiz-card">
+    <h3>🟡 Latihan 1 — Tampilkan Semua Data</h3>
+    <p>Buat list berisi <strong style="color:#fff;">5 angka nilai UAS</strong> (misalnya dari 60-100). Kemudian tampilkan semua nilai satu per satu menggunakan loop, dan tampilkan juga nilai tertinggi dan terendahnya!</p>
+    <div style="font-family:var(--mono);font-size:13px;color:var(--text3);margin-bottom:14px;padding:10px;background:var(--surface2);border-radius:8px;">
+      Expected Output:<br>
+      Nilai ke-1: 78<br>
+      Nilai ke-2: 85<br>
+      ...<br>
+      Tertinggi: 95 | Terendah: 70
+    </div>
+    <button class="show-answer-btn" onclick="toggleAnswer('ans1')">🔍 Lihat Contoh Jawaban</button>
+    <div id="ans1" class="answer-block">
+      <div class="code-block" style="margin-top:10px;">
+        <div class="code-header">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <span>JAWABAN · Latihan 1</span>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><span class="var">nilai_uas</span> = [<span class="num">78</span>, <span class="num">85</span>, <span class="num">70</span>, <span class="num">92</span>, <span class="num">95</span>]
+
+<span class="cm"># Tampilkan semua nilai</span>
+<span class="kw">for</span> <span class="var">i</span>, <span class="var">v</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="var">nilai_uas</span>):
+    <span class="fn">    print</span>(<span class="str">f"Nilai ke-{<span class="var">i</span>+<span class="num">1</span>}: {<span class="var">v</span>}"</span>)
+
+<span class="cm"># Cari tertinggi dan terendah (pakai built-in Python)</span>
+<span class="fn">print</span>(<span class="str">f"Tertinggi: {<span class="fn">max</span>(<span class="var">nilai_uas</span>)} | Terendah: {<span class="fn">min</span>(<span class="var">nilai_uas</span>)}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Latihan 2 -->
+  <div class="quiz-card">
+    <h3>🟠 Latihan 2 — Tambahkan Data Baru</h3>
+    <p>Mulai dengan list kosong <code>[]</code>. Minta pengguna masukkan <strong style="color:#fff;">3 nama mahasiswa</strong> menggunakan <code>input()</code>, tambahkan ke list dengan <code>.append()</code>, lalu tampilkan semua nama.</p>
+    <div style="font-family:var(--mono);font-size:13px;color:var(--text3);margin-bottom:14px;padding:10px;background:var(--surface2);border-radius:8px;">
+      Masukkan nama 1: Budi<br>
+      Masukkan nama 2: Siti<br>
+      Masukkan nama 3: Andi<br>
+      Daftar mahasiswa: ['Budi', 'Siti', 'Andi']
+    </div>
+    <button class="show-answer-btn" onclick="toggleAnswer('ans2')">🔍 Lihat Contoh Jawaban</button>
+    <div id="ans2" class="answer-block">
+      <div class="code-block" style="margin-top:10px;">
+        <div class="code-header">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <span>JAWABAN · Latihan 2</span>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><span class="var">daftar</span> = []   <span class="cm"># list kosong dulu</span>
+
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):   <span class="cm"># ulangi 3 kali</span>
+    <span class="var">    nama</span> = <span class="fn">input</span>(<span class="str">f"Masukkan nama {<span class="var">i</span>+<span class="num">1</span>}: "</span>)
+    <span class="var">    daftar</span>.<span class="fn">append</span>(<span class="var">nama</span>)   <span class="cm"># tambah ke list</span>
+
+<span class="fn">print</span>(<span class="str">"Daftar mahasiswa:"</span>, <span class="var">daftar</span>)</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Latihan 3 -->
+  <div class="quiz-card">
+    <h3>🔴 Latihan 3 — Array 2D Nama & Nilai</h3>
+    <p>Buat array 2D berisi <strong style="color:#fff;">data 4 mahasiswa</strong> dengan format <code>[nama, nilai_tugas, nilai_uts]</code>. Tampilkan semua data dan hitung rata-rata per mahasiswa (nilai_tugas + nilai_uts) / 2.</p>
+    <div style="font-family:var(--mono);font-size:13px;color:var(--text3);margin-bottom:14px;padding:10px;background:var(--surface2);border-radius:8px;">
+      Budi   : Tugas=80, UTS=85, Rata²=82.5<br>
+      Siti   : Tugas=90, UTS=92, Rata²=91.0<br>
+      ...
+    </div>
+    <button class="show-answer-btn" onclick="toggleAnswer('ans3')">🔍 Lihat Contoh Jawaban</button>
+    <div id="ans3" class="answer-block">
+      <div class="code-block" style="margin-top:10px;">
+        <div class="code-header">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <span>JAWABAN · Latihan 3</span>
+          <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><span class="cm"># Array 2D: [nama, nilai_tugas, nilai_uts]</span>
+<span class="var">mahasiswa</span> = [
+    [<span class="str">"Budi"</span>,  <span class="num">80</span>, <span class="num">85</span>],
+    [<span class="str">"Siti"</span>,  <span class="num">90</span>, <span class="num">92</span>],
+    [<span class="str">"Andi"</span>,  <span class="num">75</span>, <span class="num">70</span>],
+    [<span class="str">"Dewi"</span>,  <span class="num">88</span>, <span class="num">95</span>]
+]
+
+<span class="fn">print</span>(<span class="str">f"{'Nama':<span class="num">8</span>} | Tugas | UTS | Rata²"</span>)
+<span class="fn">print</span>(<span class="str">"-" * 32</span>)
+
+<span class="kw">for</span> <span class="var">m</span> <span class="kw">in</span> <span class="var">mahasiswa</span>:
+    <span class="var">    nama</span>  = <span class="var">m</span>[<span class="idx">0</span>]
+    <span class="var">    tugas</span> = <span class="var">m</span>[<span class="idx">1</span>]
+    <span class="var">    uts</span>   = <span class="var">m</span>[<span class="idx">2</span>]
+    <span class="var">    rata</span>  = (<span class="var">tugas</span> + <span class="var">uts</span>) / <span class="num">2</span>
+    <span class="fn">    print</span>(<span class="str">f"{<span class="var">nama</span>:<span class="num">8</span>} | {<span class="var">tugas</span>:<span class="num">5</span>} | {<span class="var">uts</span>:<span class="num">3</span>} | {<span class="var">rata</span>:.1f}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- 10. INTERAKTIF -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section id="interaktif">
+  <div class="section-label">10 · Simulasi Interaktif</div>
+  <h2><span class="icon" style="background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;">🚀</span>Coba Langsung di Sini!</h2>
+
+  <p style="color:var(--text2);margin-bottom:20px;">Ini simulasi cara kerja list Python. Tambah, hapus, update, dan traversal — semuanya bisa kamu coba langsung!</p>
+
+  <div class="interactive-panel">
+    <div id="array-info">list = [] | panjang: 0</div>
+    <div id="array-display"><span style="color:var(--text3);font-family:var(--mono);font-size:13px;">List masih kosong... tambahkan data di bawah!</span></div>
+
+    <!-- ADD -->
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+      <p style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;">➕ TAMBAH data ke list:</p>
+      <div class="input-row">
+        <input type="number" id="add-input" placeholder="Masukkan angka nilai (0-100)" min="0" max="100">
+        <button class="btn btn-primary" onclick="addToArray()">Append</button>
+      </div>
+    </div>
+
+    <!-- REMOVE -->
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+      <p style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;">🗑️ HAPUS data:</p>
+      <div class="input-row">
+        <input type="number" id="remove-input" placeholder="Masukkan index yang ingin dihapus" min="0">
+        <button class="btn btn-danger" onclick="removeFromArray()">pop(index)</button>
+        <button class="btn btn-danger" onclick="removeLastFromArray()">pop() last</button>
+      </div>
+    </div>
+
+    <!-- UPDATE -->
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+      <p style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;">✏️ UPDATE data:</p>
+      <div class="input-row">
+        <input type="number" id="update-idx" placeholder="Index yang diubah">
+        <input type="number" id="update-val" placeholder="Nilai baru">
+        <button class="btn btn-orange" onclick="updateArray()">Update</button>
+      </div>
+    </div>
+
+    <!-- TRAVERSAL -->
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+      <p style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;">🔄 TRAVERSAL & Operasi:</p>
+      <div class="input-row">
+        <button class="btn btn-green" onclick="traverseArray()">▶ Traversal</button>
+        <button class="btn" style="background:rgba(124,92,252,0.15);color:var(--accent2);border:1px solid rgba(124,92,252,0.3);" onclick="sortArray()">⇅ Sort</button>
+        <button class="btn" style="background:var(--surface3);color:var(--text2);" onclick="reverseArray()">↩ Reverse</button>
+        <button class="btn" style="background:rgba(247,111,111,0.1);color:var(--accent5);" onclick="clearArray()">🗑 Clear</button>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+      <p style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;">📟 Output Log (simulasi print()):</p>
+      <div id="log-output">Menunggu aksi...</div>
+      <button class="btn" style="margin-top:8px;background:var(--surface3);color:var(--text3);font-size:12px;padding:6px 12px;" onclick="clearLog()">Clear Log</button>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <span class="info-icon">🧪</span>
+    <p>Simulasi di atas meniru cara kerja list Python secara real-time! Setiap aksi yang kamu lakukan akan menampilkan output seperti di Google Colab. Coba tambah beberapa nilai, lalu traversal untuk melihat animasinya.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📚 Logika dan Algoritma 2 · Pertemuan 9 — Array & Struktur Data Sederhana</p>
+  <p style="margin-top:6px;color:var(--text3);">D3 Manajemen Informatika · Semester 2 · Python / Google Colab</p>
+</footer>
+
+<script>
+// ── PROGRESS BAR ──
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const progress = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+  document.getElementById('progress-bar').style.width = progress + '%';
+});
+
+// ── COPY CODE ──
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    btn.style.background = 'var(--accent3)';
+    btn.style.color = '#000';
+    setTimeout(() => { btn.textContent = 'copy'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+  });
+}
+
+// ── HIGHLIGHT CELL ──
+function highlightCell(idx) {
+  const cells = document.querySelectorAll('#access-array .array-cell');
+  cells.forEach((c, i) => {
+    c.classList.remove('highlight', 'active');
+    if (i === idx) { c.classList.add('highlight', 'active'); }
+  });
+  const vals = [80, 90, 75, 85];
+  document.getElementById('access-info').textContent = 
+    `print(nilai[${idx}])  →  Output: ${vals[idx]}`;
+  document.getElementById('access-info').style.color = 'var(--accent3)';
+}
+
+// ── 2D ACCESS ──
+function show2DAccess(expr, val) {
+  document.getElementById('access-2d-info').textContent = 
+    `print(${expr})  →  Output: ${val}`;
+}
+
+// ── TOGGLE ANSWER ──
+function toggleAnswer(id) {
+  const el = document.getElementById(id);
+  const btn = el.previousElementSibling;
+  el.classList.toggle('visible');
+  btn.textContent = el.classList.contains('visible') ? '🙈 Sembunyikan' : '🔍 Lihat Contoh Jawaban';
+}
+
+// ── TRAVERSAL ANIMATION ──
+let traversalRunning = false;
+function animateTraversal() {
+  if (traversalRunning) return;
+  traversalRunning = true;
+  const ptrs = [0,1,2,3];
+  const vals = [80, 90, 75, 85];
+  const log = document.getElementById('traversal-log');
+  log.textContent = 'for n in nilai:\n';
+  
+  ptrs.forEach((idx) => {
+    setTimeout(() => {
+      // reset all
+      document.querySelectorAll('#traversal-visual .array-cell').forEach(c => c.classList.remove('active'));
+      const cell = document.querySelector(`#ptr-${idx} .array-cell`);
+      if (cell) {
+        cell.classList.add('active');
+        log.textContent += `    print(${vals[idx]})  →  ${vals[idx]}\n`;
+        log.scrollTop = log.scrollHeight;
+      }
+      if (idx === 3) {
+        setTimeout(() => { traversalRunning = false; }, 600);
+      }
+    }, idx * 700);
+  });
+}
+
+function resetTraversal() {
+  document.querySelectorAll('#traversal-visual .array-cell').forEach(c => c.classList.remove('active'));
+  document.getElementById('traversal-log').textContent = '';
+  traversalRunning = false;
+}
+
+// ── INTERACTIVE ARRAY ──
+let myArray = [];
+let isAnimating = false;
+
+function renderArray() {
+  const display = document.getElementById('array-display');
+  const info = document.getElementById('array-info');
+
+  if (myArray.length === 0) {
+    display.innerHTML = '<span style="color:var(--text3);font-family:var(--mono);font-size:13px;">List masih kosong... tambahkan data di bawah!</span>';
+  } else {
+    display.innerHTML = myArray.map((val, i) => `
+      <div class="arr-item" id="item-${i}">
+        <div class="val-bubble">${val}</div>
+        <span class="idx-badge">[${i}]</span>
+      </div>
+    `).join('');
+  }
+
+  info.textContent = `list = [${myArray.join(', ')}] | panjang: ${myArray.length}`;
+}
+
+function log(msg) {
+  const logEl = document.getElementById('log-output');
+  logEl.textContent += msg + '\n';
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById('log-output').textContent = '';
+}
+
+function addToArray() {
+  const val = document.getElementById('add-input').value;
+  if (val === '') { log('⚠ Masukkan angka terlebih dahulu!'); return; }
+  if (myArray.length >= 10) { log('⚠ Maksimum 10 elemen untuk demo ini'); return; }
+  const num = parseInt(val);
+  myArray.push(num);
+  log(`>>> nilai.append(${num})`);
+  log(`>>> print(nilai)\n    ${JSON.stringify(myArray)}\n`);
+  renderArray();
+  document.getElementById('add-input').value = '';
+}
+
+function removeFromArray() {
+  const idx = parseInt(document.getElementById('remove-input').value);
+  if (isNaN(idx)) { log('⚠ Masukkan index terlebih dahulu!'); return; }
+  if (idx < 0 || idx >= myArray.length) {
+    log(`❌ IndexError: list index out of range (index ${idx}, panjang ${myArray.length})\n`);
+    return;
+  }
+  const removed = myArray[idx];
+  
+  // Animate removal
+  const item = document.getElementById(`item-${idx}`);
+  if (item) item.classList.add('removing');
+  
+  setTimeout(() => {
+    myArray.splice(idx, 1);
+    log(`>>> nilai.pop(${idx})  →  ${removed} dihapus`);
+    log(`>>> print(nilai)\n    ${JSON.stringify(myArray)}\n`);
+    renderArray();
+  }, 300);
+  
+  document.getElementById('remove-input').value = '';
+}
+
+function removeLastFromArray() {
+  if (myArray.length === 0) { log('❌ List kosong, tidak ada yang dihapus!\n'); return; }
+  const removed = myArray[myArray.length - 1];
+  
+  const item = document.getElementById(`item-${myArray.length - 1}`);
+  if (item) item.classList.add('removing');
+  
+  setTimeout(() => {
+    myArray.pop();
+    log(`>>> nilai.pop()  →  ${removed} (elemen terakhir) dihapus`);
+    log(`>>> print(nilai)\n    ${JSON.stringify(myArray)}\n`);
+    renderArray();
+  }, 300);
+}
+
+function updateArray() {
+  const idx = parseInt(document.getElementById('update-idx').value);
+  const val = parseInt(document.getElementById('update-val').value);
+  if (isNaN(idx) || isNaN(val)) { log('⚠ Masukkan index dan nilai baru!'); return; }
+  if (idx < 0 || idx >= myArray.length) {
+    log(`❌ IndexError: index ${idx} tidak ada (panjang ${myArray.length})\n`);
+    return;
+  }
+  const old = myArray[idx];
+  myArray[idx] = val;
+  log(`>>> nilai[${idx}] = ${val}  (sebelumnya: ${old})`);
+  log(`>>> print(nilai)\n    ${JSON.stringify(myArray)}\n`);
+  renderArray();
+  // Highlight updated cell
+  setTimeout(() => {
+    const item = document.getElementById(`item-${idx}`);
+    if (item) {
+      item.querySelector('.val-bubble').style.borderColor = 'var(--accent3)';
+      item.querySelector('.val-bubble').style.color = 'var(--accent3)';
+      setTimeout(() => {
+        if (item.querySelector('.val-bubble')) {
+          item.querySelector('.val-bubble').style.borderColor = '';
+          item.querySelector('.val-bubble').style.color = '';
+        }
+      }, 1200);
+    }
+  }, 50);
+  document.getElementById('update-idx').value = '';
+  document.getElementById('update-val').value = '';
+}
+
+function traverseArray() {
+  if (myArray.length === 0) { log('⚠ List kosong, tidak ada yang di-traverse!\n'); return; }
+  if (isAnimating) return;
+  isAnimating = true;
+  
+  log('>>> for n in nilai:');
+  
+  myArray.forEach((val, i) => {
+    setTimeout(() => {
+      // Highlight current
+      document.querySelectorAll('.arr-item .val-bubble').forEach((b, bi) => {
+        b.style.background = '';
+        b.style.borderColor = '';
+        b.style.color = '';
+      });
+      const item = document.getElementById(`item-${i}`);
+      if (item) {
+        const bubble = item.querySelector('.val-bubble');
+        bubble.style.background = 'rgba(56,217,169,0.2)';
+        bubble.style.borderColor = 'var(--accent3)';
+        bubble.style.color = 'var(--accent3)';
+      }
+      log(`...     print(${val})  →  ${val}`);
+      
+      if (i === myArray.length - 1) {
+        setTimeout(() => {
+          document.querySelectorAll('.arr-item .val-bubble').forEach(b => {
+            b.style.background = '';
+            b.style.borderColor = '';
+            b.style.color = '';
+          });
+          log('>>> # Traversal selesai!\n');
+          isAnimating = false;
+        }, 700);
+      }
+    }, i * 500);
+  });
+}
+
+function sortArray() {
+  if (myArray.length === 0) { log('⚠ List kosong!\n'); return; }
+  myArray.sort((a, b) => a - b);
+  log(`>>> nilai.sort()`);
+  log(`>>> print(nilai)\n    ${JSON.stringify(myArray)}\n`);
+  renderArray();
+}
+
+function reverseArray() {
+  if (myArray.length === 0) { log('⚠ List kosong!\n'); return; }
+  myArray.reverse();
+  log(`>>> nilai.reverse()`);
+  log(`>>> print(nilai)\n    ${JSON.stringify(myArray)}\n`);
+  renderArray();
+}
+
+function clearArray() {
+  myArray = [];
+  log('>>> nilai.clear()  →  List dikosongkan\n');
+  renderArray();
+}
+
+// Enter key support
+document.getElementById('add-input').addEventListener('keydown', e => { if (e.key === 'Enter') addToArray(); });
+
+// Init
+renderArray();
+log('# Selamat datang di simulator list Python!\n# Coba tambahkan beberapa nilai di bawah...\n');
+</script>
+
+</body>
+</html>

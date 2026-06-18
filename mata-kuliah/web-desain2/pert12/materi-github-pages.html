@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan GitHub Pages — Web Design 2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:        #0D1117;
+    --bg2:       #161B22;
+    --bg3:       #1C2128;
+    --border:    #30363D;
+    --blue:      #58A6FF;
+    --green:     #3FB950;
+    --purple:    #BC8CFF;
+    --orange:    #F78166;
+    --text:      #E6EDF3;
+    --muted:     #8B949E;
+    --badge-bg:  #1F2937;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ─────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    height: 56px;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: .5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; font-size: .9rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo svg { color: var(--text); }
+  .nav-links {
+    display: flex; gap: 0; margin-left: auto;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: .82rem; padding: .35rem .75rem;
+    border-radius: 6px;
+    transition: color .2s, background .2s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--bg3); }
+
+  /* ── HERO ────────────────────────────────── */
+  .hero {
+    max-width: 860px; margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem; color: var(--green);
+    background: rgba(63,185,80,.08);
+    border: 1px solid rgba(63,185,80,.25);
+    border-radius: 100px; padding: .3rem .9rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:.4; transform:scale(1.4); }
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700; line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: -.02em;
+  }
+  .hero h1 span { color: var(--blue); }
+  .hero p {
+    font-size: 1.05rem; color: var(--muted);
+    max-width: 560px; margin: 0 auto 2rem;
+  }
+  .hero-tags {
+    display: flex; flex-wrap: wrap;
+    justify-content: center; gap: .5rem;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem; padding: .3rem .7rem;
+    border-radius: 6px;
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* ── SECTION WRAPPER ─────────────────────── */
+  .section {
+    max-width: 860px; margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+  .section + .section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem; font-weight: 600;
+    color: var(--blue); text-transform: uppercase;
+    letter-spacing: .1em; margin-bottom: .75rem;
+  }
+  .section h2 {
+    font-size: 1.5rem; font-weight: 700;
+    margin-bottom: .5rem; line-height: 1.3;
+  }
+  .section > p {
+    color: var(--muted); margin-bottom: 2rem;
+    max-width: 620px;
+  }
+
+  /* ── CONCEPT CARDS ───────────────────────── */
+  .concept-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .concept-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.25rem;
+    transition: border-color .2s, transform .2s;
+  }
+  .concept-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+  .concept-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; margin-bottom: .85rem;
+  }
+  .concept-card h3 { font-size: .95rem; font-weight: 600; margin-bottom: .35rem; }
+  .concept-card p { font-size: .83rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── STEP FLOW ───────────────────────────── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: grid; grid-template-columns: 44px 1fr;
+    gap: 0 1.25rem; position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: ''; position: absolute;
+    left: 21px; top: 44px; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .step-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8rem; font-weight: 600;
+    background: var(--bg2); border: 2px solid var(--border);
+    color: var(--muted); flex-shrink: 0;
+    transition: border-color .3s, color .3s;
+    z-index: 1; position: relative;
+  }
+  .step.active .step-num {
+    border-color: var(--blue); color: var(--blue);
+    background: rgba(88,166,255,.08);
+  }
+  .step-body {
+    padding-bottom: 2.5rem;
+  }
+  .step-body h3 {
+    font-size: 1rem; font-weight: 600;
+    margin-bottom: .4rem; padding-top: .6rem;
+  }
+  .step-body p { font-size: .88rem; color: var(--muted); margin-bottom: .85rem; }
+
+  /* ── GITHUB UI MOCK ──────────────────────── */
+  .gh-mock {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    margin-top: .5rem;
+  }
+  .gh-mock-bar {
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    padding: .55rem 1rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .gh-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .gh-mock-url {
+    flex: 1; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 5px;
+    padding: .2rem .6rem; color: var(--muted); font-size: .7rem;
+    margin: 0 .5rem;
+  }
+  .gh-mock-body { padding: 1rem 1.25rem; }
+  .gh-btn {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--green); color: #000;
+    font-weight: 600; font-size: .75rem;
+    padding: .35rem .9rem; border-radius: 6px;
+    border: none; cursor: default;
+  }
+  .gh-btn-outline {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--bg3); color: var(--text);
+    font-size: .75rem; font-weight: 500;
+    padding: .3rem .8rem; border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .gh-input {
+    width: 100%; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: .45rem .7rem; color: var(--text);
+    font-family: 'JetBrains Mono', monospace; font-size: .8rem;
+    margin-bottom: .5rem;
+  }
+  .gh-label { font-size: .75rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+  .gh-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .gh-badge {
+    background: rgba(63,185,80,.15); color: var(--green);
+    border: 1px solid rgba(63,185,80,.3);
+    border-radius: 100px; padding: .15rem .6rem; font-size: .7rem;
+  }
+  .gh-file-row {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .4rem 0; border-bottom: 1px solid var(--border);
+    font-size: .8rem; color: var(--muted);
+  }
+  .gh-file-row:last-child { border-bottom: none; }
+  .gh-folder { color: var(--blue); }
+  .gh-file { color: var(--muted); }
+  .gh-commit-msg { margin-left: auto; font-size: .72rem; color: var(--muted); }
+
+  /* ── URL HIGHLIGHT ───────────────────────── */
+  .url-card {
+    background: linear-gradient(135deg, rgba(88,166,255,.06), rgba(63,185,80,.04));
+    border: 1px solid rgba(88,166,255,.25);
+    border-radius: 10px; padding: 1.25rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    flex-wrap: wrap; margin-top: .5rem;
+  }
+  .url-card code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .9rem; color: var(--blue);
+    background: rgba(88,166,255,.08);
+    padding: .3rem .7rem; border-radius: 6px;
+    flex: 1; min-width: 200px;
+  }
+  .url-card small { font-size: .78rem; color: var(--muted); }
+
+  /* ── TIPS ────────────────────────────────── */
+  .tip {
+    display: flex; gap: .75rem;
+    background: rgba(247,129,102,.06);
+    border: 1px solid rgba(247,129,102,.2);
+    border-radius: 8px; padding: 1rem 1.1rem;
+    margin-top: .85rem;
+  }
+  .tip.info {
+    background: rgba(88,166,255,.05);
+    border-color: rgba(88,166,255,.2);
+  }
+  .tip.success {
+    background: rgba(63,185,80,.05);
+    border-color: rgba(63,185,80,.2);
+  }
+  .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: .1rem; }
+  .tip p { font-size: .84rem; color: var(--muted); }
+  .tip p strong { color: var(--text); }
+
+  /* ── CHECKLIST ───────────────────────────── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: .7rem;
+    font-size: .88rem; color: var(--muted);
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: .7rem 1rem;
+  }
+  .checklist li::before {
+    content: '□'; font-size: .9rem; color: var(--border);
+    margin-top: .05rem; flex-shrink: 0;
+  }
+  .checklist li.done::before { content: '✓'; color: var(--green); }
+  .checklist strong { color: var(--text); display: block; margin-bottom: .1rem; }
+
+  /* ── FAQ ─────────────────────────────────── */
+  details {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+    margin-bottom: .6rem;
+  }
+  summary {
+    padding: 1rem 1.15rem; cursor: pointer;
+    font-size: .9rem; font-weight: 500;
+    display: flex; justify-content: space-between; align-items: center;
+    list-style: none;
+    transition: background .2s;
+  }
+  summary:hover { background: var(--bg3); }
+  summary::after { content: '+'; color: var(--muted); font-size: 1rem; }
+  details[open] summary::after { content: '−'; }
+  details[open] summary { background: var(--bg3); }
+  details p {
+    padding: .1rem 1.15rem 1rem;
+    font-size: .85rem; color: var(--muted); line-height: 1.7;
+  }
+  details code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: .1rem .4rem;
+    font-size: .82rem; color: var(--blue);
+  }
+
+  /* ── FOOTER ──────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center; padding: 2.5rem 2rem;
+    font-size: .8rem; color: var(--muted);
+  }
+  footer strong { color: var(--text); }
+
+  /* ── PROGRESS BAR ────────────────────────── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    width: 0%; z-index: 200; transition: width .1s;
+  }
+
+  /* ── SCROLL HIGHLIGHT ────────────────────── */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.8rem; }
+    .concept-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1rem; }
+    .section { padding: 2.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="20" height="20" viewBox="0 0 98 96" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M49 0C21.9 0 0 22 0 49.2c0 21.8 13.9 40.3 33.3 46.8 2.4.5 3.3-1.1 3.3-2.4v-8.4c-13.5 3-16.4-6.5-16.4-6.5-2.2-5.6-5.4-7.1-5.4-7.1-4.4-3 .3-3 .3-3 4.9.4 7.5 5.1 7.5 5.1 4.4 7.5 11.4 5.3 14.2 4.1.4-3.2 1.7-5.3 3.1-6.5-10.8-1.2-22.1-5.4-22.1-24.1 0-5.3 1.9-9.7 5-13.1-.5-1.2-2.2-6.2.5-12.9 0 0 4.1-1.3 13.4 5 3.9-1.1 8-1.6 12.2-1.7 4.1 0 8.3.6 12.2 1.7 9.3-6.4 13.4-5 13.4-5 2.7 6.7 1 11.7.5 12.9 3.1 3.4 5 7.8 5 13.1 0 18.7-11.3 22.8-22.1 24 1.7 1.5 3.3 4.5 3.3 9v13.3c0 1.3.9 2.9 3.4 2.4C84.1 89.5 98 71 98 49.2 98 22 76.1 0 49 0z"/>
+    </svg>
+    GitHub Pages
+  </a>
+  <ul class="nav-links">
+    <li><a href="#konsep">Konsep</a></li>
+    <li><a href="#langkah">Langkah</a></li>
+    <li><a href="#kirim">Kirim Link</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Materi UTS — Web Design 2</div>
+  <h1>Publish Hasil Kerjamu ke <span>GitHub Pages</span></h1>
+  <p>Pelajari cara mengunggah file HTML kamu ke internet secara gratis menggunakan GitHub — tanpa install apapun, cukup lewat browser.</p>
+  <div class="hero-tags">
+    <span class="tag">⏱ ~15 menit</span>
+    <span class="tag">🌐 Cukup browser</span>
+    <span class="tag">💸 Gratis</span>
+    <span class="tag">📁 1 file HTML</span>
+  </div>
+</div>
+
+<!-- KONSEP -->
+<section class="section" id="konsep">
+  <div class="section-label">Sebelum Mulai</div>
+  <h2>Apa itu GitHub & GitHub Pages?</h2>
+  <p>Dua hal berbeda yang bekerja bersama untuk membuat website kamu bisa diakses siapapun di internet.</p>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-icon" style="background:rgba(88,166,255,.1);">📦</div>
+      <h3>GitHub</h3>
+      <p>Tempat menyimpan file kode secara online. Seperti Google Drive, tapi khusus untuk project web dan kode program.</p>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon" style="background:rgba(63,185,80,.1);">🌐</div>
+      <h3>Repository</h3>
+      <p>Folder project kamu di GitHub. Setiap project punya repository sendiri untuk menyimpan semua file-nya.</p>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon" style="background:rgba(188,140,255,.1);">🚀</div>
+      <h3>GitHub Pages</h3>
+      <p>Fitur GitHub yang otomatis menjadikan file HTML kamu sebagai website yang bisa diakses publik dengan URL sendiri.</p>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon" style="background:rgba(247,129,102,.1);">🔗</div>
+      <h3>URL Hasil</h3>
+      <p>Setelah aktif, website kamu bisa diakses di: <code style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--blue);">username.github.io/nama-repo</code></p>
+    </div>
+  </div>
+  <div class="tip info" style="margin-top:1.25rem">
+    <span class="tip-icon">💡</span>
+    <p><strong>Analogi sederhana:</strong> GitHub itu seperti flashdisk online. GitHub Pages itu fitur yang membuat isi flashdisk tersebut bisa dilihat semua orang lewat browser.</p>
+  </div>
+</section>
+
+<!-- LANGKAH-LANGKAH -->
+<section class="section" id="langkah">
+  <div class="section-label">Panduan Lengkap</div>
+  <h2>Langkah-langkah Publish</h2>
+  <p>Ikuti 6 langkah berikut secara berurutan. Estimasi waktu: 10–15 menit untuk pertama kali.</p>
+
+  <div class="steps">
+
+    <!-- Step 1 -->
+    <div class="step active">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Buat Akun GitHub</h3>
+        <p>Buka <strong style="color:var(--blue)">github.com</strong> dan daftar akun baru. Gunakan email aktif kamu. Pilih username yang profesional — ini akan muncul di URL website kamu.</p>
+        <div class="gh-mock">
+          <div class="gh-mock-bar">
+            <div class="gh-dot" style="background:#FF5F57"></div>
+            <div class="gh-dot" style="background:#FFBD2E"></div>
+            <div class="gh-dot" style="background:#28C840"></div>
+            <div class="gh-mock-url">github.com/signup</div>
+          </div>
+          <div class="gh-mock-body">
+            <div class="gh-label">Username</div>
+            <div class="gh-input" style="color:var(--blue)">mahasiswaku123</div>
+            <div class="gh-label">Email address</div>
+            <div class="gh-input">email@student.ac.id</div>
+            <div class="gh-label">Password</div>
+            <div class="gh-input" style="color:var(--muted)">••••••••••</div>
+            <br>
+            <button class="gh-btn">Create account</button>
+          </div>
+        </div>
+        <div class="tip info" style="margin-top:.85rem">
+          <span class="tip-icon">ℹ️</span>
+          <p><strong>Username akan menjadi bagian URL kamu.</strong> Contoh: username <code style="font-family:'JetBrains Mono',monospace;color:var(--blue);font-size:.8rem">budi123</code> → URL: <code style="font-family:'JetBrains Mono',monospace;color:var(--green);font-size:.8rem">budi123.github.io/...</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Buat Repository Baru</h3>
+        <p>Setelah login, klik tombol <strong>New</strong> atau tombol <strong>+</strong> di pojok kanan atas → pilih <strong>New repository</strong>.</p>
+        <div class="gh-mock">
+          <div class="gh-mock-bar">
+            <div class="gh-dot" style="background:#FF5F57"></div>
+            <div class="gh-dot" style="background:#FFBD2E"></div>
+            <div class="gh-dot" style="background:#28C840"></div>
+            <div class="gh-mock-url">github.com/new</div>
+          </div>
+          <div class="gh-mock-body">
+            <div class="gh-label">Repository name <span style="color:var(--orange)">*</span></div>
+            <div class="gh-input" style="color:var(--green)">uts-web-design</div>
+            <div style="margin:.6rem 0; font-size:.78rem; color:var(--muted)">Visibility</div>
+            <div class="gh-row" style="margin-bottom:.75rem">
+              <div style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;">
+                <span style="color:var(--green)">●</span> <strong>Public</strong> — Pilih ini agar bisa di-publish
+              </div>
+            </div>
+            <button class="gh-btn">Create repository</button>
+          </div>
+        </div>
+        <div class="tip">
+          <span class="tip-icon">⚠️</span>
+          <p><strong>Wajib pilih Public!</strong> Repository Private tidak bisa di-publish ke GitHub Pages secara gratis. Nama repository bebas, tapi hindari spasi — gunakan tanda hubung ( - ).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Upload File HTML</h3>
+        <p>Di halaman repository yang baru dibuat, klik <strong>uploading an existing file</strong> atau <strong>Add file → Upload files</strong>.</p>
+        <div class="gh-mock">
+          <div class="gh-mock-bar">
+            <div class="gh-dot" style="background:#FF5F57"></div>
+            <div class="gh-dot" style="background:#FFBD2E"></div>
+            <div class="gh-dot" style="background:#28C840"></div>
+            <div class="gh-mock-url">github.com/budi123/uts-web-design/upload</div>
+          </div>
+          <div class="gh-mock-body">
+            <div style="border:2px dashed var(--border);border-radius:8px;padding:1.5rem;text-align:center;color:var(--muted);font-size:.82rem;margin-bottom:.75rem;">
+              <div style="font-size:1.5rem;margin-bottom:.4rem">📁</div>
+              Drag & drop file di sini<br>atau
+              <span style="color:var(--blue);cursor:pointer"> klik untuk pilih file</span>
+            </div>
+            <div class="gh-label">Commit changes</div>
+            <div class="gh-input" style="color:var(--muted)">Upload file UTS</div>
+            <br>
+            <button class="gh-btn">Commit changes</button>
+          </div>
+        </div>
+        <div class="tip success">
+          <span class="tip-icon">✅</span>
+          <p><strong>File yang di-upload:</strong> Cukup upload 1 file <code style="font-family:'JetBrains Mono',monospace;color:var(--green);font-size:.8rem">index.html</code> dari starter file UTS kamu. Pastikan nama filenya tepat <strong>index.html</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Cek File Sudah Terupload</h3>
+        <p>Kembali ke halaman utama repository. File kamu seharusnya sudah muncul di sana seperti ini:</p>
+        <div class="gh-mock">
+          <div class="gh-mock-bar">
+            <div class="gh-dot" style="background:#FF5F57"></div>
+            <div class="gh-dot" style="background:#FFBD2E"></div>
+            <div class="gh-dot" style="background:#28C840"></div>
+            <div class="gh-mock-url">github.com/budi123/uts-web-design</div>
+          </div>
+          <div class="gh-mock-body">
+            <div class="gh-row" style="margin-bottom:.75rem">
+              <span style="font-weight:600;font-size:.9rem">📂 uts-web-design</span>
+              <div class="gh-badge" style="margin-left:auto">Public</div>
+            </div>
+            <div class="gh-file-row">
+              <span class="gh-folder">📁</span> <span style="color:var(--text)">.github</span>
+              <span class="gh-commit-msg">Initial commit</span>
+            </div>
+            <div class="gh-file-row">
+              <span class="gh-file">📄</span>
+              <span style="color:var(--blue)">index.html</span>
+              <span class="gh-commit-msg">Upload file UTS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Aktifkan GitHub Pages</h3>
+        <p>Ini langkah terpenting! Klik <strong>Settings</strong> (tab paling kanan) → scroll ke bawah → cari bagian <strong>Pages</strong> di menu kiri.</p>
+        <div class="gh-mock">
+          <div class="gh-mock-bar">
+            <div class="gh-dot" style="background:#FF5F57"></div>
+            <div class="gh-dot" style="background:#FFBD2E"></div>
+            <div class="gh-dot" style="background:#28C840"></div>
+            <div class="gh-mock-url">github.com/budi123/uts-web-design/settings/pages</div>
+          </div>
+          <div class="gh-mock-body">
+            <div style="font-weight:600;font-size:.9rem;margin-bottom:1rem;">GitHub Pages</div>
+            <div class="gh-label">Source</div>
+            <div class="gh-row" style="gap:.5rem;margin-bottom:.35rem;">
+              <div class="gh-btn-outline">Branch: main ▾</div>
+              <div class="gh-btn-outline">/ (root) ▾</div>
+              <button class="gh-btn">Save</button>
+            </div>
+            <div style="margin-top:1rem;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.25);border-radius:6px;padding:.65rem .85rem;font-size:.78rem;color:var(--green);">
+              ✅ Your site is published at<br>
+              <strong>https://budi123.github.io/uts-web-design/</strong>
+            </div>
+          </div>
+        </div>
+        <div class="tip info" style="margin-top:.85rem">
+          <span class="tip-icon">⏳</span>
+          <p><strong>Tunggu 1–3 menit</strong> setelah klik Save. GitHub butuh waktu untuk memproses. Refresh halaman Settings → Pages untuk melihat URL-nya muncul.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h3>Buka & Test Website Kamu</h3>
+        <p>Setelah URL muncul di Settings → Pages, klik URL tersebut. Website UTS kamu sudah live dan bisa dilihat siapapun!</p>
+        <div class="url-card">
+          <div>🎉</div>
+          <div>
+            <code>https://username.github.io/nama-repo/</code>
+            <br>
+            <small>Ganti <em>username</em> dengan username GitHub kamu & <em>nama-repo</em> dengan nama repository.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- KIRIM LINK -->
+<section class="section" id="kirim">
+  <div class="section-label">Pengumpulan UTS</div>
+  <h2>Cara Mengirimkan Link ke Dosen</h2>
+  <p>Setelah website berhasil di-publish, salin linknya dan kirimkan ke dosen sesuai instruksi pengumpulan.</p>
+
+  <div class="concept-grid" style="margin-bottom:1.5rem">
+    <div class="concept-card">
+      <div class="concept-icon" style="background:rgba(88,166,255,.1);">📋</div>
+      <h3>Salin URL</h3>
+      <p>Pergi ke Settings → Pages. Copy link yang muncul di bagian atas (diawali https://).</p>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon" style="background:rgba(63,185,80,.1);">✉️</div>
+      <h3>Kirim via LMS / WA</h3>
+      <p>Paste link tersebut ke kolom pengumpulan yang sudah diarahkan dosen. Pastikan linknya bisa dibuka.</p>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon" style="background:rgba(188,140,255,.1);">🔍</div>
+      <h3>Test Sebelum Kirim</h3>
+      <p>Buka link di browser lain / incognito mode untuk memastikan website tampil dengan benar.</p>
+    </div>
+  </div>
+
+  <div class="tip success">
+    <span class="tip-icon">✅</span>
+    <p><strong>Format link yang benar:</strong> <code style="font-family:'JetBrains Mono',monospace;color:var(--green);font-size:.82rem">https://username.github.io/nama-repository/</code><br>
+    Contoh: <code style="font-family:'JetBrains Mono',monospace;color:var(--blue);font-size:.82rem">https://budisantoso.github.io/uts-web-design/</code></p>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div class="section-label" style="margin-bottom:.75rem">Checklist Sebelum Kirim</div>
+    <ul class="checklist">
+      <li><div><strong>File bernama index.html</strong> Nama file harus tepat "index.html" (huruf kecil semua)</div></li>
+      <li><div><strong>Repository berstatus Public</strong> Cek di halaman repository — ada badge "Public" di sebelah nama</div></li>
+      <li><div><strong>GitHub Pages sudah diaktifkan</strong> Settings → Pages → Source sudah di-set ke branch main</div></li>
+      <li><div><strong>URL bisa dibuka</strong> Test buka link di browser incognito atau dari HP lain</div></li>
+      <li><div><strong>Tampilan sesuai</strong> Pastikan CSS dan konten tampil normal, tidak ada yang rusak</div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-label">Pertanyaan Umum</div>
+  <h2>FAQ & Troubleshooting</h2>
+  <p>Masalah yang paling sering terjadi dan cara mengatasinya.</p>
+
+  <details>
+    <summary>URL sudah ada tapi website tidak tampil / error 404</summary>
+    <p>Kemungkinan nama file bukan <code>index.html</code>. GitHub Pages secara default mencari file bernama <code>index.html</code> di root repository. Cek nama file di repository kamu — pastikan hurufnya kecil semua: <code>index.html</code>, bukan <code>Index.html</code> atau <code>index.HTML</code>.</p>
+  </details>
+
+  <details>
+    <summary>Tidak menemukan menu "Pages" di Settings</summary>
+    <p>Pastikan repository kamu berstatus <strong>Public</strong>. Repository Private tidak menampilkan menu GitHub Pages secara gratis. Cara mengubah: Settings → scroll ke bawah → bagian "Danger Zone" → Change repository visibility → Public.</p>
+  </details>
+
+  <details>
+    <summary>Sudah klik Save tapi URL tidak muncul</summary>
+    <p>GitHub Pages butuh waktu 1–5 menit untuk pertama kali aktif. Tunggu beberapa menit lalu refresh halaman Settings → Pages. Jika lebih dari 10 menit masih tidak muncul, coba ulangi langkah pengaktifan: pilih branch <code>main</code> dan folder <code>/ (root)</code> lalu Save lagi.</p>
+  </details>
+
+  <details>
+    <summary>Website tampil tapi CSS / gambar tidak muncul</summary>
+    <p>Ini terjadi karena path file di HTML menggunakan path absolut (misalnya <code>C:\Users\nama\Desktop\style.css</code>). Karena kamu menggunakan 1 file HTML tunggal dengan CSS dan JS di dalamnya (inline), masalah ini tidak akan terjadi. Pastikan semua CSS dan JS sudah ada di dalam file <code>index.html</code>.</p>
+  </details>
+
+  <details>
+    <summary>Sudah update file tapi website belum berubah</summary>
+    <p>GitHub Pages butuh 1–3 menit untuk update setelah kamu commit file baru. Coba hard refresh browser: tekan <code>Ctrl + Shift + R</code> (Windows) atau <code>Cmd + Shift + R</code> (Mac). Bisa juga buka di browser incognito untuk menghindari cache.</p>
+  </details>
+
+  <details>
+    <summary>Lupa password / tidak bisa login GitHub</summary>
+    <p>Gunakan fitur "Forgot password" di halaman login GitHub. Link reset akan dikirim ke email yang kamu daftarkan. Pastikan cek folder spam jika email tidak masuk dalam 5 menit.</p>
+  </details>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Materi <strong>Web Design 2</strong> — Penggunaan GitHub Pages untuk Pengumpulan UTS</p>
+  <p style="margin-top:.35rem">Dibuat untuk membantu mahasiswa mempublish hasil kerja mereka ke internet 🚀</p>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const total = document.body.scrollHeight - window.innerHeight;
+    const pct = (window.scrollY / total) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  });
+
+  // Highlight active step on scroll
+  const steps = document.querySelectorAll('.step');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        steps.forEach(s => s.classList.remove('active'));
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.5 });
+  steps.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recall C++ & Pengenalan Python — Pertemuan 8</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222638;
+    --border: #2e3248;
+    --blue: #4f8ef7;
+    --blue-light: #7fb3ff;
+    --blue-dim: rgba(79,142,247,0.12);
+    --cyan: #36d1c4;
+    --cyan-dim: rgba(54,209,196,0.12);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --green: #4ade80;
+    --green-dim: rgba(74,222,128,0.12);
+    --yellow: #fbbf24;
+    --yellow-dim: rgba(251,191,36,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --text: #e2e8f0;
+    --text-muted: #8892a4;
+    --text-dim: #4a5568;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    overflow-x: hidden;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(15,17,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 54px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand { font-weight: 700; color: var(--blue); font-size: 14px; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav-links a {
+    font-size: 12px; color: var(--text-muted); text-decoration: none;
+    padding: 4px 10px; border-radius: 20px; transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .nav-links a:hover { color: var(--blue); border-color: var(--blue-dim); background: var(--blue-dim); }
+
+  /* LAYOUT */
+  main { padding-top: 54px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 60px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  /* HEADER */
+  .header-section {
+    padding: 80px 0 60px;
+    position: relative; overflow: hidden;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(79,142,247,0.15) 0%, transparent 70%);
+  }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue-dim); border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 20px; padding: 5px 14px; font-size: 12px;
+    color: var(--blue-light); font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .header-badge::before { content: '●'; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800; line-height: 1.15;
+    background: linear-gradient(135deg, #ffffff 0%, var(--blue-light) 60%, var(--cyan) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 14px;
+  }
+  .header-sub {
+    font-size: 18px; color: var(--text-muted); font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .header-meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .meta-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 12px; font-size: 13px; color: var(--text-muted);
+  }
+  .meta-chip span { color: var(--text); font-weight: 600; }
+
+  /* SECTION TITLES */
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 60px; }
+  h2 {
+    font-size: clamp(20px, 3vw, 28px); font-weight: 800;
+    color: #ffffff; margin-bottom: 8px;
+  }
+  h3 { font-size: 17px; font-weight: 700; color: #ffffff; margin-bottom: 12px; }
+  .section-desc { color: var(--text-muted); margin-bottom: 32px; max-width: 600px; }
+
+  /* ICE BREAKING */
+  .ice-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    position: relative; overflow: hidden;
+  }
+  .ice-box::before {
+    content: '❄️';
+    position: absolute; right: 24px; top: 24px; font-size: 40px; opacity: 0.3;
+  }
+  .ice-question {
+    font-size: 20px; font-weight: 700; color: var(--yellow);
+    margin-bottom: 20px;
+  }
+  .ice-answer {
+    font-size: 17px; color: var(--green);
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--green-dim); border: 1px solid rgba(74,222,128,0.2);
+    border-radius: var(--radius-sm); padding: 16px 20px;
+  }
+  .ice-answer::before { content: '✅'; font-size: 20px; flex-shrink: 0; }
+  .ice-explanation {
+    margin-top: 20px; color: var(--text-muted); font-size: 14px;
+    border-left: 3px solid var(--blue); padding-left: 16px;
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px; margin-top: 8px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .card:hover { transform: translateY(-3px); border-color: var(--blue); box-shadow: 0 8px 24px rgba(79,142,247,0.1); }
+  .card-icon { font-size: 26px; margin-bottom: 12px; }
+  .card-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .card-points { list-style: none; }
+  .card-points li {
+    font-size: 13px; color: var(--text-muted); padding: 3px 0;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .card-points li::before { content: '→'; color: var(--blue); flex-shrink: 0; }
+  .card-code {
+    margin-top: 12px; background: var(--bg);
+    border-radius: 6px; padding: 10px 12px; overflow-x: auto;
+  }
+  .card-code code { font-family: var(--mono); font-size: 12px; color: var(--cyan); white-space: pre; }
+
+  /* COMPARISON TABLE */
+  .compare-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 8px; }
+  .compare-table thead tr th {
+    padding: 14px 20px; text-align: left; font-size: 12px;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--surface2); color: var(--text-muted);
+  }
+  .compare-table thead tr th:first-child { border-radius: 10px 0 0 0; }
+  .compare-table thead tr th:last-child { border-radius: 0 10px 0 0; }
+  .compare-table thead tr th.th-concept { color: var(--text-muted); }
+  .compare-table thead tr th.th-cpp { color: var(--purple); }
+  .compare-table thead tr th.th-python { color: var(--cyan); }
+
+  .compare-table tbody tr { border-bottom: 1px solid var(--border); }
+  .compare-table tbody tr:hover td { background: var(--surface2); }
+  .compare-table tbody tr td {
+    padding: 14px 20px; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    transition: background 0.15s;
+  }
+  .compare-table tbody tr td:first-child {
+    font-weight: 700; color: var(--text); border-left: 3px solid var(--blue);
+  }
+  .compare-table tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+  .compare-table tbody tr:last-child td:last-child { border-radius: 0 0 10px 0; }
+  .tag {
+    display: inline-block; font-family: var(--mono); font-size: 12px;
+    padding: 3px 8px; border-radius: 5px;
+  }
+  .tag-cpp { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .tag-python { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(54,209,196,0.2); }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: #0d1117; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); overflow: hidden; margin: 12px 0;
+  }
+  .code-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px; background: var(--surface2); border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .lang-python { color: var(--cyan); }
+  .lang-cpp { color: var(--purple); }
+  .code-dots { display: flex; gap: 5px; }
+  .code-dots span { width: 10px; height: 10px; border-radius: 50%; }
+  .code-dots span:nth-child(1) { background: #ff5f57; }
+  .code-dots span:nth-child(2) { background: #febc2e; }
+  .code-dots span:nth-child(3) { background: #28c840; }
+  .code-block pre {
+    padding: 16px 18px; overflow-x: auto; line-height: 1.6;
+  }
+  .code-block pre code {
+    font-family: var(--mono); font-size: 13px; color: var(--text);
+    white-space: pre;
+  }
+  /* Syntax highlight helpers */
+  .kw { color: var(--purple); }
+  .fn { color: var(--blue-light); }
+  .str { color: var(--green); }
+  .num { color: var(--yellow); }
+  .cm { color: var(--text-dim); font-style: italic; }
+  .op { color: var(--cyan); }
+  .var { color: var(--text); }
+
+  /* WHY PYTHON */
+  .reasons-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px; margin-top: 8px;
+  }
+  .reason-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; text-align: center;
+    transition: all 0.2s;
+  }
+  .reason-card:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+  .reason-icon { font-size: 32px; margin-bottom: 10px; }
+  .reason-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .reason-desc { font-size: 13px; color: var(--text-muted); }
+
+  /* COLAB */
+  .colab-steps {
+    display: flex; gap: 0; margin: 24px 0; flex-wrap: wrap;
+  }
+  .colab-step {
+    flex: 1; min-width: 180px;
+    background: var(--surface); padding: 20px;
+    position: relative; text-align: center;
+    border-top: 3px solid var(--blue);
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+  .colab-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+  .colab-step:last-child { border-radius: 0 var(--radius) var(--radius) 0; border-right: 1px solid var(--border); }
+  .colab-step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--blue); color: #fff; font-weight: 800;
+    font-size: 14px; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+  }
+  .colab-step-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .colab-step-desc { font-size: 12px; color: var(--text-muted); }
+  .colab-note {
+    background: var(--yellow-dim); border: 1px solid rgba(251,191,36,0.2);
+    border-radius: var(--radius-sm); padding: 14px 18px;
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: var(--yellow); margin-top: 16px;
+  }
+
+  /* SUB SECTIONS (Dasar Python) */
+  .topic-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+  }
+  .topic-block-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  .topic-badge {
+    background: var(--blue-dim); color: var(--blue);
+    border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 6px; padding: 4px 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .topic-title { font-weight: 700; font-size: 16px; }
+  .explain-box {
+    background: var(--bg); border-left: 3px solid var(--blue);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 16px; margin-top: 10px;
+    font-size: 13px; color: var(--text-muted);
+  }
+  .explain-box strong { color: var(--blue-light); }
+
+  /* INTERACTIVE SIMULATOR */
+  .simulator {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .sim-header {
+    background: var(--surface2); padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sim-title { font-weight: 700; font-size: 14px; }
+  .sim-body { padding: 24px; }
+  .sim-code {
+    background: #0d1117; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px;
+    font-family: var(--mono); font-size: 13px; line-height: 1.6;
+  }
+  .sim-input-row {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .sim-input-row label { font-size: 13px; color: var(--text-muted); min-width: 100px; }
+  .sim-input {
+    flex: 1; min-width: 180px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    color: var(--text); font-family: var(--sans); font-size: 14px;
+    transition: border-color 0.2s;
+  }
+  .sim-input:focus { outline: none; border-color: var(--blue); }
+  .sim-btn {
+    background: var(--blue); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    padding: 10px 22px; font-weight: 700; font-size: 14px;
+    cursor: pointer; transition: all 0.2s; font-family: var(--sans);
+  }
+  .sim-btn:hover { background: var(--blue-light); transform: translateY(-1px); }
+  .sim-btn:active { transform: translateY(0); }
+  .sim-output {
+    background: #0d1117; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px;
+    font-family: var(--mono); font-size: 13px; min-height: 60px;
+    display: none;
+  }
+  .sim-output.visible { display: block; }
+  .output-line { color: var(--green); }
+  .output-prompt { color: var(--text-dim); margin-bottom: 4px; }
+
+  /* EXERCISES */
+  .exercise-list { display: flex; flex-direction: column; gap: 16px; }
+  .exercise-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .exercise-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .exercise-header:hover { background: var(--surface2); }
+  .exercise-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--blue-dim); color: var(--blue);
+    border: 1px solid rgba(79,142,247,0.3);
+    font-weight: 800; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .exercise-title { font-weight: 600; font-size: 15px; flex: 1; margin-left: 12px; }
+  .exercise-toggle {
+    background: none; border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 12px;
+    color: var(--text-muted); cursor: pointer; font-size: 12px;
+    font-family: var(--sans); transition: all 0.2s;
+  }
+  .exercise-toggle:hover { border-color: var(--blue); color: var(--blue); }
+  .exercise-answer {
+    padding: 0 20px; max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+  }
+  .exercise-answer.open { max-height: 500px; padding: 0 20px 20px; }
+
+  /* UTS BOX */
+  .uts-box {
+    background: var(--red-dim); border: 2px solid rgba(248,113,113,0.3);
+    border-radius: var(--radius); padding: 28px;
+    position: relative; overflow: hidden;
+  }
+  .uts-box::before {
+    content: '⚠️'; position: absolute; right: 20px; top: 20px;
+    font-size: 40px; opacity: 0.4;
+  }
+  .uts-title { font-size: 18px; font-weight: 800; color: var(--red); margin-bottom: 16px; }
+  .uts-items { display: flex; flex-direction: column; gap: 10px; }
+  .uts-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px;
+    font-size: 14px;
+  }
+  .uts-item-icon { flex-shrink: 0; }
+  .uts-item-text { color: var(--text-muted); }
+  .uts-item-text strong { color: var(--text); }
+
+  /* TUGAS BOX */
+  .tugas-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px; margin-top: 8px;
+  }
+  .tugas-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    display: flex; align-items: flex-start; gap: 14px;
+    transition: all 0.2s;
+  }
+  .tugas-card:hover { border-color: var(--green); }
+  .tugas-icon { font-size: 24px; flex-shrink: 0; }
+  .tugas-content {}
+  .tugas-num { font-size: 10px; font-weight: 700; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+  .tugas-title { font-size: 14px; font-weight: 700; color: #fff; margin: 4px 0; }
+  .tugas-desc { font-size: 12px; color: var(--text-muted); }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 20px; text-align: center;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim); font-size: 13px;
+  }
+  footer span { color: var(--blue); }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .colab-step { border-radius: var(--radius)!important; margin-bottom: 8px; }
+    .compare-table { font-size: 12px; }
+    .compare-table thead tr th, .compare-table tbody tr td { padding: 10px 12px; }
+    section { padding: 40px 0; }
+    .sim-input-row { flex-direction: column; align-items: flex-start; }
+    .sim-input { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-brand">🐍 LA-2 Pertemuan 8</div>
+  <div class="nav-links">
+    <a href="#recall">Recall C++</a>
+    <a href="#transisi">Transisi</a>
+    <a href="#python">Dasar Python</a>
+    <a href="#simulasi">Simulasi</a>
+    <a href="#latihan">Latihan</a>
+    <a href="#uts">UTS</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================== HEADER ===================== -->
+<section class="header-section">
+  <div class="container">
+    <div class="header-badge">Logika & Algoritma 2 — Pertemuan 8</div>
+    <h1>Recall C++ &<br>Pengenalan Python</h1>
+    <p class="header-sub">Dari C++ ke Python — Transisi Mudah 🚀</p>
+    <div class="header-meta">
+      <div class="meta-chip">🎓 Target: <span>D3 Manajemen Informatika Sem 2</span></div>
+      <div class="meta-chip">📚 Prasyarat: <span>C++ Pertemuan 1–7</span></div>
+      <div class="meta-chip">⏱️ Durasi: <span>±2 × 50 menit</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ICE BREAKING ===================== -->
+<section id="icebreaking">
+  <div class="container fade-in">
+    <div class="section-label">Pembuka</div>
+    <h2>Ice Breaking ❄️</h2>
+    <p class="section-desc">Sebelum mulai, jawab dulu satu pertanyaan ini...</p>
+    <div class="ice-box">
+      <div class="ice-question">
+        💭 "Kalau kita pindah dari C++ ke Python, apakah kita harus belajar ulang dari nol?"
+      </div>
+      <div class="ice-answer">
+        <strong>TIDAK! Logika tetap sama, hanya sintaks yang berbeda.</strong>
+      </div>
+      <div class="ice-explanation">
+        Bayangkan kamu sudah bisa masak <strong style="color:var(--text)">nasi goreng</strong> pakai kompor gas. Lalu kamu diminta masak pakai kompor listrik. Caranya berbeda? Ya, sedikit. Tapi logika memasaknya? Sama persis! Python itu "kompor listrik"-nya — lebih mudah, lebih cepat panas, tapi resepnya tetap sama. 🍳
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RECALL C++ ===================== -->
+<section id="recall">
+  <div class="container fade-in">
+    <div class="section-label">Review</div>
+    <h2>Recall C++ 💾</h2>
+    <p class="section-desc">Kita recall dulu apa yang sudah kalian pelajari 7 pertemuan lalu. Bukan untuk dihafal ulang — tapi untuk dibandingkan dengan Python nanti.</p>
+
+    <div class="cards-grid">
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-icon">🧱</div>
+        <div class="card-title">Dasar C++</div>
+        <ul class="card-points">
+          <li>Harus include library & deklarasi tipe</li>
+          <li>Program dimulai dari <code style="color:var(--cyan);font-family:var(--mono)">main()</code></li>
+          <li>Setiap baris diakhiri titik koma</li>
+        </ul>
+        <div class="card-code"><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+  cout &lt;&lt; "Hello!";
+  return 0;
+}</code></div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-icon">🔀</div>
+        <div class="card-title">Percabangan</div>
+        <ul class="card-points">
+          <li>Menggunakan <code style="color:var(--cyan);font-family:var(--mono)">if / else if / else</code></li>
+          <li>Blok kode dibungkus <code style="color:var(--cyan);font-family:var(--mono)">{}</code></li>
+        </ul>
+        <div class="card-code"><code>if (nilai >= 80) {
+  cout &lt;&lt; "A";
+} else {
+  cout &lt;&lt; "B";
+}</code></div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">Perulangan</div>
+        <ul class="card-points">
+          <li><code style="color:var(--cyan);font-family:var(--mono)">for</code>, <code style="color:var(--cyan);font-family:var(--mono)">while</code>, <code style="color:var(--cyan);font-family:var(--mono)">do-while</code></li>
+          <li>Ada inisialisasi, kondisi, increment</li>
+        </ul>
+        <div class="card-code"><code>for (int i=1; i<=5; i++) {
+  cout &lt;&lt; i &lt;&lt; endl;
+}</code></div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">Fungsi</div>
+        <ul class="card-points">
+          <li>Harus dideklarasikan tipe return-nya</li>
+          <li>Bisa dipanggil berulang kali</li>
+        </ul>
+        <div class="card-code"><code>int tambah(int a, int b) {
+  return a + b;
+}</code></div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card">
+        <div class="card-icon">🔁</div>
+        <div class="card-title">Rekursi</div>
+        <ul class="card-points">
+          <li>Fungsi memanggil dirinya sendiri</li>
+          <li>Wajib ada base case (kondisi berhenti)</li>
+        </ul>
+        <div class="card-code"><code>int faktorial(int n) {
+  if (n == 0) return 1;
+  return n * faktorial(n-1);
+}</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TRANSISI KE PYTHON ===================== -->
+<section id="transisi">
+  <div class="container fade-in">
+    <div class="section-label">Inti Materi</div>
+    <h2>Transisi ke Python 🐍</h2>
+    <p class="section-desc">Coba kita lihat perbedaan-perbedaannya satu per satu. Ini sebenarnya tidak banyak kok — yang berubah hanya cara penulisannya.</p>
+
+    <div style="overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th class="th-concept">Konsep</th>
+            <th class="th-cpp">⚙️ C++</th>
+            <th class="th-python">🐍 Python</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Output</td>
+            <td><span class="tag tag-cpp">cout &lt;&lt; "teks";</span></td>
+            <td><span class="tag tag-python">print("teks")</span></td>
+          </tr>
+          <tr>
+            <td>Input</td>
+            <td><span class="tag tag-cpp">cin >> variabel;</span></td>
+            <td><span class="tag tag-python">variabel = input()</span></td>
+          </tr>
+          <tr>
+            <td>Blok kode</td>
+            <td><span class="tag tag-cpp">{ ... }</span></td>
+            <td><span class="tag tag-python">indentasi (spasi 4)</span></td>
+          </tr>
+          <tr>
+            <td>Tipe data</td>
+            <td><span class="tag tag-cpp">int x = 5;</span></td>
+            <td><span class="tag tag-python">x = 5</span></td>
+          </tr>
+          <tr>
+            <td>Komentar</td>
+            <td><span class="tag tag-cpp">// komentar</span></td>
+            <td><span class="tag tag-python"># komentar</span></td>
+          </tr>
+          <tr>
+            <td>Titik koma</td>
+            <td><span class="tag tag-cpp">WAJIB di akhir baris</span></td>
+            <td><span class="tag tag-python">TIDAK PERLU</span></td>
+          </tr>
+          <tr>
+            <td>Compile</td>
+            <td><span class="tag tag-cpp">g++ file.cpp → jalankan</span></td>
+            <td><span class="tag tag-python">python file.py (langsung!)</span></td>
+          </tr>
+          <tr>
+            <td>Perulangan for</td>
+            <td><span class="tag tag-cpp">for(int i=0; i&lt;5; i++)</span></td>
+            <td><span class="tag tag-python">for i in range(5):</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="explain-box" style="margin-top:20px;">
+      💡 <strong>Intinya:</strong> Python lebih "santai" dalam penulisan. Tidak perlu titik koma, tidak perlu deklarasi tipe, tidak perlu compile dulu. Bedanya cuma di sini — logika <em>if, for, fungsi</em> semuanya sama!
+    </div>
+  </div>
+</section>
+
+<!-- ===================== KENAPA PYTHON ===================== -->
+<section id="kenapa">
+  <div class="container fade-in">
+    <div class="section-label">Motivasi</div>
+    <h2>Kenapa Harus Python? 🤔</h2>
+    <p class="section-desc">Banyak yang tanya: "Pak, kenapa kita pindah ke Python?" Ini alasannya...</p>
+    <div class="reasons-grid">
+      <div class="reason-card">
+        <div class="reason-icon">✍️</div>
+        <div class="reason-title">Lebih Sederhana</div>
+        <div class="reason-desc">Kode Python lebih pendek dan mudah dibaca. Yang di C++ 10 baris, di Python bisa 3 baris.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-icon">⚡</div>
+        <div class="reason-title">Tanpa Compile</div>
+        <div class="reason-desc">Langsung jalankan. Tidak perlu tunggu proses compile seperti di C++.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-icon">📊</div>
+        <div class="reason-title">Cocok Data & AI</div>
+        <div class="reason-desc">Python adalah raja di bidang data science, machine learning, dan kecerdasan buatan.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-icon">🌍</div>
+        <div class="reason-title">Komunitas Besar</div>
+        <div class="reason-desc">Masalah apapun yang kamu temui, sudah ada jawabannya di Google. Library tersedia ribuan.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-icon">💼</div>
+        <div class="reason-title">Permintaan Tinggi</div>
+        <div class="reason-desc">Skill Python = nilai jual tinggi di dunia kerja. Banyak perusahaan mencari Python developer.</div>
+      </div>
+      <div class="reason-card">
+        <div class="reason-icon">🔬</div>
+        <div class="reason-title">Multifungsi</div>
+        <div class="reason-desc">Web, otomasi, data, game, AI — Python bisa semua. Satu bahasa untuk banyak tujuan.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GOOGLE COLAB ===================== -->
+<section id="colab">
+  <div class="container fade-in">
+    <div class="section-label">Tools</div>
+    <h2>Google Colab 📓</h2>
+    <p class="section-desc">Ini adalah "lapangan bermain" kita untuk coding Python — tanpa install apapun!</p>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;">
+      <h3 style="margin-bottom:12px;">Apa itu Google Colab?</h3>
+      <p style="color:var(--text-muted);font-size:14px;margin-bottom:14px;">Google Colaboratory (Colab) adalah platform notebook berbasis web yang memungkinkan kamu menulis dan menjalankan kode Python langsung di browser — gratis, tanpa perlu install Python, tanpa perlu compiler.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <span style="background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,0.2);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;">✓ Gratis</span>
+        <span style="background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,0.2);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;">✓ Tanpa Install</span>
+        <span style="background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,0.2);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;">✓ Bisa Simpan ke Drive</span>
+        <span style="background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,0.2);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;">✓ Butuh Akun Google</span>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:12px;">Cara Akses (3 Langkah Mudah)</h3>
+    <div class="colab-steps">
+      <div class="colab-step">
+        <div class="colab-step-num">1</div>
+        <div class="colab-step-title">Buka Browser</div>
+        <div class="colab-step-desc">Kunjungi <strong style="color:var(--blue);">colab.research.google.com</strong> atau cari "Google Colab"</div>
+      </div>
+      <div class="colab-step">
+        <div class="colab-step-num">2</div>
+        <div class="colab-step-title">Login Google</div>
+        <div class="colab-step-desc">Gunakan akun Google kamu (Gmail). Klik "New Notebook"</div>
+      </div>
+      <div class="colab-step">
+        <div class="colab-step-num">3</div>
+        <div class="colab-step-title">Langsung Coding!</div>
+        <div class="colab-step-desc">Ketik kode di cell → Klik ▶ atau tekan Shift+Enter</div>
+      </div>
+    </div>
+
+    <div class="colab-note">
+      <span>⏰</span>
+      <div><strong>Catatan Penting:</strong> Sesi Colab akan timeout (terputus) setelah sekitar <strong>±90 menit</strong> tidak aktif. Simpan kode kamu ke Google Drive secara berkala agar tidak hilang!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DASAR PYTHON ===================== -->
+<section id="python">
+  <div class="container fade-in">
+    <div class="section-label">Materi Utama</div>
+    <h2>Dasar Python 🐍</h2>
+    <p class="section-desc">Oke, sekarang kita mulai coding Python! Santai dulu — kita bahas satu per satu, pelan-pelan.</p>
+
+    <!-- A: VARIABEL -->
+    <div class="topic-block">
+      <div class="topic-block-header">
+        <span class="topic-badge">A</span>
+        <span class="topic-title">Variabel & Tipe Data</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Ini sebenarnya sama seperti di C++, tapi... lebih simpel. Bedanya cuma di sini: Python tidak perlu deklarasi tipe data. Langsung assign saja.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang lang-python">Python</span>
+        </div>
+        <pre><code><span class="cm"># C++ → int nama = "Budi";  ← Salah! String di int</span>
+<span class="cm"># C++ → string nama = "Budi";  ← Harus tulis tipe dulu</span>
+
+<span class="cm"># Python → langsung saja:</span>
+<span class="var">nama</span> <span class="op">=</span> <span class="str">"Budi"</span>        <span class="cm"># otomatis tipe string</span>
+<span class="var">usia</span> <span class="op">=</span> <span class="num">20</span>          <span class="cm"># otomatis tipe integer</span>
+<span class="var">nilai</span> <span class="op">=</span> <span class="num">85.5</span>       <span class="cm"># otomatis tipe float</span>
+<span class="var">lulus</span> <span class="op">=</span> <span class="kw">True</span>       <span class="cm"># otomatis tipe boolean</span>
+
+<span class="cm"># Cek tipe data pakai:</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="var">nama</span>))   <span class="cm"># output: &lt;class 'str'&gt;</span></code></pre>
+      </div>
+      <div class="explain-box">
+        💡 Python itu "pintar" — dia bisa tebak sendiri tipe datanya. <strong>Kamu tidak perlu tulis <code style="font-family:var(--mono)">int</code>, <code style="font-family:var(--mono)">string</code>, <code style="font-family:var(--mono)">float</code></strong> sebelum nama variabel.
+      </div>
+    </div>
+
+    <!-- B: OUTPUT -->
+    <div class="topic-block">
+      <div class="topic-block-header">
+        <span class="topic-badge">B</span>
+        <span class="topic-title">Output dengan print()</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Ganti <code style="font-family:var(--mono);color:var(--purple)">cout &lt;&lt;</code> dengan <code style="font-family:var(--mono);color:var(--cyan)">print()</code>. Sesimpel itu.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang lang-python">Python</span>
+        </div>
+        <pre><code><span class="var">nama</span> <span class="op">=</span> <span class="str">"Budi"</span>
+<span class="var">usia</span> <span class="op">=</span> <span class="num">20</span>
+
+<span class="fn">print</span>(<span class="str">"Hello, World!"</span>)          <span class="cm"># Hello, World!</span>
+<span class="fn">print</span>(<span class="str">"Nama:"</span>, <span class="var">nama</span>)             <span class="cm"># Nama: Budi</span>
+<span class="fn">print</span>(<span class="str">f"Nama: <span class="op">{</span><span class="var">nama</span><span class="op">}</span>"</span>)            <span class="cm"># f-string — cara keren!</span>
+<span class="fn">print</span>(<span class="str">f"Usia: <span class="op">{</span><span class="var">usia</span><span class="op">}</span> tahun"</span>)      <span class="cm"># Usia: 20 tahun</span></code></pre>
+      </div>
+      <div class="explain-box">
+        💡 <strong>f-string</strong> adalah cara praktis menampilkan variabel di dalam teks. Awali string dengan <code style="font-family:var(--mono)">f</code> dan taruh variabel dalam <code style="font-family:var(--mono)">{}</code>. Ini lebih rapi dari <code style="font-family:var(--mono)">cout &lt;&lt; "Nama: " &lt;&lt; nama;</code> kan?
+      </div>
+    </div>
+
+    <!-- C: INPUT -->
+    <div class="topic-block">
+      <div class="topic-block-header">
+        <span class="topic-badge">C</span>
+        <span class="topic-title">Input dari Pengguna</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Ganti <code style="font-family:var(--mono);color:var(--purple)">cin >></code> dengan <code style="font-family:var(--mono);color:var(--cyan)">input()</code>. Tapi ada satu catatan penting...</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang lang-python">Python</span>
+        </div>
+        <pre><code><span class="var">nama</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Masukkan nama: "</span>)       <span class="cm"># hasil: string</span>
+
+<span class="cm"># ⚠️ input() SELALU menghasilkan tipe STRING!</span>
+<span class="cm"># Kalau mau angka, harus dikonversi dulu:</span>
+
+<span class="var">usia</span> <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Masukkan usia: "</span>))   <span class="cm"># konversi ke integer</span>
+<span class="var">nilai</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Masukkan nilai: "</span>)) <span class="cm"># konversi ke float</span></code></pre>
+      </div>
+      <div class="explain-box">
+        ⚠️ <strong>Ini jebakan paling umum!</strong> Kalau kamu lupa konversi, lalu mau hitung <code style="font-family:var(--mono)">usia + 1</code>, Python akan error karena tidak bisa tambah string dengan angka. Selalu ingat: <strong>input() = string, butuh int() atau float() untuk angka.</strong>
+      </div>
+    </div>
+
+    <!-- D: OPERATOR -->
+    <div class="topic-block">
+      <div class="topic-block-header">
+        <span class="topic-badge">D</span>
+        <span class="topic-title">Operator Aritmatika</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Sebagian besar sama dengan C++. Yang beda ada 3 — yang ini wajib diperhatikan!</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang lang-python">Python</span>
+        </div>
+        <pre><code><span class="var">a</span>, <span class="var">b</span> <span class="op">=</span> <span class="num">10</span>, <span class="num">3</span>
+
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">+</span> <span class="var">b</span>)   <span class="cm"># 13  → Sama seperti C++</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">-</span> <span class="var">b</span>)   <span class="cm"># 7   → Sama seperti C++</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">*</span> <span class="var">b</span>)   <span class="cm"># 30  → Sama seperti C++</span>
+
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">/</span> <span class="var">b</span>)   <span class="cm"># 3.333... → BEDA! Di C++ int/int = int, Python hasilnya float</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">//</span> <span class="var">b</span>)  <span class="cm"># 3  → Pembagian bulat (seperti int/int di C++)</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">%</span> <span class="var">b</span>)   <span class="cm"># 1  → Modulo, sama seperti C++</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">**</span> <span class="var">b</span>)  <span class="cm"># 1000 → Pangkat! Di C++ pakai pow(a,b)</span></code></pre>
+      </div>
+      <div class="explain-box">
+        💡 Yang perlu diingat: <strong><code style="font-family:var(--mono)">/</code> = bagi biasa (hasilnya desimal)</strong>, <strong><code style="font-family:var(--mono)">//</code> = bagi bulat</strong>, <strong><code style="font-family:var(--mono)">**</code> = pangkat</strong>. Tiga operator ini tidak ada di C++.
+      </div>
+    </div>
+
+    <!-- E: PERCABANGAN -->
+    <div class="topic-block">
+      <div class="topic-block-header">
+        <span class="topic-badge">E</span>
+        <span class="topic-title">Percabangan (if / elif / else)</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">Logikanya SAMA dengan C++. Yang beda: <code style="font-family:var(--mono);color:var(--cyan)">else if</code> jadi <code style="font-family:var(--mono);color:var(--cyan)">elif</code>, tidak ada kurung kurawal, dan wajib pakai titik dua <code style="font-family:var(--mono)">:</code> di akhir kondisi.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--purple);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">⚙️ C++ (dulu)</div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots"><span></span><span></span><span></span></div>
+              <span class="code-lang lang-cpp">C++</span>
+            </div>
+            <pre><code><span class="kw">if</span> (nilai >= <span class="num">80</span>) {
+  cout << <span class="str">"A"</span>;
+} <span class="kw">else if</span> (nilai >= <span class="num">70</span>) {
+  cout << <span class="str">"B"</span>;
+} <span class="kw">else</span> {
+  cout << <span class="str">"C"</span>;
+}</code></pre>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">🐍 Python (sekarang)</div>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots"><span></span><span></span><span></span></div>
+              <span class="code-lang lang-python">Python</span>
+            </div>
+            <pre><code><span class="kw">if</span> nilai >= <span class="num">80</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"A"</span>)
+<span class="kw">elif</span> nilai >= <span class="num">70</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"B"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"C"</span>)</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="explain-box" style="margin-top:12px;">
+        💡 Perhatikan: <strong>tidak ada <code style="font-family:var(--mono)">()</code> di kondisi</strong>, tidak ada <code style="font-family:var(--mono)">{}</code>, dan <strong>WAJIB indentasi 4 spasi</strong> untuk blok kode. Indentasi ini adalah pengganti kurung kurawal!
+      </div>
+    </div>
+
+    <!-- F: PERULANGAN -->
+    <div class="topic-block">
+      <div class="topic-block-header">
+        <span class="topic-badge">F</span>
+        <span class="topic-title">Perulangan (for & while)</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">For loop di Python jauh lebih ringkas. Tidak perlu inisialisasi, kondisi, dan increment secara terpisah.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang lang-python">Python</span>
+        </div>
+        <pre><code><span class="cm"># range(start, stop, step)</span>
+<span class="cm"># stop TIDAK termasuk! range(1, 6) = 1, 2, 3, 4, 5</span>
+
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>)<span class="op">:</span>
+    <span class="fn">print</span>(<span class="var">i</span>)          <span class="cm"># output: 1 2 3 4 5</span>
+
+<span class="cm"># Hitung mundur</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>, <span class="num">0</span>, <span class="op">-</span><span class="num">1</span>)<span class="op">:</span>
+    <span class="fn">print</span>(<span class="var">i</span>)          <span class="cm"># output: 5 4 3 2 1</span>
+
+<span class="cm"># While loop — sama konsepnya</span>
+<span class="var">i</span> <span class="op">=</span> <span class="num">1</span>
+<span class="kw">while</span> <span class="var">i</span> <= <span class="num">5</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="var">i</span>)
+    <span class="var">i</span> <span class="op">+=</span> <span class="num">1</span>            <span class="cm"># tidak ada i++ di Python!</span></code></pre>
+      </div>
+      <div class="explain-box">
+        💡 <strong><code style="font-family:var(--mono)">range(1, 6)</code></strong> artinya dari 1 sampai 5 (angka 6 TIDAK termasuk). Ini sering bikin bingung pertama kali — tapi cepat hafal! Dan ingat: <strong>tidak ada <code style="font-family:var(--mono)">i++</code> di Python, pakainya <code style="font-family:var(--mono)">i += 1</code></strong>.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== SIMULASI INTERAKTIF ===================== -->
+<section id="simulasi">
+  <div class="container fade-in">
+    <div class="section-label">Interaktif</div>
+    <h2>Simulasi Python Output 🖥️</h2>
+    <p class="section-desc">Coba rasakan sendiri bagaimana Python bekerja! Isi input di bawah dan klik Run.</p>
+
+    <div class="simulator">
+      <div class="sim-header">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="sim-title">🐍 Python Simulator (mini)</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-code">
+          <span style="color:var(--text-dim)">>>> </span><span class="cm"># Kode yang akan dijalankan:</span><br>
+          <span style="color:var(--text-dim)">>>> </span><span class="var">nama</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Masukkan nama: "</span>)<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="var">usia</span> <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Masukkan usia: "</span>))<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="fn">print</span>(<span class="str">f"Halo, <span class="op">{</span><span class="var">nama</span><span class="op">}</span>! Usiamu <span class="op">{</span><span class="var">usia</span><span class="op">}</span> tahun."</span>)<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="kw">if</span> <span class="var">usia</span> >= <span class="num">18</span>:<br>
+          <span style="color:var(--text-dim)">...     </span><span class="fn">print</span>(<span class="str">"Kamu sudah dewasa!"</span>)<br>
+          <span style="color:var(--text-dim)">... </span><span class="kw">else</span>:<br>
+          <span style="color:var(--text-dim)">...     </span><span class="fn">print</span>(<span class="str">"Kamu masih muda!"</span>)
+        </div>
+
+        <div class="sim-input-row">
+          <label>Masukkan nama:</label>
+          <input class="sim-input" type="text" id="simNama" placeholder="Nama kamu..." maxlength="30">
+        </div>
+        <div class="sim-input-row">
+          <label>Masukkan usia:</label>
+          <input class="sim-input" type="number" id="simUsia" placeholder="Usia..." min="1" max="120">
+          <button class="sim-btn" onclick="runSimulator()">▶ Run</button>
+        </div>
+
+        <div id="simOutput" class="sim-output">
+          <div class="output-prompt"># Output:</div>
+          <div id="simOutputContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulator 2: FizzBuzz mini -->
+    <div class="simulator" style="margin-top:20px;">
+      <div class="sim-header">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="sim-title">🔢 Kalkulator Sederhana</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-code">
+          <span style="color:var(--text-dim)">>>> </span><span class="var">a</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Angka 1: "</span>))<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="var">b</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Angka 2: "</span>))<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="fn">print</span>(<span class="str">f"Jumlah: <span class="op">{</span><span class="var">a</span><span class="op">+</span><span class="var">b</span><span class="op">}</span>"</span>)<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="fn">print</span>(<span class="str">f"Selisih: <span class="op">{</span><span class="var">a</span><span class="op">-</span><span class="var">b</span><span class="op">}</span>"</span>)<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="fn">print</span>(<span class="str">f"Hasil kali: <span class="op">{</span><span class="var">a</span><span class="op">*</span><span class="var">b</span><span class="op">}</span>"</span>)<br>
+          <span style="color:var(--text-dim)">>>> </span><span class="fn">print</span>(<span class="str">f"Hasil bagi: <span class="op">{</span><span class="var">a</span><span class="op">/</span><span class="var">b</span><span class="op">}</span>"</span>)
+        </div>
+        <div class="sim-input-row">
+          <label>Angka 1:</label>
+          <input class="sim-input" type="number" id="calcA" placeholder="Angka pertama">
+        </div>
+        <div class="sim-input-row">
+          <label>Angka 2:</label>
+          <input class="sim-input" type="number" id="calcB" placeholder="Angka kedua">
+          <button class="sim-btn" onclick="runCalculator()">▶ Run</button>
+        </div>
+        <div id="calcOutput" class="sim-output">
+          <div class="output-prompt"># Output:</div>
+          <div id="calcOutputContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LATIHAN ===================== -->
+<section id="latihan">
+  <div class="container fade-in">
+    <div class="section-label">Praktik</div>
+    <h2>Soal Latihan 📝</h2>
+    <p class="section-desc">Coba kerjakan di Google Colab! Klik "Tampilkan Contoh Jawaban" kalau sudah coba sendiri dulu ya.</p>
+
+    <div class="exercise-list">
+
+      <!-- Soal 1 -->
+      <div class="exercise-item">
+        <div class="exercise-header" onclick="toggleExercise(this)">
+          <div class="exercise-num">1</div>
+          <div class="exercise-title">Kalkulator Sederhana — Buat program yang menerima 2 angka dan tampilkan hasil +, -, *, /</div>
+          <button class="exercise-toggle">Lihat Jawaban</button>
+        </div>
+        <div class="exercise-answer">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots"><span></span><span></span><span></span></div>
+              <span class="code-lang lang-python">Contoh Jawaban</span>
+            </div>
+            <pre><code><span class="var">a</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Masukkan angka pertama: "</span>))
+<span class="var">b</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Masukkan angka kedua: "</span>))
+
+<span class="fn">print</span>(<span class="str">f"Penjumlahan  : <span class="op">{</span><span class="var">a</span> <span class="op">+</span> <span class="var">b</span><span class="op">}</span>"</span>)
+<span class="fn">print</span>(<span class="str">f"Pengurangan  : <span class="op">{</span><span class="var">a</span> <span class="op">-</span> <span class="var">b</span><span class="op">}</span>"</span>)
+<span class="fn">print</span>(<span class="str">f"Perkalian    : <span class="op">{</span><span class="var">a</span> <span class="op">*</span> <span class="var">b</span><span class="op">}</span>"</span>)
+
+<span class="kw">if</span> <span class="var">b</span> <span class="op">!=</span> <span class="num">0</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">f"Pembagian    : <span class="op">{</span><span class="var">a</span> <span class="op">/</span> <span class="var">b</span><span class="op">}</span>"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Tidak bisa dibagi nol!"</span>)</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soal 2 -->
+      <div class="exercise-item">
+        <div class="exercise-header" onclick="toggleExercise(this)">
+          <div class="exercise-num">2</div>
+          <div class="exercise-title">Ganjil / Genap — Cek apakah bilangan yang diinput ganjil atau genap</div>
+          <button class="exercise-toggle">Lihat Jawaban</button>
+        </div>
+        <div class="exercise-answer">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots"><span></span><span></span><span></span></div>
+              <span class="code-lang lang-python">Contoh Jawaban</span>
+            </div>
+            <pre><code><span class="var">angka</span> <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Masukkan angka: "</span>))
+
+<span class="kw">if</span> <span class="var">angka</span> <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">f"<span class="op">{</span><span class="var">angka</span><span class="op">}</span> adalah bilangan GENAP"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">f"<span class="op">{</span><span class="var">angka</span><span class="op">}</span> adalah bilangan GANJIL"</span>)</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soal 3 -->
+      <div class="exercise-item">
+        <div class="exercise-header" onclick="toggleExercise(this)">
+          <div class="exercise-num">3</div>
+          <div class="exercise-title">Hitung Mundur — Tampilkan hitungan mundur dari N sampai 1, lalu "Selesai!"</div>
+          <button class="exercise-toggle">Lihat Jawaban</button>
+        </div>
+        <div class="exercise-answer">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots"><span></span><span></span><span></span></div>
+              <span class="code-lang lang-python">Contoh Jawaban</span>
+            </div>
+            <pre><code><span class="var">n</span> <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Hitung mundur dari: "</span>))
+
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">n</span>, <span class="num">0</span>, <span class="op">-</span><span class="num">1</span>)<span class="op">:</span>
+    <span class="fn">print</span>(<span class="var">i</span>)
+
+<span class="fn">print</span>(<span class="str">"Selesai! 🎉"</span>)</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soal 4 -->
+      <div class="exercise-item">
+        <div class="exercise-header" onclick="toggleExercise(this)">
+          <div class="exercise-num">4</div>
+          <div class="exercise-title">Konversi Suhu — Ubah Celsius ke Fahrenheit: F = (C × 9/5) + 32</div>
+          <button class="exercise-toggle">Lihat Jawaban</button>
+        </div>
+        <div class="exercise-answer">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots"><span></span><span></span><span></span></div>
+              <span class="code-lang lang-python">Contoh Jawaban</span>
+            </div>
+            <pre><code><span class="var">celsius</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Masukkan suhu Celsius: "</span>))
+
+<span class="var">fahrenheit</span> <span class="op">=</span> (<span class="var">celsius</span> <span class="op">*</span> <span class="num">9</span><span class="op">/</span><span class="num">5</span>) <span class="op">+</span> <span class="num">32</span>
+
+<span class="fn">print</span>(<span class="str">f"<span class="op">{</span><span class="var">celsius</span><span class="op">}</span>°C = <span class="op">{</span><span class="var">fahrenheit</span><span class="op">}</span>°F"</span>)</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soal 5 -->
+      <div class="exercise-item">
+        <div class="exercise-header" onclick="toggleExercise(this)">
+          <div class="exercise-num">5</div>
+          <div class="exercise-title">FizzBuzz — 1 sampai 30: FizzBuzz (÷15), Fizz (÷3), Buzz (÷5), angka (lainnya)</div>
+          <button class="exercise-toggle">Lihat Jawaban</button>
+        </div>
+        <div class="exercise-answer">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots"><span></span><span></span><span></span></div>
+              <span class="code-lang lang-python">Contoh Jawaban</span>
+            </div>
+            <pre><code><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">31</span>)<span class="op">:</span>
+    <span class="kw">if</span> <span class="var">i</span> <span class="op">%</span> <span class="num">15</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+        <span class="fn">print</span>(<span class="str">"FizzBuzz"</span>)
+    <span class="kw">elif</span> <span class="var">i</span> <span class="op">%</span> <span class="num">3</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+        <span class="fn">print</span>(<span class="str">"Fizz"</span>)
+    <span class="kw">elif</span> <span class="var">i</span> <span class="op">%</span> <span class="num">5</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+        <span class="fn">print</span>(<span class="str">"Buzz"</span>)
+    <span class="kw">else</span><span class="op">:</span>
+        <span class="fn">print</span>(<span class="var">i</span>)</code></pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== INFO UTS ===================== -->
+<section id="uts">
+  <div class="container fade-in">
+    <div class="section-label">Penting!</div>
+    <h2>Informasi UTS ⚠️</h2>
+    <p class="section-desc">Ini yang perlu kalian catat baik-baik.</p>
+    <div class="uts-box">
+      <div class="uts-title">📋 Info UTS — Logika & Algoritma 2</div>
+      <div class="uts-items">
+        <div class="uts-item">
+          <span class="uts-item-icon">📚</span>
+          <div class="uts-item-text"><strong>Materi yang diujikan:</strong> Seluruh materi C++ dari Pertemuan 1–7 (Dasar, Percabangan, Perulangan, Fungsi, Rekursi, Array, dst.)</div>
+        </div>
+        <div class="uts-item">
+          <span class="uts-item-icon">🏫</span>
+          <div class="uts-item-text"><strong>Pelaksanaan:</strong> Offline — hadir langsung di kelas. Pastikan hadir tepat waktu!</div>
+        </div>
+        <div class="uts-item">
+          <span class="uts-item-icon">📝</span>
+          <div class="uts-item-text"><strong>Bentuk soal:</strong> Pilihan ganda + isian/koding C++. Siapkan logika, bukan hafalan kode.</div>
+        </div>
+        <div class="uts-item">
+          <span class="uts-item-icon">💡</span>
+          <div class="uts-item-text"><strong>Tips:</strong> Review kode-kode yang sudah dibuat di pertemuan 1–7. Pahami alur logika, bukan sekadar menghafal sintaks.</div>
+        </div>
+        <div class="uts-item">
+          <span class="uts-item-icon">🐍</span>
+          <div class="uts-item-text"><strong>Python di UTS:</strong> <em>Belum masuk UTS.</em> Materi Python akan diujikan di UAS. Jadi fokus dulu ke C++ ya!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TUGAS ===================== -->
+<section id="tugas">
+  <div class="container fade-in">
+    <div class="section-label">Homework</div>
+    <h2>Tugas Pertemuan Ini 📌</h2>
+    <p class="section-desc">Tiga hal yang harus dilakukan sebelum pertemuan berikutnya.</p>
+    <div class="tugas-grid">
+      <div class="tugas-card">
+        <div class="tugas-icon">📖</div>
+        <div class="tugas-content">
+          <div class="tugas-num">Tugas 01</div>
+          <div class="tugas-title">Review Materi C++</div>
+          <div class="tugas-desc">Buka kembali catatan dan kode dari Pertemuan 1–7. Pahami ulang konsep yang masih membingungkan sebagai persiapan UTS.</div>
+        </div>
+      </div>
+      <div class="tugas-card">
+        <div class="tugas-icon">💻</div>
+        <div class="tugas-content">
+          <div class="tugas-num">Tugas 02</div>
+          <div class="tugas-title">Akses Google Colab</div>
+          <div class="tugas-desc">Buka colab.research.google.com, login dengan akun Google, buat notebook baru, dan coba jalankan <code style="font-family:var(--mono);color:var(--cyan)">print("Halo Python!")</code>.</div>
+        </div>
+      </div>
+      <div class="tugas-card">
+        <div class="tugas-icon">✏️</div>
+        <div class="tugas-content">
+          <div class="tugas-num">Tugas 03</div>
+          <div class="tugas-title">Kerjakan Latihan</div>
+          <div class="tugas-desc">Coba kerjakan 5 soal latihan di atas menggunakan Google Colab. Screenshot hasilnya dan simpan sebagai bukti belajar mandiri.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>📘 Logika & Algoritma 2 — Pertemuan 8 &nbsp;|&nbsp; <span>D3 Manajemen Informatika</span></p>
+    <p style="margin-top:6px;font-size:12px;">Dibuat untuk keperluan pembelajaran. Selamat belajar dan semangat! 🚀</p>
+  </div>
+</footer>
+
+<script>
+  // ==================== FADE IN ON SCROLL ====================
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+  fadeEls.forEach(el => observer.observe(el));
+
+  // ==================== EXERCISE TOGGLE ====================
+  function toggleExercise(header) {
+    const answer = header.nextElementSibling;
+    const btn = header.querySelector('.exercise-toggle');
+    const isOpen = answer.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.exercise-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.exercise-toggle').forEach(b => b.textContent = 'Lihat Jawaban');
+
+    if (!isOpen) {
+      answer.classList.add('open');
+      btn.textContent = 'Tutup';
+    }
+  }
+
+  // ==================== SIMULATOR 1: NAMA & USIA ====================
+  function runSimulator() {
+    const nama = document.getElementById('simNama').value.trim();
+    const usiaRaw = document.getElementById('simUsia').value.trim();
+
+    const output = document.getElementById('simOutput');
+    const content = document.getElementById('simOutputContent');
+
+    if (!nama || !usiaRaw) {
+      content.innerHTML = '<span style="color:var(--red)">⛔ Error: Isi semua input terlebih dahulu!</span>';
+      output.classList.add('visible');
+      return;
+    }
+
+    const usia = parseInt(usiaRaw);
+    if (isNaN(usia) || usia <= 0) {
+      content.innerHTML = '<span style="color:var(--red)">⛔ ValueError: Usia harus berupa angka positif!</span>';
+      output.classList.add('visible');
+      return;
+    }
+
+    const status = usia >= 18 ? "Kamu sudah dewasa!" : "Kamu masih muda!";
+    const lines = [
+      `Halo, ${nama}! Usiamu ${usia} tahun.`,
+      status
+    ];
+
+    content.innerHTML = lines.map((l, i) => {
+      return `<div class="output-line" style="animation-delay:${i * 0.12}s;animation: fadeUp 0.3s ease ${i * 0.12}s both;">${l}</div>`;
+    }).join('');
+
+    output.classList.add('visible');
+
+    // Animate
+    content.querySelectorAll('.output-line').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-8px)';
+      setTimeout(() => {
+        el.style.transition = 'all 0.3s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(0)';
+      }, i * 100);
+    });
+  }
+
+  // ==================== SIMULATOR 2: KALKULATOR ====================
+  function runCalculator() {
+    const aRaw = document.getElementById('calcA').value.trim();
+    const bRaw = document.getElementById('calcB').value.trim();
+
+    const output = document.getElementById('calcOutput');
+    const content = document.getElementById('calcOutputContent');
+
+    if (!aRaw || !bRaw) {
+      content.innerHTML = '<span style="color:var(--red)">⛔ Error: Isi semua input terlebih dahulu!</span>';
+      output.classList.add('visible');
+      return;
+    }
+
+    const a = parseFloat(aRaw);
+    const b = parseFloat(bRaw);
+
+    if (isNaN(a) || isNaN(b)) {
+      content.innerHTML = '<span style="color:var(--red)">⛔ ValueError: Input harus berupa angka!</span>';
+      output.classList.add('visible');
+      return;
+    }
+
+    const fmt = (n) => {
+      return Number.isInteger(n) ? n.toString() : parseFloat(n.toFixed(6)).toString();
+    };
+
+    const lines = [
+      `Penjumlahan  : ${fmt(a + b)}`,
+      `Pengurangan  : ${fmt(a - b)}`,
+      `Perkalian    : ${fmt(a * b)}`,
+      b !== 0 ? `Pembagian    : ${fmt(a / b)}` : '⛔ ZeroDivisionError: division by zero'
+    ];
+
+    content.innerHTML = lines.map(l =>
+      `<div class="output-line">${l}</div>`
+    ).join('');
+
+    output.classList.add('visible');
+
+    content.querySelectorAll('.output-line').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-8px)';
+      setTimeout(() => {
+        el.style.transition = 'all 0.3s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(0)';
+      }, i * 80);
+    });
+  }
+
+  // Enter key trigger
+  document.getElementById('simUsia').addEventListener('keydown', e => { if (e.key === 'Enter') runSimulator(); });
+  document.getElementById('simNama').addEventListener('keydown', e => { if (e.key === 'Enter') runSimulator(); });
+  document.getElementById('calcB').addEventListener('keydown', e => { if (e.key === 'Enter') runCalculator(); });
+</script>
+
+</body>
+</html>

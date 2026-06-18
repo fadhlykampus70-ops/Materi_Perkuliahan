@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruang Kelas Digital — Fadhly Alfallah</title>
+<meta name="description" content="Pusat materi perkuliahan — AMIK Mahaputra Riau">
+<style>
+  :root[data-theme="light"]{
+    --bg: #F7F6F2;
+    --bg-elev: #FFFFFF;
+    --ink: #1C2321;
+    --ink-soft: #565F5C;
+    --line: #DEDCD3;
+    --accent: #2F5D50;
+    --accent-soft: #E4ECE8;
+    --accent-ink: #FFFFFF;
+    --code-tone: #8A6D3B;
+    --shadow: 0 1px 2px rgba(28,35,33,0.04), 0 8px 24px rgba(28,35,33,0.06);
+  }
+  :root[data-theme="dark"]{
+    --bg: #141816;
+    --bg-elev: #1B201D;
+    --ink: #EDEFEC;
+    --ink-soft: #9AA39E;
+    --line: #2B322E;
+    --accent: #6FBFA3;
+    --accent-soft: #1F2C27;
+    --accent-ink: #0E1411;
+    --code-tone: #D6B377;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    transition: background .25s ease, color .25s ease;
+  }
+  h1,h2,h3{
+    font-family: "Fraunces", "Iowan Old Style", "Georgia", serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* ===== Header / Identity ===== */
+  .site-header{
+    border-bottom:1px solid var(--line);
+    padding:20px 0;
+  }
+  .site-header .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    width:40px;height:40px;border-radius:10px;
+    background:var(--accent);color:var(--accent-ink);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Fraunces",serif;font-weight:700;font-size:16px;
+    flex-shrink:0;
+  }
+  .brand-text{line-height:1.25;}
+  .brand-text strong{display:block;font-size:15px;}
+  .brand-text span{display:block;font-size:12.5px;color:var(--ink-soft);}
+
+  .theme-toggle{
+    border:1px solid var(--line);
+    background:var(--bg-elev);
+    color:var(--ink);
+    width:38px;height:38px;
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    transition: border-color .2s ease, transform .15s ease;
+  }
+  .theme-toggle:hover{border-color:var(--accent);}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .theme-toggle:active{transform:scale(0.94);}
+
+  /* ===== Hero ===== */
+  .hero{padding:64px 0 40px;}
+  .hero .eyebrow{
+    color:var(--code-tone);
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+    display:block;
+  }
+  .hero h1{
+    font-size:clamp(28px, 4vw, 42px);
+    line-height:1.15;
+    max-width:780px;
+  }
+  .hero p{
+    margin:18px 0 0;
+    color:var(--ink-soft);
+    font-size:16.5px;
+    line-height:1.65;
+    max-width:620px;
+  }
+
+  /* ===== Lecturer card ===== */
+  .lecturer-card{
+    margin-top:32px;
+    background:var(--bg-elev);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 24px;
+    box-shadow:var(--shadow);
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:18px;
+    align-items:center;
+    max-width:620px;
+  }
+  .lecturer-avatar{
+    width:56px;height:56px;border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Fraunces",serif;font-weight:700;font-size:20px;
+  }
+  .lecturer-info strong{display:block;font-size:16px;}
+  .lecturer-info .role{color:var(--ink-soft);font-size:13.5px;margin-top:3px;}
+  .lecturer-info .campus{color:var(--ink-soft);font-size:13.5px;}
+
+  /* ===== Courses section ===== */
+  .courses{padding:24px 0 80px;}
+  .courses-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:24px;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .courses-head h2{font-size:22px;}
+  .courses-head .count{
+    color:var(--ink-soft);
+    font-size:13.5px;
+  }
+
+  .course-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:18px;
+  }
+
+  .course-card{
+    background:var(--bg-elev);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    box-shadow:var(--shadow);
+    transition: transform .18s ease, border-color .18s ease;
+  }
+  .course-card:hover{transform:translateY(-3px);border-color:var(--accent);}
+
+  .course-code{
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.06em;
+    color:var(--code-tone);
+    text-transform:uppercase;
+  }
+  .course-card h3{font-size:19px;line-height:1.3;}
+  .course-card p.desc{
+    color:var(--ink-soft);
+    font-size:14px;
+    line-height:1.55;
+    margin:0;
+    flex-grow:1;
+  }
+  .course-meta{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .course-meta span{
+    background:var(--accent-soft);
+    color:var(--accent);
+    padding:3px 9px;
+    border-radius:100px;
+    font-weight:600;
+  }
+  .course-link{
+    margin-top:4px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--accent);
+  }
+  .course-link svg{width:14px;height:14px;transition:transform .15s ease;}
+  .course-card:hover .course-link svg{transform:translateX(3px);}
+
+  /* Placeholder card for adding a new course */
+  .course-card.add-new{
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    border-style:dashed;
+    box-shadow:none;
+    color:var(--ink-soft);
+  }
+  .course-card.add-new:hover{transform:none;}
+
+  /* ===== Footer ===== */
+  .site-footer{
+    border-top:1px solid var(--line);
+    padding:28px 0;
+  }
+  .site-footer .wrap{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:560px){
+    .lecturer-card{grid-template-columns:1fr;text-align:left;}
+    .hero{padding:44px 0 28px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark">FA</div>
+      <div class="brand-text">
+        <strong>Ruang Kelas Digital</strong>
+        <span>AMIK Mahaputra Riau</span>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema terang/gelap" title="Ganti tema">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Program Studi D3 Manajemen Informatika</span>
+    <h1>Materi perkuliahan, terkumpul di satu tempat.</h1>
+    <p>Pilih mata kuliah di bawah untuk melihat daftar pertemuan, materi, dan berkas yang bisa diunduh.</p>
+
+    <div class="lecturer-card">
+      <div class="lecturer-avatar">FA</div>
+      <div class="lecturer-info">
+        <strong>Fadhly Alfallah, S.Kom., M.Kom.</strong>
+        <div class="role">Dosen — Program Studi D3 Manajemen Informatika</div>
+        <div class="campus">AMIK Mahaputra Riau</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="courses">
+  <div class="wrap">
+    <div class="courses-head">
+      <h2>Mata Kuliah</h2>
+    </div>
+
+    <div class="course-grid" id="courseGrid">
+
+      <!-- ============================================ -->
+      <!-- TEMPLATE KARTU MATA KULIAH — SALIN BLOK INI    -->
+      <!-- UNTUK SETIAP MATA KULIAH BARU, LALU EDIT:      -->
+      <!-- 1. href -> nama folder mata kuliah             -->
+      <!-- 2. .course-code -> kode/semester (opsional)     -->
+      <!-- 3. <h3> -> nama mata kuliah                     -->
+      <!-- 4. .desc -> deskripsi singkat                   -->
+      <!-- 5. .course-meta span -> info singkat (SKS, dst) -->
+      <!-- ============================================ -->
+      <a class="course-card" href="mata-kuliah/logika-algoritma2/indexalgo2.html">
+        <span class="course-code">Algoritma-2 / Semester II</span>
+        <h3>Logika dan Algoritma 2</h3>
+        <p class="desc">Algoritma dan Pemrograman II merupakan mata kuliah lanjutan yang membahas penerapan konsep algoritma dan pemrograman secara lebih mendalam. Materi meliputi struktur kontrol, fungsi dan rekursi, pengolahan data menggunakan array dan string, operasi file, serta penerapan algoritma sorting dan searching. Selain itu, mahasiswa diperkenalkan pada analisis efisiensi dan kompleksitas algoritma.</p>
+        <div class="course-meta">
+          <span>3 SKS</span>
+        </div>
+        <span class="course-link">
+          Lihat materi
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+      
+      <a class="course-card" href="mata-kuliah/web-desain2/indexwebdesain2.html">
+        <span class="course-code">webdesain-2 / Semester II</span>
+        <h3>Web Desain 2</h3>
+        <p class="desc">Perancangan web (web design) adalah istilah umum yang digunakan untuk mencakup bagaimana isi web konten ditampilkan, (biasanya berupa hypertext atau hypermedia) yang dikirimkan ke pengguna akhir melalui World Wide Web, dengan menggunakan sebuah browser web atau perangkat lunak berbasis web. Sebuah website dapat berupa sekumpulan teks, gambar, suara dan konten lainnya, serta dapat bersifat statis.</p>
+        <div class="course-meta">
+          <span>3 SKS</span>
+        </div>
+        <span class="course-link">
+          Lihat materi
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+      <!-- ====== AKHIR TEMPLATE — duplikasi blok <a class="course-card">...</a> di atas untuk MK lain ====== -->
+
+      <!-- Kartu "tambah mata kuliah" — hiasan saja, boleh dihapus 
+      <div class="course-card add-new">
+        <p class="desc">Mata kuliah baru akan ditambahkan di sini.</p>
+      </div>-->
+
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© <span id="year"></span> Fadhly Alfallah — AMIK Mahaputra Riau</span>
+    <span>Dibuat untuk keperluan akademik</span>
+  </div>
+</footer>
+
+<script>
+  // Tema terang/gelap, tersimpan di localStorage
+  const root = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+
+  function applyTheme(theme){
+    root.setAttribute('data-theme', theme);
+    icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', theme);
+  }
+
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+
+  toggleBtn.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+
+  // Tahun otomatis di footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Hitung otomatis jumlah mata kuliah (card asli, bukan kartu "tambah")
+  const realCards = document.querySelectorAll('.course-card:not(.add-new)').length;
+  document.getElementById('courseCount').textContent = realCards + ' mata kuliah';
+</script>
+
+</body>
+</html>

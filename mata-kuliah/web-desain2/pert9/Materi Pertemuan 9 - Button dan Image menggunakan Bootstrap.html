@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Design II — Bootstrap Button & Image</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #BFDBFE;
+    --dark: #1E293B;
+    --gray: #64748B;
+    --gray-light: #F8FAFC;
+    --border: #E2E8F0;
+    --success: #16A34A;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--gray-light);
+    color: var(--dark);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  .site-nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    padding: 0.75rem 0;
+  }
+  .site-nav .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-brand {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+  }
+  .nav-tag {
+    font-size: 0.72rem;
+    background: var(--blue-light);
+    color: var(--blue);
+    border: 1px solid var(--blue-mid);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 1.5rem 3rem;
+    text-align: center;
+  }
+  .hero-chip {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue);
+    border: 1px solid var(--blue-mid);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .hero h1 span { color: var(--blue); }
+  .hero p {
+    color: var(--gray);
+    font-size: 1rem;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+  }
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .pill {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--gray);
+    font-weight: 500;
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar-nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .progress-bar-nav a {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gray);
+    text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .progress-bar-nav a:hover {
+    color: var(--blue);
+    border-color: var(--blue-mid);
+    background: var(--blue-light);
+  }
+
+  /* MAIN WRAPPER */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+
+  /* SECTION */
+  .section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem 2rem 2.5rem;
+    margin-bottom: 2rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 36px;
+    height: 36px;
+    background: var(--blue);
+    color: var(--white);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .section-title { font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .section-desc { font-size: 0.88rem; color: var(--gray); }
+
+  /* DEMO AREA */
+  .demo-area {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .demo-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray);
+    margin-bottom: 0.75rem;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #0F172A;
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #94A3B8;
+  }
+  .code-block .kw { color: #7DD3FC; }
+  .code-block .attr { color: #A5F3FC; }
+  .code-block .val { color: #86EFAC; }
+  .code-block .tag { color: #FCA5A5; }
+  .code-block .cm { color: #475569; font-style: italic; }
+
+  /* TOGGLE CODE BTN */
+  .btn-toggle-code {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--blue);
+    background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
+    padding: 6px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 0.75rem;
+  }
+  .btn-toggle-code:hover { background: var(--blue-mid); }
+
+  /* COMPARISON GRID */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media(max-width:576px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  .compare-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    background: var(--white);
+  }
+  .compare-card.highlight { border-color: var(--blue); background: var(--blue-light); }
+  .compare-card .cc-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+    color: var(--gray);
+  }
+  .compare-card.highlight .cc-label { color: var(--blue); }
+
+  /* NOTE BOX */
+  .note-box {
+    background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.88rem;
+    color: #1E40AF;
+    margin-top: 1.25rem;
+  }
+  .note-box strong { color: var(--blue); }
+
+  /* TAG ROW */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+  .tag-item {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-family: 'Fira Code', monospace;
+    color: var(--dark);
+  }
+
+  /* BUTTON SHOWCASE ROW */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+  /* SIZE DEMO */
+  .size-demo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 1.25rem;
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .size-label { font-size: 0.72rem; color: var(--gray); font-weight: 600; text-align: center; margin-top: 6px; }
+
+  /* STATE DEMO */
+  .state-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .state-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem;
+    text-align: center;
+  }
+  .state-card .sc-title { font-size: 0.8rem; font-weight: 600; color: var(--gray); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* IMAGE VARIANTS */
+  .img-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; }
+  .img-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .img-card img { margin-bottom: 0.6rem; max-width: 100%; }
+  .img-card .ic-label { font-size: 0.72rem; font-family: 'Fira Code', monospace; color: var(--gray); }
+
+  /* PRODUCT CARD */
+  .product-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 300px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .product-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(37,99,235,0.1); }
+  .product-card img { width: 100%; height: 180px; object-fit: cover; }
+  .product-card .pc-body { padding: 1.1rem; }
+  .product-card .pc-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .product-card .pc-desc { font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+
+  /* MINI SIM */
+  .sim-area {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .sim-controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 1.25rem; }
+
+  /* CODE PANEL */
+  .code-panel { display: none; }
+  .code-panel.show { display: block; }
+
+  /* MINI PROJECT */
+  .project-box {
+    background: linear-gradient(135deg, var(--blue-light) 0%, #F0FDF4 100%);
+    border: 1px solid var(--blue-mid);
+    border-radius: 14px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .project-box h3 { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; }
+  .project-box p { font-size: 0.9rem; color: var(--gray); margin-bottom: 1rem; }
+  .project-box ul { font-size: 0.88rem; color: var(--dark); padding-left: 1.2rem; }
+  .project-box ul li { margin-bottom: 4px; }
+
+  .copy-btn {
+    background: var(--dark);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .copy-btn:hover { background: var(--blue); }
+  .copy-btn.copied { background: var(--success); }
+
+  .result-preview {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* FOOTER */
+  .site-footer {
+    background: var(--dark);
+    color: #94A3B8;
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.82rem;
+  }
+  .site-footer strong { color: var(--white); }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  /* ALERT BOX */
+  #click-alert {
+    display: none;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+
+  /* HOVER OVERRIDE for cards */
+  .section:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: box-shadow 0.25s; }
+
+  /* COLOR SIMULATOR */
+  #sim-button {
+    font-size: 1rem;
+    padding: 10px 28px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  #sim-image { transition: opacity 0.3s; }
+
+  .responsive-img-wrapper {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <span class="nav-brand">Web Design II</span>
+    <span class="nav-tag">Bootstrap 4 — Button & Image</span>
+  </div>
+</nav>
+
+<!-- SECTION NAV -->
+<div class="progress-bar-nav ">
+  <a href="#s1">Perbandingan</a>
+  <a href="#s2">Dasar Button</a>
+  <a href="#s3">Style Button</a>
+  <a href="#s4">Ukuran Button</a>
+  <a href="#s5">State Button</a>
+  <a href="#s6">Image Dasar</a>
+  <a href="#s7">Responsive Image</a>
+  <a href="#s8">Kombinasi</a>
+  <a href="#s9">Simulasi</a>
+  <a href="#s10">Mini Project</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-chip">Materi Interaktif</div>
+  <h1>Bootstrap <span>Button</span> & <span>Image</span></h1>
+  <p>Pelajari cara membuat tombol dan gambar yang responsif dan menarik menggunakan Bootstrap 4 secara langsung.</p>
+  <div class="hero-pills">
+    <span class="pill">Bootstrap 4</span>
+    <span class="pill">10 Sections</span>
+    <span class="pill">Mini Simulasi</span>
+    <span class="pill">Mini Project</span>
+    <span class="pill">Copy Code</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SECTION 1: PERBANDINGAN -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">Perbandingan: HTML Biasa vs Bootstrap</div>
+        <div class="section-desc">Lihat perbedaan visual antara button HTML standar dan button Bootstrap.</div>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="cc-label">Button HTML Biasa</div>
+        <button style="margin-bottom:1rem;">Tombol HTML</button>
+        <div class="code-block">
+          <span class="tag">&lt;button&gt;</span>Tombol HTML<span class="tag">&lt;/button&gt;</span>
+        </div>
+      </div>
+      <div class="compare-card highlight">
+        <div class="cc-label">Button Bootstrap</div>
+        <button class="btn btn-primary mb-3">Tombol Bootstrap</button>
+        <div class="code-block">
+          <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span><span class="tag">&gt;</span><br>
+          &nbsp;&nbsp;Tombol Bootstrap<br>
+          <span class="tag">&lt;/button&gt;</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>Pertanyaan:</strong> Mana yang lebih menarik dan mudah digunakan? Bootstrap memberikan styling yang konsisten, responsif, dan profesional hanya dengan menambahkan <code>class="btn btn-primary"</code>.
+    </div>
+  </div>
+
+  <!-- SECTION 2: DASAR BUTTON -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">Dasar Button Bootstrap</div>
+        <div class="section-desc">Struktur dasar button: tag HTML dan class Bootstrap.</div>
+      </div>
+    </div>
+
+    <div class="tag-row">
+      <span class="tag-item">&lt;button&gt;</span>
+      <span class="tag-item">&lt;a&gt;</span>
+      <span class="tag-item">&lt;input type="button"&gt;</span>
+      <span class="tag-item">.btn</span>
+      <span class="tag-item">.btn-{variant}</span>
+    </div>
+
+    <div class="demo-area">
+      <div class="demo-label">Demo Langsung</div>
+      <div class="btn-row">
+        <div style="text-align:center;">
+          <button style="border:1px solid #ccc;padding:4px 12px;background:#eee;margin-bottom:6px;">Button Biasa</button>
+          <div style="font-size:0.72rem;color:var(--gray);">&#60;button&#62;</div>
+        </div>
+        <div style="text-align:center;">
+          <button class="btn" style="margin-bottom:6px;">+ .btn</button>
+          <div style="font-size:0.72rem;color:var(--gray);">.btn saja</div>
+        </div>
+        <div style="text-align:center;">
+          <button class="btn btn-primary" style="margin-bottom:6px;">+ .btn-primary</button>
+          <div style="font-size:0.72rem;color:var(--gray);">.btn.btn-primary</div>
+        </div>
+        <div style="text-align:center;">
+          <a href="#" class="btn btn-primary" style="margin-bottom:6px;">&lt;a&gt; as Button</a>
+          <div style="font-size:0.72rem;color:var(--gray);">&lt;a&gt; tag</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-toggle-code" onclick="toggleCode('code-s2')">Lihat Kode</button>
+    <div id="code-s2" class="code-panel">
+      <div class="code-block">
+        <span class="cm">&lt;!-- menggunakan tag button --&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span><span class="tag">&gt;</span>Klik Saya<span class="tag">&lt;/button&gt;</span><br><br>
+        <span class="cm">&lt;!-- menggunakan tag a --&gt;</span><br>
+        <span class="tag">&lt;a</span> <span class="attr">href=</span><span class="val">"#"</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span><span class="tag">&gt;</span>Klik Saya<span class="tag">&lt;/a&gt;</span><br><br>
+        <span class="cm">&lt;!-- menggunakan input --&gt;</span><br>
+        <span class="tag">&lt;input</span> <span class="attr">type=</span><span class="val">"button"</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span> <span class="attr">value=</span><span class="val">"Klik Saya"</span><span class="tag">/&gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: STYLE BUTTON -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">Style Button Bootstrap</div>
+        <div class="section-desc">Klik tombol untuk melihat efek interaksi.</div>
+      </div>
+    </div>
+
+    <div class="demo-area">
+      <div class="demo-label">Semua Varian Style</div>
+      <div class="btn-row" style="margin-bottom:1rem;">
+        <button class="btn btn-primary" onclick="showClickFeedback(this,'Primary diklik!')">btn-primary</button>
+        <button class="btn btn-success" onclick="showClickFeedback(this,'Success diklik!')">btn-success</button>
+        <button class="btn btn-danger" onclick="showClickFeedback(this,'Danger diklik!')">btn-danger</button>
+        <button class="btn btn-warning" onclick="showClickFeedback(this,'Warning diklik!')">btn-warning</button>
+        <button class="btn btn-secondary" onclick="showClickFeedback(this,'Secondary diklik!')">btn-secondary</button>
+        <button class="btn btn-info" onclick="showClickFeedback(this,'Info diklik!')">btn-info</button>
+        <button class="btn btn-light" onclick="showClickFeedback(this,'Light diklik!')" style="border:1px solid #dee2e6;">btn-light</button>
+        <button class="btn btn-dark" onclick="showClickFeedback(this,'Dark diklik!')">btn-dark</button>
+      </div>
+
+      <div class="demo-label">Outline Style</div>
+      <div class="btn-row">
+        <button class="btn btn-outline-primary" onclick="showClickFeedback(this,'Outline Primary!')">btn-outline-primary</button>
+        <button class="btn btn-outline-success" onclick="showClickFeedback(this,'Outline Success!')">btn-outline-success</button>
+        <button class="btn btn-outline-danger" onclick="showClickFeedback(this,'Outline Danger!')">btn-outline-danger</button>
+        <button class="btn btn-outline-secondary" onclick="showClickFeedback(this,'Outline Secondary!')">btn-outline-secondary</button>
+      </div>
+
+      <div id="click-alert" class="alert alert-info"></div>
+    </div>
+
+    <button class="btn-toggle-code" onclick="toggleCode('code-s3')">Lihat Kode</button>
+    <div id="code-s3" class="code-panel">
+      <div class="code-block">
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span><span class="tag">&gt;</span>Primary<span class="tag">&lt;/button&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-success"</span><span class="tag">&gt;</span>Success<span class="tag">&lt;/button&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-danger"</span><span class="tag">&gt;</span>Danger<span class="tag">&lt;/button&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-warning"</span><span class="tag">&gt;</span>Warning<span class="tag">&lt;/button&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-secondary"</span><span class="tag">&gt;</span>Secondary<span class="tag">&lt;/button&gt;</span><br><br>
+        <span class="cm">&lt;!-- Outline variant --&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-outline-primary"</span><span class="tag">&gt;</span>Outline<span class="tag">&lt;/button&gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: UKURAN BUTTON -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-title">Ukuran Button</div>
+        <div class="section-desc">Bootstrap menyediakan 3 ukuran button bawaan.</div>
+      </div>
+    </div>
+
+    <div class="size-demo">
+      <div>
+        <button class="btn btn-primary btn-lg d-block">btn-lg</button>
+        <div class="size-label">Besar</div>
+      </div>
+      <div>
+        <button class="btn btn-primary d-block">Default</button>
+        <div class="size-label">Normal</div>
+      </div>
+      <div>
+        <button class="btn btn-primary btn-sm d-block">btn-sm</button>
+        <div class="size-label">Kecil</div>
+      </div>
+      <div style="margin-left:1.5rem;border-left:1px solid var(--border);padding-left:1.5rem;">
+        <div class="size-label" style="margin-bottom:8px;">Block Button</div>
+        <button class="btn btn-primary btn-block">btn-block (full width)</button>
+      </div>
+    </div>
+
+    <button class="btn-toggle-code" style="margin-top:1rem;" onclick="toggleCode('code-s4')">Lihat Kode</button>
+    <div id="code-s4" class="code-panel">
+      <div class="code-block">
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary btn-lg"</span><span class="tag">&gt;</span>Besar<span class="tag">&lt;/button&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span><span class="tag">&gt;</span>Normal<span class="tag">&lt;/button&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary btn-sm"</span><span class="tag">&gt;</span>Kecil<span class="tag">&lt;/button&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary btn-block"</span><span class="tag">&gt;</span>Full Width<span class="tag">&lt;/button&gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: STATE BUTTON -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <div class="section-title">State Button</div>
+        <div class="section-desc">Button memiliki state aktif dan nonaktif. Coba simulasi di bawah!</div>
+      </div>
+    </div>
+
+    <div class="state-grid" style="margin-bottom:1.25rem;">
+      <div class="state-card">
+        <div class="sc-title">Active State</div>
+        <button class="btn btn-primary active">Tombol Aktif</button>
+        <div style="font-size:0.75rem;color:var(--gray);margin-top:8px;">class="btn btn-primary <strong>active</strong>"</div>
+      </div>
+      <div class="state-card">
+        <div class="sc-title">Disabled State</div>
+        <button class="btn btn-primary" disabled>Tombol Disabled</button>
+        <div style="font-size:0.75rem;color:var(--gray);margin-top:8px;">atribut: <strong>disabled</strong></div>
+      </div>
+      <div class="state-card">
+        <div class="sc-title">Loading State (simulasi)</div>
+        <button class="btn btn-primary" id="btn-loading" onclick="simulateLoading()">Klik Saya</button>
+        <div style="font-size:0.75rem;color:var(--gray);margin-top:8px;">Mengubah teks + menonaktifkan</div>
+      </div>
+    </div>
+
+    <div class="demo-area" style="text-align:center;">
+      <div class="demo-label">MINI SIMULASI — Toggle State</div>
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:1rem;">Klik tombol di bawah untuk mengubah state-nya</p>
+      <button class="btn btn-success btn-lg" id="toggle-state-btn" onclick="toggleStateBtn()">Tombol Aktif ✓</button>
+      <div style="font-size:0.8rem;color:var(--gray);margin-top:0.75rem;" id="state-info">State saat ini: <strong style="color:var(--success)">AKTIF</strong></div>
+    </div>
+
+    <button class="btn-toggle-code" style="margin-top:1.25rem;" onclick="toggleCode('code-s5')">Lihat Kode</button>
+    <div id="code-s5" class="code-panel">
+      <div class="code-block">
+        <span class="cm">&lt;!-- Active --&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary active"</span><span class="tag">&gt;</span>Aktif<span class="tag">&lt;/button&gt;</span><br><br>
+        <span class="cm">&lt;!-- Disabled (HTML attribute) --&gt;</span><br>
+        <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span> <span class="attr">disabled</span><span class="tag">&gt;</span>Disabled<span class="tag">&lt;/button&gt;</span><br><br>
+        <span class="cm">&lt;!-- Toggle via JavaScript --&gt;</span><br>
+        <span class="kw">function</span> toggleBtn() {<br>
+        &nbsp;&nbsp;<span class="kw">const</span> btn = document.getElementById(<span class="val">'myBtn'</span>);<br>
+        &nbsp;&nbsp;btn.disabled = !btn.disabled;<br>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: IMAGE DASAR -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div>
+        <div class="section-title">Image Dasar Bootstrap</div>
+        <div class="section-desc">Bootstrap menyediakan class utilitas untuk styling gambar.</div>
+      </div>
+    </div>
+
+    <div class="img-grid">
+      <div class="img-card">
+        <img src="https://picsum.photos/seed/webdesign/200/200" alt="Normal" width="120" height="120">
+        <div class="ic-label">Normal</div>
+        <div style="font-size:0.72rem;color:var(--gray);">(tanpa class)</div>
+      </div>
+      <div class="img-card">
+        <img src="https://picsum.photos/seed/webdesign/200/200" alt="Fluid" class="img-fluid" style="max-width:120px;">
+        <div class="ic-label">.img-fluid</div>
+        <div style="font-size:0.72rem;color:var(--gray);">Responsif</div>
+      </div>
+      <div class="img-card">
+        <img src="https://picsum.photos/seed/webdesign/200/200" alt="Rounded" class="rounded" width="120" height="120">
+        <div class="ic-label">.rounded</div>
+        <div style="font-size:0.72rem;color:var(--gray);">Sudut bulat</div>
+      </div>
+      <div class="img-card">
+        <img src="https://picsum.photos/seed/webdesign/200/200" alt="Circle" class="rounded-circle" width="120" height="120" style="object-fit:cover;">
+        <div class="ic-label">.rounded-circle</div>
+        <div style="font-size:0.72rem;color:var(--gray);">Lingkaran</div>
+      </div>
+      <div class="img-card">
+        <img src="https://picsum.photos/seed/webdesign/200/200" alt="Thumbnail" class="img-thumbnail" width="120" height="120">
+        <div class="ic-label">.img-thumbnail</div>
+        <div style="font-size:0.72rem;color:var(--gray);">Dengan border</div>
+      </div>
+    </div>
+
+    <button class="btn-toggle-code" style="margin-top:1.25rem;" onclick="toggleCode('code-s6')">Lihat Kode</button>
+    <div id="code-s6" class="code-panel">
+      <div class="code-block">
+        <span class="cm">&lt;!-- Normal --&gt;</span><br>
+        <span class="tag">&lt;img</span> <span class="attr">src=</span><span class="val">"gambar.jpg"</span> <span class="attr">alt=</span><span class="val">"Normal"</span><span class="tag">&gt;</span><br><br>
+        <span class="cm">&lt;!-- Responsive --&gt;</span><br>
+        <span class="tag">&lt;img</span> <span class="attr">src=</span><span class="val">"gambar.jpg"</span> <span class="attr">class=</span><span class="val">"img-fluid"</span> <span class="attr">alt=</span><span class="val">"..."</span><span class="tag">&gt;</span><br><br>
+        <span class="cm">&lt;!-- Sudut Bulat --&gt;</span><br>
+        <span class="tag">&lt;img</span> <span class="attr">src=</span><span class="val">"gambar.jpg"</span> <span class="attr">class=</span><span class="val">"rounded"</span> <span class="attr">alt=</span><span class="val">"..."</span><span class="tag">&gt;</span><br><br>
+        <span class="cm">&lt;!-- Lingkaran --&gt;</span><br>
+        <span class="tag">&lt;img</span> <span class="attr">src=</span><span class="val">"gambar.jpg"</span> <span class="attr">class=</span><span class="val">"rounded-circle"</span> <span class="attr">alt=</span><span class="val">"..."</span><span class="tag">&gt;</span><br><br>
+        <span class="cm">&lt;!-- Thumbnail --&gt;</span><br>
+        <span class="tag">&lt;img</span> <span class="attr">src=</span><span class="val">"gambar.jpg"</span> <span class="attr">class=</span><span class="val">"img-thumbnail"</span> <span class="attr">alt=</span><span class="val">"..."</span><span class="tag">&gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: RESPONSIVE IMAGE -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div>
+        <div class="section-title">Responsive Image</div>
+        <div class="section-desc">Gambar yang menyesuaikan ukuran container secara otomatis.</div>
+      </div>
+    </div>
+
+    <div class="responsive-img-wrapper">
+      <img src="https://picsum.photos/seed/landscape/900/350" alt="Landscape" class="img-fluid rounded" style="width:100%;">
+      <p style="font-size:0.82rem;color:var(--gray);margin-top:0.75rem;text-align:center;">📐 <strong>Resize layar untuk melihat perubahan</strong> — gambar menyesuaikan lebar container secara otomatis</p>
+    </div>
+
+    <div class="note-box" style="margin-top:1.25rem;">
+      <strong>Cara kerja:</strong> Class <code>.img-fluid</code> menerapkan <code>max-width: 100%</code> dan <code>height: auto</code>, sehingga gambar tidak pernah melebihi lebar container-nya.
+    </div>
+
+    <button class="btn-toggle-code" style="margin-top:1.25rem;" onclick="toggleCode('code-s7')">Lihat Kode</button>
+    <div id="code-s7" class="code-panel">
+      <div class="code-block">
+        <span class="cm">&lt;!-- Gambar Responsif --&gt;</span><br>
+        <span class="tag">&lt;img</span><br>
+        &nbsp;&nbsp;<span class="attr">src=</span><span class="val">"landscape.jpg"</span><br>
+        &nbsp;&nbsp;<span class="attr">class=</span><span class="val">"img-fluid"</span><br>
+        &nbsp;&nbsp;<span class="attr">alt=</span><span class="val">"Gambar Landscape"</span><br>
+        <span class="tag">&gt;</span><br><br>
+        <span class="cm">/* CSS yang dihasilkan Bootstrap */</span><br>
+        .img-fluid {<br>
+        &nbsp;&nbsp;<span class="attr">max-width</span>: <span class="val">100%</span>;<br>
+        &nbsp;&nbsp;<span class="attr">height</span>: <span class="val">auto</span>;<br>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8: KOMBINASI BUTTON + IMAGE -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div>
+        <div class="section-title">Kombinasi Button + Image</div>
+        <div class="section-desc">Contoh penerapan nyata: Card dengan gambar dan tombol.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;">
+      <div class="product-card">
+        <img src="https://picsum.photos/seed/nature1/400/300" alt="Card 1">
+        <div class="pc-body">
+          <div class="pc-title">Hutan Pinus</div>
+          <div class="pc-desc">Eksplorasi keindahan alam yang hijau dan sejuk bersama kami.</div>
+          <button class="btn btn-primary btn-block">Lihat Detail</button>
+        </div>
+      </div>
+      <div class="product-card">
+        <img src="https://picsum.photos/seed/city2/400/300" alt="Card 2">
+        <div class="pc-body">
+          <div class="pc-title">Kota Modern</div>
+          <div class="pc-desc">Temukan keajaiban arsitektur dan teknologi kota masa kini.</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline-primary" style="flex:1;">Detail</button>
+            <button class="btn btn-primary" style="flex:1;">Pesan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-toggle-code" style="margin-top:1.5rem;" onclick="toggleCode('code-s8')">Lihat Kode</button>
+    <div id="code-s8" class="code-panel">
+      <div class="code-block">
+        <span class="tag">&lt;div</span> <span class="attr">class=</span><span class="val">"card"</span><span class="tag">&gt;</span><br>
+        &nbsp;&nbsp;<span class="tag">&lt;img</span> <span class="attr">src=</span><span class="val">"gambar.jpg"</span> <span class="attr">class=</span><span class="val">"card-img-top"</span> <span class="attr">alt=</span><span class="val">"..."</span><span class="tag">&gt;</span><br>
+        &nbsp;&nbsp;<span class="tag">&lt;div</span> <span class="attr">class=</span><span class="val">"card-body"</span><span class="tag">&gt;</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;h5</span> <span class="attr">class=</span><span class="val">"card-title"</span><span class="tag">&gt;</span>Judul Card<span class="tag">&lt;/h5&gt;</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;p</span> <span class="attr">class=</span><span class="val">"card-text"</span><span class="tag">&gt;</span>Deskripsi singkat.<span class="tag">&lt;/p&gt;</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;a</span> <span class="attr">href=</span><span class="val">"#"</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span><span class="tag">&gt;</span>Lihat Detail<span class="tag">&lt;/a&gt;</span><br>
+        &nbsp;&nbsp;<span class="tag">&lt;/div&gt;</span><br>
+        <span class="tag">&lt;/div&gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 9: MINI SIMULASI INTERAKTIF -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div>
+        <div class="section-title">Mini Simulasi Interaktif</div>
+        <div class="section-desc">Kontrol button dan gambar secara langsung menggunakan JavaScript.</div>
+      </div>
+    </div>
+
+    <div class="sim-area">
+      <div class="sim-controls">
+        <button class="btn btn-primary" onclick="ubahWarnaButton()">Ubah Warna Button</button>
+        <button class="btn btn-secondary" onclick="toggleGambar()">Sembunyikan / Tampilkan Gambar</button>
+        <button class="btn btn-outline-danger" onclick="resetSim()">Reset</button>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;align-items:center;">
+        <div>
+          <button class="btn btn-primary btn-lg" id="sim-button">Tombol Demo</button>
+          <div style="font-size:0.78rem;color:var(--gray);text-align:center;margin-top:6px;" id="color-info">Klik "Ubah Warna" ↑</div>
+        </div>
+        <div>
+          <img id="sim-image" src="https://picsum.photos/seed/demo/240/180" alt="Demo" class="rounded img-thumbnail" style="max-width:200px;">
+          <div style="font-size:0.78rem;color:var(--gray);text-align:center;margin-top:6px;">Klik "Sembunyikan" ↑</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-toggle-code" style="margin-top:1.25rem;" onclick="toggleCode('code-s9')">Lihat Kode</button>
+    <div id="code-s9" class="code-panel">
+      <div class="code-block">
+        <span class="cm">// Ubah warna button</span><br>
+        <span class="kw">function</span> ubahWarnaButton() {<br>
+        &nbsp;&nbsp;<span class="kw">const</span> btn = document.getElementById(<span class="val">'myBtn'</span>);<br>
+        &nbsp;&nbsp;<span class="kw">const</span> colors = [<span class="val">'btn-primary'</span>, <span class="val">'btn-success'</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="val">'btn-danger'</span>, <span class="val">'btn-warning'</span>];<br>
+        &nbsp;&nbsp;<span class="cm">// toggle class secara berurutan</span><br>
+        }<br><br>
+        <span class="cm">// Sembunyikan / tampilkan gambar</span><br>
+        <span class="kw">function</span> toggleGambar() {<br>
+        &nbsp;&nbsp;<span class="kw">const</span> img = document.getElementById(<span class="val">'myImg'</span>);<br>
+        &nbsp;&nbsp;img.style.display = img.style.display === <span class="val">'none'</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;? <span class="val">'block'</span> : <span class="val">'none'</span>;<br>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 10: MINI PROJECT -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <div>
+        <div class="section-title">Mini Project</div>
+        <div class="section-desc">Terapkan semua yang telah dipelajari dalam satu card.</div>
+      </div>
+    </div>
+
+    <div class="project-box">
+      <h3>Instruksi Mini Project</h3>
+      <p>Buat 1 card menggunakan Bootstrap yang terdiri dari:</p>
+      <ul>
+        <li>Sebuah gambar (gunakan <code>.img-fluid</code> atau <code>.rounded</code>)</li>
+        <li>Judul card yang menarik</li>
+        <li>Deskripsi singkat (2–3 kalimat)</li>
+        <li>Minimal 1 tombol dengan style Bootstrap</li>
+        <li>Layout responsive menggunakan grid Bootstrap</li>
+      </ul>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.25rem;">
+      <button class="btn-toggle-code" style="margin:0;" onclick="togglePanel('panel-result','panel-code')">Lihat Hasil</button>
+      <button class="btn-toggle-code" style="margin:0;" onclick="togglePanel('panel-code','panel-result')">Lihat Kode</button>
+      <button class="copy-btn" id="copy-main-btn" onclick="copyProjectCode()">Salin Kode</button>
+    </div>
+
+    <div id="panel-result" class="result-preview">
+      <div class="card shadow-sm" style="max-width:320px;border-radius:14px;overflow:hidden;">
+        <img src="https://picsum.photos/seed/project/640/360" class="card-img-top img-fluid" alt="Mini Project" style="height:200px;object-fit:cover;">
+        <div class="card-body">
+          <h5 class="card-title" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">Pantai Sanur Bali</h5>
+          <p class="card-text" style="font-size:0.88rem;color:#64748B;">Nikmati keindahan matahari terbit di Pantai Sanur yang tenang dan eksotis, cocok untuk liburan keluarga.</p>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="btn btn-primary">Pesan Sekarang</a>
+            <a href="#" class="btn btn-outline-secondary">Detail</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-code" class="code-panel" style="margin-top:0;">
+      <div class="code-block" id="project-code-block">
+<span class="tag">&lt;div</span> <span class="attr">class=</span><span class="val">"card shadow-sm"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;img</span>
+    <span class="attr">src=</span><span class="val">"pantai.jpg"</span>
+    <span class="attr">class=</span><span class="val">"card-img-top img-fluid"</span>
+    <span class="attr">alt=</span><span class="val">"Pantai Sanur"</span>
+  <span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class=</span><span class="val">"card-body"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h5</span> <span class="attr">class=</span><span class="val">"card-title"</span><span class="tag">&gt;</span>
+      Pantai Sanur Bali
+    <span class="tag">&lt;/h5&gt;</span>
+    <span class="tag">&lt;p</span> <span class="attr">class=</span><span class="val">"card-text"</span><span class="tag">&gt;</span>
+      Nikmati keindahan matahari terbit...
+    <span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href=</span><span class="val">"#"</span> <span class="attr">class=</span><span class="val">"btn btn-primary"</span><span class="tag">&gt;</span>
+      Pesan Sekarang
+    <span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attr">href=</span><span class="val">"#"</span> <span class="attr">class=</span><span class="val">"btn btn-outline-secondary"</span><span class="tag">&gt;</span>
+      Detail
+    <span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .main -->
+
+<!-- FOOTER -->
+<div class="site-footer">
+  <strong>Web Design II</strong> — Materi: Bootstrap Button & Image<br>
+  <span style="font-size:0.75rem;margin-top:4px;display:block;">Powered by Bootstrap 4 · Dibuat untuk kebutuhan pembelajaran interaktif</span>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Toggle code panel
+  function toggleCode(id) {
+    var el = document.getElementById(id);
+    el.classList.toggle('show');
+  }
+
+  // Show/hide panels (for mini project)
+  function togglePanel(showId, hideId) {
+    document.getElementById(showId).classList.add('show');
+    document.getElementById(hideId).classList.remove('show');
+    if (showId === 'panel-result') {
+      document.getElementById('panel-result').style.display = 'flex';
+    } else {
+      document.getElementById('panel-result').style.display = 'none';
+    }
+  }
+
+  // Button click feedback (Section 3)
+  var alertTimer;
+  function showClickFeedback(btn, msg) {
+    var orig = btn.textContent;
+    btn.textContent = '✓ ' + msg;
+    clearTimeout(alertTimer);
+
+    var alert = document.getElementById('click-alert');
+    alert.style.display = 'block';
+    alert.textContent = '👆 ' + msg + ' — Tombol berhasil diklik!';
+
+    alertTimer = setTimeout(function() {
+      btn.textContent = orig;
+      alert.style.display = 'none';
+    }, 2000);
+  }
+
+  // Simulate Loading (Section 5)
+  function simulateLoading() {
+    var btn = document.getElementById('btn-loading');
+    btn.textContent = 'Memuat...';
+    btn.disabled = true;
+    btn.classList.remove('btn-primary');
+    btn.classList.add('btn-secondary');
+    setTimeout(function() {
+      btn.textContent = '✓ Selesai!';
+      btn.classList.remove('btn-secondary');
+      btn.classList.add('btn-success');
+      setTimeout(function() {
+        btn.textContent = 'Klik Saya';
+        btn.disabled = false;
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-primary');
+      }, 1500);
+    }, 2000);
+  }
+
+  // Toggle State Button (Section 5)
+  var stateActive = true;
+  function toggleStateBtn() {
+    var btn = document.getElementById('toggle-state-btn');
+    var info = document.getElementById('state-info');
+    stateActive = !stateActive;
+    if (stateActive) {
+      btn.className = 'btn btn-success btn-lg';
+      btn.textContent = 'Tombol Aktif ✓';
+      info.innerHTML = 'State saat ini: <strong style="color:var(--success)">AKTIF</strong>';
+    } else {
+      btn.className = 'btn btn-danger btn-lg';
+      btn.textContent = 'Tombol Disabled ✗';
+      btn.disabled = true;
+      info.innerHTML = 'State saat ini: <strong style="color:#DC2626">DISABLED</strong>';
+      setTimeout(function() {
+        btn.disabled = false;
+      }, 100);
+    }
+  }
+
+  // Color rotation (Section 9)
+  var colorClasses = ['btn-primary','btn-success','btn-danger','btn-warning','btn-info','btn-dark'];
+  var colorNames = ['Primary (Biru)','Success (Hijau)','Danger (Merah)','Warning (Kuning)','Info (Cyan)','Dark (Hitam)'];
+  var currentColor = 0;
+
+  function ubahWarnaButton() {
+    var btn = document.getElementById('sim-button');
+    btn.className = 'btn btn-lg ' + colorClasses[currentColor];
+    document.getElementById('color-info').textContent = 'Warna: ' + colorNames[currentColor];
+    currentColor = (currentColor + 1) % colorClasses.length;
+  }
+
+  // Toggle gambar (Section 9)
+  var imgVisible = true;
+  function toggleGambar() {
+    var img = document.getElementById('sim-image');
+    imgVisible = !imgVisible;
+    img.style.opacity = imgVisible ? '1' : '0';
+    img.style.pointerEvents = imgVisible ? 'auto' : 'none';
+  }
+
+  function resetSim() {
+    var btn = document.getElementById('sim-button');
+    btn.className = 'btn btn-primary btn-lg';
+    btn.textContent = 'Tombol Demo';
+    document.getElementById('color-info').textContent = 'Klik "Ubah Warna" ↑';
+    currentColor = 0;
+    var img = document.getElementById('sim-image');
+    img.style.opacity = '1';
+    imgVisible = true;
+  }
+
+  // Copy code (Mini Project)
+  var projectCode = `<div class="card shadow-sm">
+  <img
+    src="pantai.jpg"
+    class="card-img-top img-fluid"
+    alt="Pantai Sanur"
+  >
+  <div class="card-body">
+    <h5 class="card-title">Pantai Sanur Bali</h5>
+    <p class="card-text">
+      Nikmati keindahan matahari terbit di Pantai Sanur
+      yang tenang dan eksotis.
+    </p>
+    <a href="#" class="btn btn-primary">Pesan Sekarang</a>
+    <a href="#" class="btn btn-outline-secondary">Detail</a>
+  </div>
+</div>`;
+
+  function copyProjectCode() {
+    navigator.clipboard.writeText(projectCode).then(function() {
+      var btn = document.getElementById('copy-main-btn');
+      btn.textContent = '✓ Tersalin!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'Salin Kode';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Show result panel by default
+  document.getElementById('panel-result').style.display = 'flex';
+</script>
+</body>
+</html>

@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan 11 — File I/O dengan Python</title>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+<style>
+  :root {
+    --blue-dark:#1F4E79;--blue-mid:#2E75B6;--blue-light:#DEEBF7;--blue-pale:#EEF5FC;
+    --green-dark:#1E5C2A;--green-mid:#2E7D32;--green-light:#E8F5E9;
+    --amber-dark:#7B4F00;--amber-mid:#F59E0B;--amber-light:#FEF3C7;
+    --red-dark:#7F1D1D;--red-mid:#EF4444;--red-light:#FEE2E2;
+    --gray-100:#F8F9FA;--gray-200:#E9ECEF;--gray-300:#DEE2E6;--gray-500:#6C757D;--gray-700:#343A40;--gray-900:#111827;
+    --purple-dark:#3C3489;--purple-mid:#6D4AFF;--purple-light:#EEEDFE;
+    --teal-dark:#085041;--teal-mid:#0F9D75;--teal-light:#E1F5EE;
+    --radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:24px;
+    --font-main:'Segoe UI',system-ui,-apple-system,sans-serif;
+    --font-code:'Fira Code','Courier New',monospace;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 4px 16px rgba(0,0,0,.1);
+    --transition:.2s ease;
+    --bg:#F0F4F8;--surface:#FFFFFF;--text-primary:#111827;--text-muted:#6C757D;
+    --border:#DEE2E6;
+  }
+  [data-theme="dark"] {
+    --bg:#0F172A;--surface:#1E293B;--text-primary:#F1F5F9;--text-muted:#94A3B8;
+    --border:#334155;--gray-100:#1E293B;--gray-200:#334155;--gray-300:#475569;
+    --blue-light:#1e3a5f;--blue-pale:#172d44;--green-light:#1a3020;
+    --amber-light:#2d2208;--red-light:#2d1515;--purple-light:#1e1a40;--teal-light:#0a2520;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-main);background:var(--bg);color:var(--text-primary);line-height:1.6;min-height:100vh;transition:background var(--transition),color var(--transition)}
+
+  /* NAV */
+  nav{background:var(--blue-dark);color:#fff;padding:0;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;height:56px;padding:0 16px;gap:0}
+  .nav-logo{font-weight:700;font-size:15px;white-space:nowrap;margin-right:auto}
+  .nav-logo span{font-weight:400;opacity:.7;font-size:12px;display:block}
+  .nav-tabs{display:flex;height:100%;overflow-x:auto;scrollbar-width:none}
+  .nav-tabs::-webkit-scrollbar{display:none}
+  .nav-tab{padding:0 13px;height:100%;display:flex;align-items:center;font-size:13px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;opacity:.75;transition:opacity var(--transition),border-color var(--transition);color:#fff;border:none;background:none}
+  .nav-tab.active,.nav-tab:hover{opacity:1;border-bottom-color:#60A5FA}
+  .nav-actions{display:flex;gap:8px;margin-left:12px}
+  .btn-icon{background:rgba(255,255,255,.12);border:none;color:#fff;width:36px;height:36px;border-radius:var(--radius-sm);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background var(--transition)}
+  .btn-icon:hover{background:rgba(255,255,255,.22)}
+
+  /* LAYOUT */
+  .page{display:none;max-width:1100px;margin:0 auto;padding:24px 16px 48px}
+  .page.active{display:block}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--blue-dark) 0%,#1565C0 100%);color:#fff;border-radius:var(--radius-xl);padding:36px 32px;margin-bottom:24px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+  .hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04)}
+  .hero-badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:12px}
+  .hero h1{font-size:clamp(20px,4vw,30px);font-weight:700;margin-bottom:8px}
+  .hero p{font-size:14px;opacity:.85;max-width:560px}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+  .hero-stat{background:rgba(255,255,255,.15);border-radius:var(--radius-md);padding:10px 16px}
+  .hero-stat-val{font-size:20px;font-weight:700}
+  .hero-stat-lbl{font-size:11px;opacity:.8;margin-top:2px}
+
+  /* CARDS */
+  .card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px 22px;margin-bottom:16px}
+  .card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .card-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .card-title{font-size:15px;font-weight:600}
+  .card-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+
+  /* CODE BLOCK */
+  .code-wrap{background:#0F172A;border-radius:var(--radius-md);overflow:hidden;margin:12px 0}
+  .code-header{background:#1E293B;padding:8px 14px;display:flex;justify-content:space-between;align-items:center}
+  .code-lang{font-size:11px;color:#94A3B8;font-weight:600;letter-spacing:.5px}
+  .code-copy{background:none;border:1px solid #334155;color:#94A3B8;padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all var(--transition)}
+  .code-copy:hover{background:#334155;color:#F1F5F9}
+  .code-body{padding:16px;font-family:var(--font-code);font-size:13px;line-height:1.7;overflow-x:auto;color:#E2E8F0;white-space:pre}
+  .code-body .kw{color:#C084FC}
+  .code-body .fn{color:#60A5FA}
+  .code-body .str{color:#86EFAC}
+  .code-body .cm{color:#64748B;font-style:italic}
+  .code-body .num{color:#FCA5A5}
+  .code-body .op{color:#F9A8D4}
+
+  /* INFO BOX */
+  .info-box{border-radius:var(--radius-md);padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.7;display:flex;gap:12px}
+  .info-box.info{background:var(--blue-light);border-left:3px solid var(--blue-mid)}
+  .info-box.warning{background:var(--amber-light);border-left:3px solid var(--amber-mid)}
+  .info-box.success{background:var(--green-light);border-left:3px solid var(--green-mid)}
+  .info-box.danger{background:var(--red-light);border-left:3px solid var(--red-mid)}
+  .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  [data-theme="dark"] .info-box.info{color:#93C5FD}
+  [data-theme="dark"] .info-box.warning{color:#FCD34D}
+  [data-theme="dark"] .info-box.success{color:#86EFAC}
+  [data-theme="dark"] .info-box.danger{color:#FCA5A5}
+
+  /* SECTION HEADER */
+  .sec-hd{display:flex;align-items:center;gap:10px;margin:28px 0 16px}
+  .sec-line{flex:1;height:1px;background:var(--border)}
+  .sec-label{font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:.8px;white-space:nowrap}
+
+  /* ACCORDION */
+  .acc-item{border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:8px;overflow:hidden}
+  .acc-head{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;background:var(--surface);transition:background var(--transition)}
+  .acc-head:hover{background:var(--gray-100)}
+  [data-theme="dark"] .acc-head:hover{background:#334155}
+  .acc-arrow{font-size:12px;transition:transform var(--transition);color:var(--text-muted)}
+  .acc-body{display:none;padding:16px;border-top:1px solid var(--border);background:var(--surface)}
+  .acc-item.open .acc-body{display:block}
+  .acc-item.open .acc-arrow{transform:rotate(180deg)}
+
+  /* LAB */
+  .lab-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px}
+  .lab-top{background:#1E293B;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .lab-title{color:#F1F5F9;font-size:13px;font-weight:600}
+  .lab-badges{display:flex;gap:6px}
+  .lab-badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600}
+  .badge-py{background:#1D4ED8;color:#BFDBFE}
+  .badge-vfs{background:#7C3AED;color:#DDD6FE}
+  .lab-editor{width:100%;min-height:150px;padding:14px;background:#0F172A;color:#E2E8F0;font-family:var(--font-code);font-size:13px;line-height:1.7;border:none;outline:none;resize:vertical;tab-size:4}
+  .lab-toolbar{background:#1E293B;padding:8px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .btn-run{background:#16A34A;color:#fff;border:none;padding:8px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background var(--transition)}
+  .btn-run:hover{background:#15803D}
+  .btn-run:disabled{background:#374151;color:#6B7280;cursor:not-allowed}
+  .btn-clear{background:none;border:1px solid #475569;color:#94A3B8;padding:8px 14px;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;transition:all var(--transition)}
+  .btn-clear:hover{background:#334155;color:#F1F5F9}
+  .lab-output{padding:14px;background:#000D1A;min-height:60px;max-height:260px;overflow-y:auto;font-family:var(--font-code);font-size:13px;line-height:1.7;color:#86EFAC;border-top:1px solid #1E293B;white-space:pre-wrap;word-break:break-word}
+  .lab-output.has-error{color:#FCA5A5}
+  .lab-status{padding:6px 14px;background:#0F172A;font-size:11px;color:#475569;border-top:1px solid #1E293B}
+
+  /* QUIZ */
+  .quiz-q{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
+  .quiz-num{font-size:11px;font-weight:700;color:var(--blue-mid);margin-bottom:6px}
+  .quiz-text{font-size:14px;margin-bottom:12px;line-height:1.6}
+  .quiz-opts{display:flex;flex-direction:column;gap:8px}
+  .quiz-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);font-size:13px;background:var(--surface);text-align:left;width:100%}
+  .quiz-opt:hover{border-color:var(--blue-mid);background:var(--blue-pale)}
+  .quiz-opt.correct{border-color:#22C55E;background:var(--green-light);color:var(--green-dark)}
+  .quiz-opt.wrong{border-color:#EF4444;background:var(--red-light);color:var(--red-dark)}
+  .quiz-opt.disabled{cursor:default;pointer-events:none}
+  .quiz-feedback{font-size:13px;margin-top:10px;padding:10px 12px;border-radius:var(--radius-sm);display:none}
+  .quiz-feedback.show{display:block}
+  .quiz-feedback.ok{background:var(--green-light);color:var(--green-dark)}
+  .quiz-feedback.fail{background:var(--red-light);color:var(--red-dark)}
+  .quiz-score{text-align:center;padding:24px;background:var(--blue-light);border-radius:var(--radius-lg);margin-top:16px}
+  .quiz-score-num{font-size:48px;font-weight:700;color:var(--blue-dark)}
+  .quiz-score-lbl{color:var(--text-muted);font-size:14px}
+  .progress-bar{height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden;margin-bottom:8px}
+  .progress-fill{height:100%;background:linear-gradient(90deg,#2563EB,#10B981);border-radius:3px;transition:width .5s ease}
+
+  /* LATIHAN */
+  .latihan-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .lat-tab{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:13px;cursor:pointer;transition:all var(--transition)}
+  .lat-tab.active{background:var(--blue-mid);color:#fff;border-color:var(--blue-mid)}
+  .lat-panel{display:none}
+  .lat-panel.active{display:block}
+  .lat-desc{background:var(--blue-light);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--blue-dark);line-height:1.7;border-left:3px solid var(--blue-mid)}
+  [data-theme="dark"] .lat-desc{color:#93C5FD}
+  .lat-hint{background:var(--amber-light);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--amber-dark);cursor:pointer;user-select:none}
+  [data-theme="dark"] .lat-hint{color:#FCD34D}
+  .lat-hint-text{display:none;margin-top:6px;font-size:12px}
+  .lat-hint.open .lat-hint-text{display:block}
+  .lat-expected{background:var(--green-light);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;color:var(--green-dark);font-family:var(--font-code);margin-top:8px;white-space:pre-wrap}
+  [data-theme="dark"] .lat-expected{color:#86EFAC}
+
+  /* VIRTUAL FILE SYSTEM VIEWER */
+  .vfs-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px}
+  .vfs-header{background:#1E293B;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+  .vfs-title{color:#F1F5F9;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .vfs-body{padding:14px}
+  .vfs-empty{color:var(--text-muted);font-size:13px;text-align:center;padding:20px;font-style:italic}
+  .vfs-file-list{display:flex;flex-direction:column;gap:8px}
+  .vfs-file{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+  .vfs-file-head{background:var(--gray-100);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+  [data-theme="dark"] .vfs-file-head{background:#334155}
+  .vfs-file-name{font-family:var(--font-code);font-size:13px;font-weight:600;color:var(--blue-mid);display:flex;align-items:center;gap:8px}
+  .vfs-file-meta{font-size:11px;color:var(--text-muted)}
+  .vfs-file-content{padding:12px;background:#0F172A;color:#86EFAC;font-family:var(--font-code);font-size:12px;line-height:1.6;white-space:pre-wrap;max-height:150px;overflow-y:auto;display:none}
+  .vfs-file.open .vfs-file-content{display:block}
+  .vfs-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:#7C3AED;color:#DDD6FE;font-weight:600}
+  .btn-del-file{background:none;border:1px solid #EF4444;color:#EF4444;padding:3px 8px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .2s}
+  .btn-del-file:hover{background:#FEE2E2}
+
+  /* MODE TABLE */
+  .mode-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+  .mode-table th{background:var(--blue-dark);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:12px}
+  .mode-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+  .mode-table tr:nth-child(even) td{background:var(--gray-100)}
+  [data-theme="dark"] .mode-table tr:nth-child(even) td{background:#1E293B}
+  .mode-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-family:var(--font-code);font-size:12px;font-weight:700}
+  .mb-r{background:#DCFCE7;color:#166534}
+  .mb-w{background:#FEF3C7;color:#7B4F00}
+  .mb-a{background:#EDE9FE;color:#4C1D95}
+  .mb-x{background:#FEE2E2;color:#7F1D1D}
+  [data-theme="dark"] .mb-r{background:#1a3020;color:#86EFAC}
+  [data-theme="dark"] .mb-w{background:#2d2208;color:#FCD34D}
+  [data-theme="dark"] .mb-a{background:#1e1a40;color:#C4B5FD}
+  [data-theme="dark"] .mb-x{background:#2d1515;color:#FCA5A5}
+
+  /* MODAL INPUT */
+  .input-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center}
+  .input-modal.show{display:flex}
+  .input-box{background:var(--surface);border-radius:var(--radius-lg);padding:24px;width:90%;max-width:400px;box-shadow:var(--shadow-md)}
+  .input-prompt-text{font-size:14px;margin-bottom:12px;color:var(--text-primary)}
+  .input-field{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:var(--font-code);outline:none;background:var(--surface);color:var(--text-primary)}
+  .input-field:focus{border-color:var(--blue-mid)}
+  .input-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+  .btn-submit{background:var(--blue-mid);color:#fff;border:none;padding:8px 20px;border-radius:var(--radius-sm);font-size:14px;cursor:pointer;font-weight:600}
+
+  /* CHIPS */
+  .chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px}
+  .chip-blue{background:var(--blue-light);color:var(--blue-dark)}
+  .chip-green{background:var(--green-light);color:var(--green-dark)}
+  .chip-purple{background:var(--purple-light);color:var(--purple-dark)}
+  [data-theme="dark"] .chip-blue{color:#93C5FD}
+  [data-theme="dark"] .chip-green{color:#86EFAC}
+  [data-theme="dark"] .chip-purple{color:#C4B5FD}
+
+  /* FLOW DIAGRAM */
+  .flow-wrap{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0;padding:16px;background:var(--gray-100);border-radius:var(--radius-md)}
+  [data-theme="dark"] .flow-wrap{background:#1E293B}
+  .flow-box{background:var(--surface);border:2px solid var(--blue-mid);border-radius:var(--radius-sm);padding:8px 14px;font-size:12px;font-weight:600;text-align:center;min-width:90px}
+  .flow-arrow{color:var(--blue-mid);font-size:18px;font-weight:700}
+  .flow-box.file{background:var(--amber-light);border-color:var(--amber-mid);color:var(--amber-dark)}
+  [data-theme="dark"] .flow-box.file{background:#2d2208;color:#FCD34D}
+
+  /* GRID */
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:16px}
+
+  /* TIMELINE */
+  .timeline{display:flex;flex-direction:column;gap:0}
+  .tl-item{display:flex;gap:16px;padding:12px 0}
+  .tl-item:not(:last-child){border-bottom:1px solid var(--border)}
+  .tl-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px}
+  .tl-dot.b1{background:var(--blue-light);color:var(--blue-dark)}
+  .tl-dot.b2{background:var(--green-light);color:var(--green-dark)}
+  .tl-time{font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:.3px;margin-bottom:3px}
+  .tl-title{font-size:14px;font-weight:600;margin-bottom:3px}
+  .tl-desc{font-size:13px;color:var(--text-muted)}
+
+  @media(max-width:600px){
+    .hero{padding:24px 20px}
+    .grid-2{grid-template-columns:1fr}
+    .nav-logo span{display:none}
+    .page{padding:16px 12px 40px}
+    .flow-wrap{gap:4px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      Pertemuan 11
+      <span>Pemrograman — File I/O Python</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="gotoPage('home',this)">🏠 Beranda</button>
+      <button class="nav-tab" onclick="gotoPage('materi',this)">📖 Materi</button>
+      <button class="nav-tab" onclick="gotoPage('lab',this)">💻 Lab File I/O</button>
+      <button class="nav-tab" onclick="gotoPage('ui',this)">🖥️ File I/O + UI</button>
+      <button class="nav-tab" onclick="gotoPage('kuis',this)">📝 Kuis</button>
+      <button class="nav-tab" onclick="gotoPage('latihan',this)">🎯 Latihan</button>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-icon" onclick="toggleTheme()" title="Ganti tema">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- INPUT MODAL -->
+<div class="input-modal" id="inputModal">
+  <div class="input-box">
+    <div style="font-size:24px;text-align:center;margin-bottom:8px">⌨️</div>
+    <div class="input-prompt-text" id="inputPromptText">Masukkan nilai:</div>
+    <input class="input-field" id="inputField" placeholder="Ketik di sini..." />
+    <div class="input-actions">
+      <button class="btn-submit" onclick="submitInput()">Enter ↵</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BERANDA ===== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">PERTEMUAN 11</div>
+    <h1>📁 File I/O — Membaca &amp; Menulis File dengan Python</h1>
+    <p>Pelajari cara program Python berinteraksi dengan file di komputer: menyimpan data, membaca kembali, mengedit, hingga menggabungkan dengan UI Tkinter yang sudah kamu pelajari sebelumnya.</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><div class="hero-stat-val">135'</div><div class="hero-stat-lbl">Durasi Total</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">4</div><div class="hero-stat-lbl">Mode File</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">5</div><div class="hero-stat-lbl">Soal Latihan</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">10</div><div class="hero-stat-lbl">Soal Kuis</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#DEEBF7">⏱️</div>
+      <div><div class="card-title">Rencana Waktu Pertemuan</div><div class="card-sub">Pembagian 135 menit</div></div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot b1">1</div>
+        <div>
+          <div class="tl-time">MENIT 1–15</div>
+          <div class="tl-title">Pembukaan & Konsep File I/O</div>
+          <div class="tl-desc">Apa itu file I/O, mengapa penting, perbedaan file teks vs binary</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot b1">1</div>
+        <div>
+          <div class="tl-time">MENIT 16–45</div>
+          <div class="tl-title">Materi: open(), read, write, append</div>
+          <div class="tl-desc">Mode file (r/w/a/x), fungsi read/readline/readlines, with statement</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot b1">1</div>
+        <div>
+          <div class="tl-time">MENIT 46–75</div>
+          <div class="tl-title">Praktik Coding di Lab (dengan Colab/Browser)</div>
+          <div class="tl-desc">Coding bersama: buat, baca, edit, dan hapus isi file</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot b2">2</div>
+        <div>
+          <div class="tl-time">MENIT 76–105</div>
+          <div class="tl-title">Integrasi File I/O dengan UI Tkinter</div>
+          <div class="tl-desc">Aplikasi notepad sederhana: simpan & buka file menggunakan GUI</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot b2">2</div>
+        <div>
+          <div class="tl-time">MENIT 106–135</div>
+          <div class="tl-title">Kuis & Latihan Mandiri</div>
+          <div class="tl-desc">10 soal kuis, 5 latihan mandiri, diskusi & penutup</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box info">
+    <span class="info-icon">💡</span>
+    <div><strong>Simulasi Virtual File System:</strong> Web ini menggunakan <em>Virtual File System</em> di memori browser. Kamu bisa "membuat", "membaca", dan "menulis" file seperti di Python sungguhan — cocok untuk latihan tanpa Colab!</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:4px">
+    <button onclick="gotoPage('materi',document.querySelectorAll('.nav-tab')[1])" style="padding:14px;border-radius:var(--radius-md);border:2px solid #2E75B6;background:var(--blue-light);color:var(--blue-dark);font-size:14px;font-weight:700;cursor:pointer">📖 Mulai Materi</button>
+    <button onclick="gotoPage('lab',document.querySelectorAll('.nav-tab')[2])" style="padding:14px;border-radius:var(--radius-md);border:2px solid #16A34A;background:var(--green-light);color:var(--green-dark);font-size:14px;font-weight:700;cursor:pointer">💻 Langsung ke Lab</button>
+  </div>
+</div>
+
+<!-- ===== MATERI ===== -->
+<div class="page" id="page-materi">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">KONSEP DASAR FILE I/O</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#EDE9FE">📁</div>
+      <div><div class="card-title">Apa itu File I/O?</div><div class="card-sub">Input/Output ke file di penyimpanan komputer</div></div>
+    </div>
+    <p style="font-size:14px;line-height:1.8;margin-bottom:14px">Selama ini data di program disimpan di <strong>memori (RAM)</strong> — ketika program ditutup, data hilang. Dengan <strong>File I/O</strong>, kita bisa menyimpan data ke <strong>hard disk</strong> sehingga bisa dibaca kembali kapanpun.</p>
+
+    <div class="flow-wrap">
+      <div class="flow-box">Program<br><small>Python</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">open()</div>
+      <div class="flow-arrow">↔</div>
+      <div class="flow-box file">📄 File.txt<br><small>Hard Disk</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">close()</div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+      <span class="chip chip-blue">Simpan data permanen</span>
+      <span class="chip chip-blue">Log / catatan aktivitas</span>
+      <span class="chip chip-green">Baca konfigurasi</span>
+      <span class="chip chip-green">Ekspor laporan</span>
+      <span class="chip chip-purple">Basis data sederhana</span>
+    </div>
+  </div>
+
+  <!-- Mode File -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#FEF3C7">🔑</div>
+      <div><div class="card-title">Mode Pembukaan File</div><div class="card-sub">Parameter kedua di fungsi open()</div></div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="mode-table">
+      <tr><th>Mode</th><th>Nama</th><th>Keterangan</th><th>File Ada?</th><th>File Tidak Ada?</th></tr>
+      <tr>
+        <td><span class="mode-badge mb-r">"r"</span></td>
+        <td><strong>Read</strong></td>
+        <td>Hanya membaca isi file</td>
+        <td>✅ Dibuka</td>
+        <td>❌ Error</td>
+      </tr>
+      <tr>
+        <td><span class="mode-badge mb-w">"w"</span></td>
+        <td><strong>Write</strong></td>
+        <td>Menulis ke file. <strong>Isi lama dihapus!</strong></td>
+        <td>✅ Ditimpa</td>
+        <td>✅ Dibuat baru</td>
+      </tr>
+      <tr>
+        <td><span class="mode-badge mb-a">"a"</span></td>
+        <td><strong>Append</strong></td>
+        <td>Menambah ke akhir file tanpa menghapus isi lama</td>
+        <td>✅ Ditambah</td>
+        <td>✅ Dibuat baru</td>
+      </tr>
+      <tr>
+        <td><span class="mode-badge mb-x">"x"</span></td>
+        <td><strong>Create</strong></td>
+        <td>Membuat file baru saja</td>
+        <td>❌ Error</td>
+        <td>✅ Dibuat baru</td>
+      </tr>
+      <tr>
+        <td><span class="mode-badge mb-r">"r+"</span></td>
+        <td><strong>Read+Write</strong></td>
+        <td>Baca sekaligus tulis</td>
+        <td>✅ Dibuka</td>
+        <td>❌ Error</td>
+      </tr>
+    </table>
+    </div>
+    <div class="info-box warning" style="margin-top:12px">
+      <span class="info-icon">⚠️</span>
+      <div>Mode <code>"w"</code> akan <strong>menghapus seluruh isi file</strong> jika file sudah ada! Gunakan <code>"a"</code> jika ingin menambahkan data tanpa menghapus yang lama.</div>
+    </div>
+  </div>
+
+  <!-- Accordion topik -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#E1F5EE">📖</div>
+      <div><div class="card-title">Topik File I/O Lengkap</div><div class="card-sub">Klik setiap topik untuk melihat penjelasan dan contoh kode</div></div>
+    </div>
+
+    <div class="acc-item open">
+      <div class="acc-head" onclick="toggleAcc(this)">1. Menulis File dengan open() mode "w" <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Gunakan <code>with open(...) as f:</code> — cara terbaik karena file <strong>otomatis tertutup</strong> setelah blok selesai, meski terjadi error.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="cm"># Cara 1: with statement (DISARANKAN)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"catatan.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="str">"Halo, ini baris pertama!\n"</span>)
+    f.<span class="fn">write</span>(<span class="str">"Ini baris kedua.\n"</span>)
+    f.<span class="fn">write</span>(<span class="str">"Pertemuan 11 — File I/O\n"</span>)
+
+<span class="fn">print</span>(<span class="str">"File berhasil ditulis!"</span>)
+
+<span class="cm"># Cara 2: manual open/close (kurang aman)</span>
+f = <span class="fn">open</span>(<span class="str">"catatan.txt"</span>, <span class="str">"w"</span>)
+f.<span class="fn">write</span>(<span class="str">"Contoh lain\n"</span>)
+f.<span class="fn">close</span>()  <span class="cm"># wajib ditutup manual!</span></div></div>
+        <div class="info-box success">
+          <span class="info-icon">✅</span>
+          <div><code>\n</code> adalah karakter <em>newline</em> (baris baru). Tanpa <code>\n</code>, semua teks akan bersambung dalam satu baris.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head" onclick="toggleAcc(this)">2. Membaca File dengan mode "r" <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Ada 3 cara membaca file. Pilih sesuai kebutuhan.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="cm"># read() — baca semua isi file sekaligus</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"catatan.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+    isi = f.<span class="fn">read</span>()
+    <span class="fn">print</span>(isi)
+
+<span class="cm"># readline() — baca satu baris saja</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"catatan.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+    baris1 = f.<span class="fn">readline</span>()
+    <span class="fn">print</span>(<span class="str">"Baris 1:"</span>, baris1.<span class="fn">strip</span>())
+
+<span class="cm"># readlines() — baca semua baris ke dalam LIST</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"catatan.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+    semua = f.<span class="fn">readlines</span>()
+    <span class="kw">for</span> i, baris <span class="kw">in</span> <span class="fn">enumerate</span>(semua):
+        <span class="fn">print</span>(<span class="str">f"Baris {i+1}: {baris.<span class="op">strip()</span>}"</span>)</div></div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head" onclick="toggleAcc(this)">3. Menambah Data dengan mode "a" (Append) <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="info-box warning" style="margin-bottom:12px">
+          <span class="info-icon">⚠️</span>
+          <div>Mode <code>"a"</code> menambahkan data di <strong>akhir file</strong> tanpa menghapus isi yang sudah ada. Ini yang kamu butuhkan untuk membuat log atau catatan bertambah.</div>
+        </div>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="cm"># Tambah baris baru ke file yang sudah ada</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"log.txt"</span>, <span class="str">"a"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="str">"[2025-01-15] User login: Budi\n"</span>)
+    f.<span class="fn">write</span>(<span class="str">"[2025-01-15] User logout: Budi\n"</span>)
+
+<span class="fn">print</span>(<span class="str">"Log ditambahkan!"</span>)
+
+<span class="cm"># Baca untuk cek hasilnya</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"log.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+    <span class="fn">print</span>(f.<span class="fn">read</span>())</div></div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head" onclick="toggleAcc(this)">4. Cek Keberadaan File dengan os.path <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="kw">import</span> os
+
+<span class="cm"># Cek apakah file ada</span>
+<span class="kw">if</span> os.path.<span class="fn">exists</span>(<span class="str">"catatan.txt"</span>):
+    <span class="fn">print</span>(<span class="str">"File ditemukan!"</span>)
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="str">"catatan.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+        <span class="fn">print</span>(f.<span class="fn">read</span>())
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"File tidak ditemukan!"</span>)
+
+<span class="cm"># Hapus file</span>
+<span class="kw">if</span> os.path.<span class="fn">exists</span>(<span class="str">"temp.txt"</span>):
+    os.<span class="fn">remove</span>(<span class="str">"temp.txt"</span>)
+    <span class="fn">print</span>(<span class="str">"File dihapus."</span>)
+
+<span class="cm"># Lihat semua file di folder saat ini</span>
+<span class="fn">print</span>(os.<span class="fn">listdir</span>(<span class="str">"."</span>))</div></div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head" onclick="toggleAcc(this)">5. Penanganan Error dengan try-except <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Selalu antisipasi kemungkinan file tidak ada atau tidak bisa dibuka menggunakan <code>try-except</code>.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="kw">try</span>:
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+        isi = f.<span class="fn">read</span>()
+        <span class="fn">print</span>(isi)
+<span class="kw">except</span> FileNotFoundError:
+    <span class="fn">print</span>(<span class="str">"❌ Error: File 'data.txt' tidak ditemukan!"</span>)
+<span class="kw">except</span> PermissionError:
+    <span class="fn">print</span>(<span class="str">"❌ Error: Tidak punya izin buka file!"</span>)
+<span class="kw">except</span> Exception <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="str">f"❌ Error tidak terduga: {e}"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"✅ File berhasil dibaca."</span>)
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="str">"Proses selesai."</span>)  <span class="cm"># selalu dijalankan</span></div></div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head" onclick="toggleAcc(this)">6. writelines() — Tulis dari List <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="cm"># writelines() menulis list of string ke file</span>
+mahasiswa = [
+    <span class="str">"Andi\n"</span>,
+    <span class="str">"Budi\n"</span>,
+    <span class="str">"Citra\n"</span>,
+    <span class="str">"Dina\n"</span>
+]
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"mahasiswa.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">writelines</span>(mahasiswa)
+
+<span class="fn">print</span>(<span class="str">"Data mahasiswa tersimpan!"</span>)
+
+<span class="cm"># Baca kembali</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"mahasiswa.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+    daftar = f.<span class="fn">readlines</span>()
+    <span class="fn">print</span>(<span class="str">f"Total mahasiswa: {<span class="op">len(daftar)</span>}"</span>)
+    <span class="kw">for</span> nama <span class="kw">in</span> daftar:
+        <span class="fn">print</span>(<span class="str">f"  - {nama.<span class="op">strip()</span>}"</span>)</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LAB FILE I/O ===== -->
+<div class="page" id="page-lab">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">LAB FILE I/O — VIRTUAL FILE SYSTEM</div><div class="sec-line"></div></div>
+
+  <div class="info-box success" style="margin-bottom:16px">
+    <span class="info-icon">🗂️</span>
+    <div><strong>Virtual File System aktif!</strong> Semua perintah <code>open()</code>, <code>write()</code>, <code>read()</code>, dan <code>os</code> bekerja di memori browser. File yang dibuat akan muncul di panel <strong>File Explorer</strong> di bawah editor.</div>
+  </div>
+
+  <!-- VFS Explorer -->
+  <div class="vfs-panel" id="vfsPanel">
+    <div class="vfs-header">
+      <div class="vfs-title">📂 File Explorer <span class="vfs-badge" id="vfsCount">0 file</span></div>
+      <button onclick="clearVFS()" style="background:none;border:1px solid #EF4444;color:#EF4444;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">Hapus Semua File</button>
+    </div>
+    <div class="vfs-body">
+      <div class="vfs-empty" id="vfsEmpty">Belum ada file. Jalankan kode yang membuat file terlebih dahulu.</div>
+      <div class="vfs-file-list" id="vfsFileList" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Editor Utama -->
+  <div class="lab-wrap">
+    <div class="lab-top">
+      <span class="lab-title">📝 Editor Python — File I/O</span>
+      <div class="lab-badges"><span class="lab-badge badge-py">Python 3</span><span class="lab-badge badge-vfs">VFS</span></div>
+    </div>
+    <textarea class="lab-editor" id="mainEditor" spellcheck="false"># Contoh lengkap File I/O
+# Jalankan kode ini untuk melihat cara kerja file I/O!
+
+# 1. Tulis file
+with open("biodata.txt", "w") as f:
+    f.write("Nama: Budi Santoso\n")
+    f.write("NIM: 2301001\n")
+    f.write("Prodi: D3 Manajemen Informatika\n")
+
+print("✅ File 'biodata.txt' berhasil dibuat!")
+
+# 2. Baca file
+print("\n📖 Isi file biodata.txt:")
+with open("biodata.txt", "r") as f:
+    print(f.read())
+
+# 3. Tambah data (append)
+with open("biodata.txt", "a") as f:
+    f.write("Semester: 3\n")
+
+print("✅ Data ditambahkan ke file!")
+
+# 4. Baca ulang
+print("\n📖 Isi file setelah ditambah:")
+with open("biodata.txt", "r") as f:
+    for i, baris in enumerate(f.readlines()):
+        print(f"  Baris {i+1}: {baris.strip()}")</textarea>
+    <div class="lab-toolbar">
+      <button class="btn-run" id="btnRunMain" onclick="runPython('mainEditor','mainOutput','mainStatus')">▶ Jalankan</button>
+      <button class="btn-clear" onclick="clearOutput('mainOutput')">Bersihkan Output</button>
+      <button class="btn-clear" onclick="document.getElementById('mainEditor').value=''">Kosongkan Editor</button>
+      <span style="margin-left:auto;font-size:11px;color:#64748B">Shift+Enter = jalankan</span>
+    </div>
+    <div class="lab-output" id="mainOutput"><span style="color:#475569">— Output akan muncul di sini —</span></div>
+    <div class="lab-status" id="mainStatus">Siap</div>
+  </div>
+
+  <!-- Contoh Siap Coba -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#E1F5EE">🎮</div>
+      <div><div class="card-title">Contoh Kode Siap Coba</div><div class="card-sub">Klik untuk load ke editor, lalu jalankan</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px" id="snippetGrid"></div>
+  </div>
+</div>
+
+<!-- ===== FILE I/O + UI ===== -->
+<div class="page" id="page-ui">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">INTEGRASI FILE I/O DENGAN UI TKINTER</div><div class="sec-line"></div></div>
+
+  <div class="info-box info" style="margin-bottom:16px">
+    <span class="info-icon">🖥️</span>
+    <div>Di pertemuan sebelumnya kamu sudah belajar membuat UI dengan Tkinter. Sekarang kita gabungkan dengan File I/O — membuat aplikasi yang bisa <strong>menyimpan dan membuka file</strong> dari antarmuka grafis!</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#EDE9FE">🔗</div>
+      <div><div class="card-title">Konsep Penggabungan</div><div class="card-sub">UI sebagai antarmuka, File I/O sebagai penyimpanan</div></div>
+    </div>
+    <div class="flow-wrap">
+      <div class="flow-box">Pengguna<br><small>klik tombol</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Widget Tkinter<br><small>Button/Entry</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Fungsi Python<br><small>event handler</small></div>
+      <div class="flow-arrow">↔</div>
+      <div class="flow-box file">📄 File.txt<br><small>Disk</small></div>
+    </div>
+    <div class="info-box warning" style="margin-top:8px">
+      <span class="info-icon">📌</span>
+      <div>Kode Tkinter di bawah ini dirancang untuk dijalankan di <strong>Google Colab</strong> atau <strong>Python lokal</strong> — bukan di browser (Tkinter butuh tampilan grafis). Kita pelajari strukturnya di sini, lalu praktik di Colab.</div>
+    </div>
+  </div>
+
+  <!-- Contoh 1: Notepad Sederhana -->
+  <div class="acc-item open" style="border-radius:var(--radius-lg);margin-bottom:8px">
+    <div class="acc-head" onclick="toggleAcc(this)">📝 Aplikasi 1: Notepad Sederhana (Tkinter + File I/O) <span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Aplikasi notepad dengan tombol <strong>Simpan</strong> dan <strong>Buka</strong> file. Ini adalah dasar dari hampir semua aplikasi desktop.</p>
+      <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON — JALANKAN DI COLAB / PYTHON LOKAL</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> messagebox, filedialog
+
+<span class="kw">def</span> <span class="fn">simpan_file</span>():
+    <span class="cm"># Ambil teks dari widget Text</span>
+    isi = text_area.<span class="fn">get</span>(<span class="str">"1.0"</span>, tk.END)
+    nama_file = entry_nama.<span class="fn">get</span>()
+    
+    <span class="kw">if not</span> nama_file:
+        messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Nama file tidak boleh kosong!"</span>)
+        <span class="kw">return</span>
+    
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(nama_file, <span class="str">"w"</span>) <span class="kw">as</span> f:
+            f.<span class="fn">write</span>(isi)
+        messagebox.<span class="fn">showinfo</span>(<span class="str">"Sukses"</span>, <span class="str">f"File '{nama_file}' berhasil disimpan!"</span>)
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">f"Gagal simpan: {e}"</span>)
+
+<span class="kw">def</span> <span class="fn">buka_file</span>():
+    nama_file = entry_nama.<span class="fn">get</span>()
+    <span class="kw">if not</span> nama_file:
+        messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Masukkan nama file yang ingin dibuka!"</span>)
+        <span class="kw">return</span>
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(nama_file, <span class="str">"r"</span>) <span class="kw">as</span> f:
+            isi = f.<span class="fn">read</span>()
+        text_area.<span class="fn">delete</span>(<span class="str">"1.0"</span>, tk.END)
+        text_area.<span class="fn">insert</span>(<span class="str">"1.0"</span>, isi)
+    <span class="kw">except</span> FileNotFoundError:
+        messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">f"File '{nama_file}' tidak ditemukan!"</span>)
+
+<span class="kw">def</span> <span class="fn">hapus_teks</span>():
+    text_area.<span class="fn">delete</span>(<span class="str">"1.0"</span>, tk.END)
+
+<span class="cm"># ── Setup Window ──────────────────────────────</span>
+root = tk.<span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="str">"Notepad Sederhana — File I/O"</span>)
+root.<span class="fn">geometry</span>(<span class="str">"600x450"</span>)
+root.<span class="fn">configure</span>(bg=<span class="str">"#f0f4f8"</span>)
+
+<span class="cm"># ── Baris Nama File ───────────────────────────</span>
+frame_top = tk.<span class="fn">Frame</span>(root, bg=<span class="str">"#f0f4f8"</span>, pady=<span class="num">8</span>)
+frame_top.<span class="fn">pack</span>(fill=<span class="str">"x"</span>, padx=<span class="num">10</span>)
+
+tk.<span class="fn">Label</span>(frame_top, text=<span class="str">"Nama File:"</span>, bg=<span class="str">"#f0f4f8"</span>).<span class="fn">pack</span>(side=<span class="str">"left"</span>)
+entry_nama = tk.<span class="fn">Entry</span>(frame_top, width=<span class="num">30</span>, font=(<span class="str">"Courier"</span>, <span class="num">12</span>))
+entry_nama.<span class="fn">pack</span>(side=<span class="str">"left"</span>, padx=<span class="num">8</span>)
+entry_nama.<span class="fn">insert</span>(<span class="num">0</span>, <span class="str">"catatan.txt"</span>)
+
+<span class="cm"># ── Tombol ────────────────────────────────────</span>
+frame_btn = tk.<span class="fn">Frame</span>(root, bg=<span class="str">"#f0f4f8"</span>)
+frame_btn.<span class="fn">pack</span>(fill=<span class="str">"x"</span>, padx=<span class="num">10</span>, pady=<span class="num">4</span>)
+
+tk.<span class="fn">Button</span>(frame_btn, text=<span class="str">"💾 Simpan"</span>, command=simpan_file,
+         bg=<span class="str">"#16A34A"</span>, fg=<span class="str">"white"</span>, padx=<span class="num">12</span>).<span class="fn">pack</span>(side=<span class="str">"left"</span>, padx=<span class="num">4</span>)
+tk.<span class="fn">Button</span>(frame_btn, text=<span class="str">"📂 Buka"</span>, command=buka_file,
+         bg=<span class="str">"#2E75B6"</span>, fg=<span class="str">"white"</span>, padx=<span class="num">12</span>).<span class="fn">pack</span>(side=<span class="str">"left"</span>, padx=<span class="num">4</span>)
+tk.<span class="fn">Button</span>(frame_btn, text=<span class="str">"🗑️ Bersihkan"</span>, command=hapus_teks,
+         bg=<span class="str">"#EF4444"</span>, fg=<span class="str">"white"</span>, padx=<span class="num">12</span>).<span class="fn">pack</span>(side=<span class="str">"left"</span>, padx=<span class="num">4</span>)
+
+<span class="cm"># ── Area Teks ─────────────────────────────────</span>
+text_area = tk.<span class="fn">Text</span>(root, font=(<span class="str">"Courier"</span>, <span class="num">12</span>), wrap=<span class="str">"word"</span>, padx=<span class="num">10</span>, pady=<span class="num">10</span>)
+text_area.<span class="fn">pack</span>(expand=<span class="kw">True</span>, fill=<span class="str">"both"</span>, padx=<span class="num">10</span>, pady=<span class="num">8</span>)
+
+root.<span class="fn">mainloop</span>()</div></div>
+    </div>
+  </div>
+
+  <!-- Contoh 2: Buku Catatan -->
+  <div class="acc-item" style="border-radius:var(--radius-lg);margin-bottom:8px">
+    <div class="acc-head" onclick="toggleAcc(this)">📒 Aplikasi 2: Buku Catatan Nama Mahasiswa <span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Aplikasi untuk menambah, menampilkan, dan menghapus daftar nama dari file teks. Menggabungkan Listbox Tkinter dengan operasi append dan read file.</p>
+      <div class="code-wrap"><div class="code-header"><span class="code-lang">PYTHON — JALANKAN DI COLAB / PYTHON LOKAL</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div><div class="code-body"><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> messagebox
+
+FILE_NAMA = <span class="str">"daftar_mahasiswa.txt"</span>
+
+<span class="kw">def</span> <span class="fn">muat_data</span>():
+    <span class="cm">"Muat data dari file ke listbox"</span>
+    listbox.<span class="fn">delete</span>(<span class="num">0</span>, tk.END)
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(FILE_NAMA, <span class="str">"r"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> nama <span class="kw">in</span> f.<span class="fn">readlines</span>():
+                listbox.<span class="fn">insert</span>(tk.END, nama.<span class="fn">strip</span>())
+    <span class="kw">except</span> FileNotFoundError:
+        <span class="kw">pass</span>  <span class="cm"># file belum ada, tidak apa-apa</span>
+
+<span class="kw">def</span> <span class="fn">tambah_nama</span>():
+    nama = entry.<span class="fn">get</span>().<span class="fn">strip</span>()
+    <span class="kw">if not</span> nama:
+        messagebox.<span class="fn">showwarning</span>(<span class="str">"Peringatan"</span>, <span class="str">"Nama tidak boleh kosong!"</span>)
+        <span class="kw">return</span>
+    <span class="kw">with</span> <span class="fn">open</span>(FILE_NAMA, <span class="str">"a"</span>) <span class="kw">as</span> f:
+        f.<span class="fn">write</span>(nama + <span class="str">"\n"</span>)
+    entry.<span class="fn">delete</span>(<span class="num">0</span>, tk.END)
+    <span class="fn">muat_data</span>()
+    lbl_status.<span class="fn">config</span>(text=<span class="str">f"✅ '{nama}' ditambahkan!"</span>)
+
+<span class="kw">def</span> <span class="fn">hapus_terpilih</span>():
+    sel = listbox.<span class="fn">curselection</span>()
+    <span class="kw">if not</span> sel:
+        messagebox.<span class="fn">showwarning</span>(<span class="str">"Peringatan"</span>, <span class="str">"Pilih nama yang ingin dihapus!"</span>)
+        <span class="kw">return</span>
+    nama_hapus = listbox.<span class="fn">get</span>(sel[<span class="num">0</span>])
+    <span class="kw">with</span> <span class="fn">open</span>(FILE_NAMA, <span class="str">"r"</span>) <span class="kw">as</span> f:
+        semua = f.<span class="fn">readlines</span>()
+    <span class="kw">with</span> <span class="fn">open</span>(FILE_NAMA, <span class="str">"w"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> baris <span class="kw">in</span> semua:
+            <span class="kw">if</span> baris.<span class="fn">strip</span>() != nama_hapus:
+                f.<span class="fn">write</span>(baris)
+    <span class="fn">muat_data</span>()
+    lbl_status.<span class="fn">config</span>(text=<span class="str">f"🗑️ '{nama_hapus}' dihapus!"</span>)
+
+root = tk.<span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="str">"Daftar Mahasiswa"</span>)
+root.<span class="fn">geometry</span>(<span class="str">"400x500"</span>)
+
+tk.<span class="fn">Label</span>(root, text=<span class="str">"📒 Buku Mahasiswa"</span>, font=(<span class="str">"Arial"</span>,<span class="num">14</span>,<span class="str">"bold"</span>)).<span class="fn">pack</span>(pady=<span class="num">10</span>)
+
+frame = tk.<span class="fn">Frame</span>(root)
+frame.<span class="fn">pack</span>(padx=<span class="num">10</span>, fill=<span class="str">"x"</span>)
+entry = tk.<span class="fn">Entry</span>(frame, font=(<span class="str">"Arial"</span>,<span class="num">12</span>), width=<span class="num">25</span>)
+entry.<span class="fn">pack</span>(side=<span class="str">"left"</span>, padx=<span class="num">4</span>)
+tk.<span class="fn">Button</span>(frame, text=<span class="str">"+ Tambah"</span>, command=tambah_nama,
+         bg=<span class="str">"#16A34A"</span>, fg=<span class="str">"white"</span>).<span class="fn">pack</span>(side=<span class="str">"left"</span>)
+
+listbox = tk.<span class="fn">Listbox</span>(root, font=(<span class="str">"Arial"</span>,<span class="num">12</span>), height=<span class="num">15</span>, selectmode=tk.SINGLE)
+listbox.<span class="fn">pack</span>(padx=<span class="num">10</span>, pady=<span class="num">10</span>, fill=<span class="str">"both"</span>, expand=<span class="kw">True</span>)
+
+tk.<span class="fn">Button</span>(root, text=<span class="str">"🗑️ Hapus Terpilih"</span>, command=hapus_terpilih,
+         bg=<span class="str">"#EF4444"</span>, fg=<span class="str">"white"</span>).<span class="fn">pack</span>(pady=<span class="num">4</span>)
+tk.<span class="fn">Button</span>(root, text=<span class="str">"🔄 Refresh"</span>, command=muat_data).<span class="fn">pack</span>(pady=<span class="num">2</span>)
+
+lbl_status = tk.<span class="fn">Label</span>(root, text=<span class="str">"Siap"</span>, fg=<span class="str">"gray"</span>)
+lbl_status.<span class="fn">pack</span>()
+
+<span class="fn">muat_data</span>()
+root.<span class="fn">mainloop</span>()</div></div>
+    </div>
+  </div>
+
+  <!-- Penjelasan pola integrasi -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#FEF3C7">💡</div>
+      <div><div class="card-title">Pola Umum Integrasi UI + File</div><div class="card-sub">Gunakan pola ini untuk semua proyek</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <div style="background:var(--green-light);border-radius:var(--radius-md);padding:14px">
+        <div style="font-weight:700;font-size:13px;color:var(--green-dark);margin-bottom:8px">📥 Tombol "Simpan"</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.7">Ambil data dari widget → buka file mode <code>"w"</code> atau <code>"a"</code> → tulis → tutup → tampilkan pesan sukses</div>
+      </div>
+      <div style="background:var(--blue-light);border-radius:var(--radius-md);padding:14px">
+        <div style="font-weight:700;font-size:13px;color:var(--blue-dark);margin-bottom:8px">📤 Tombol "Buka/Load"</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.7">Buka file mode <code>"r"</code> → baca → masukkan ke widget (Text/Listbox/Label) → tampilkan</div>
+      </div>
+      <div style="background:var(--red-light);border-radius:var(--radius-md);padding:14px">
+        <div style="font-weight:700;font-size:13px;color:var(--red-dark);margin-bottom:8px">🗑️ Tombol "Hapus"</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.7">Baca semua → filter yang tidak dihapus → tulis ulang dengan mode <code>"w"</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== KUIS ===== -->
+<div class="page" id="page-kuis">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">KUIS — FILE I/O PYTHON</div><div class="sec-line"></div></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header">
+      <div class="card-icon" style="background:#FEF3C7">📝</div>
+      <div><div class="card-title">10 Soal Pilihan Ganda</div><div class="card-sub">Materi File I/O Python — Pertemuan 11</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="quizProgress" style="width:0%"></div></div>
+    <div style="font-size:12px;color:var(--text-muted)" id="quizProgressLbl">0 dari 10 soal dijawab</div>
+  </div>
+  <div id="quizContainer"></div>
+  <div class="quiz-score" id="quizScore" style="display:none">
+    <div class="quiz-score-num" id="scoreNum">0/10</div>
+    <div class="quiz-score-lbl">Nilai Kuis File I/O</div>
+    <div style="margin-top:12px;font-size:13px;color:var(--text-muted)" id="scoreFeedback"></div>
+    <button onclick="resetQuiz()" style="margin-top:16px;padding:10px 24px;background:var(--blue-mid);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;cursor:pointer;font-weight:600">Ulangi Kuis</button>
+  </div>
+</div>
+
+<!-- ===== LATIHAN ===== -->
+<div class="page" id="page-latihan">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">LATIHAN MANDIRI FILE I/O</div><div class="sec-line"></div></div>
+
+  <div class="info-box info" style="margin-bottom:16px">
+    <span class="info-icon">🎯</span>
+    <div>Selesaikan 5 soal latihan File I/O. File yang kamu buat akan muncul di <strong>File Explorer</strong> di Tab Lab. Klik <strong>Petunjuk</strong> jika butuh bantuan.</div>
+  </div>
+
+  <div class="latihan-tabs" id="latihanTabs"></div>
+  <div id="latihanPanels"></div>
+</div>
+
+<script>
+// ─── VIRTUAL FILE SYSTEM ─────────────────────────────────────────────────
+const VFS = {};
+
+function vfsWrite(name, content) {
+  VFS[name] = content;
+  renderVFS();
+}
+function vfsRead(name) {
+  if (!(name in VFS)) throw new Error(`FileNotFoundError: [Errno 2] No such file or directory: '${name}'`);
+  return VFS[name];
+}
+function vfsExists(name) { return name in VFS; }
+function vfsDelete(name) { delete VFS[name]; renderVFS(); }
+function clearVFS() {
+  Object.keys(VFS).forEach(k => delete VFS[k]);
+  renderVFS();
+}
+function renderVFS() {
+  const list = document.getElementById('vfsFileList');
+  const empty = document.getElementById('vfsEmpty');
+  const cnt = document.getElementById('vfsCount');
+  const keys = Object.keys(VFS);
+  cnt.textContent = keys.length + ' file';
+  if (keys.length === 0) {
+    list.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  list.style.display = 'flex';
+  empty.style.display = 'none';
+  list.innerHTML = '';
+  keys.forEach(name => {
+    const content = VFS[name];
+    const lines = content.split('\n').filter(l => l !== '').length;
+    const bytes = new TextEncoder().encode(content).length;
+    const el = document.createElement('div');
+    el.className = 'vfs-file';
+    el.innerHTML = `
+      <div class="vfs-file-head" onclick="this.parentElement.classList.toggle('open')">
+        <div class="vfs-file-name">📄 ${name}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="vfs-file-meta">${lines} baris · ${bytes} bytes</div>
+          <button class="btn-del-file" onclick="event.stopPropagation();vfsDelete('${name}')">Hapus</button>
+        </div>
+      </div>
+      <div class="vfs-file-content">${escHtml(content)}</div>`;
+    list.appendChild(el);
+  });
+}
+
+// ─── DATA ────────────────────────────────────────────────────────────────
+const QUIZ = [
+  {q:'Apa fungsi mode <code>"w"</code> pada open() di Python?',opts:['Hanya membaca file','Membuat/menimpa file untuk ditulis','Menambah data di akhir file','Membuat file baru saja jika belum ada'],ans:1,exp:'Mode "w" (write) membuka file untuk ditulis. Jika file sudah ada, isinya akan ditimpa. Jika belum ada, file baru dibuat.'},
+  {q:'Apa perbedaan mode <code>"a"</code> dan <code>"w"</code>?',opts:['"a" menimpa file, "w" menambah','Tidak ada perbedaan','"w" menimpa file, "a" menambah di akhir tanpa menghapus isi lama','"a" hanya untuk membaca'],ans:2,exp:'"w" menimpa (hapus semua isi lama), sedangkan "a" (append) menambahkan data di akhir file tanpa menghapus yang sudah ada.'},
+  {q:'Manakah cara terbaik untuk membuka file di Python?',opts:['f = open("file.txt")\nf.read()\nf.close()','with open("file.txt") as f:\n    f.read()','open("file.txt", "r").read()','file.open("file.txt")'],ans:1,exp:'Menggunakan "with open(...) as f:" adalah cara terbaik karena file otomatis tertutup setelah blok selesai, bahkan jika terjadi error.'},
+  {q:'Apa output dari kode ini?\n<code>f = open("data.txt","w")\nf.write("Halo")\nf.write(" Dunia")\nf.close()</code>\nKemudian file dibaca, apa isinya?',opts:['Halo\nDunia','Halo Dunia','HaloDunia','Halo + Dunia'],ans:2,exp:'write() tidak otomatis menambah newline. Dua pemanggilan write() berturut-turut akan bersambung: "Halo" + " Dunia" = "Halo Dunia".'},
+  {q:'Apa perbedaan read() dan readlines()?',opts:['read() lebih cepat dari readlines()','read() mengembalikan string, readlines() mengembalikan list of string','readlines() mengembalikan string, read() mengembalikan list','Tidak ada perbedaan'],ans:1,exp:'read() mengembalikan seluruh isi file sebagai satu string. readlines() mengembalikan list, di mana setiap elemen adalah satu baris (termasuk karakter \\n).'},
+  {q:'Apa yang terjadi jika kita membuka file dengan mode <code>"r"</code> tetapi file tidak ada?',opts:['File baru dibuat secara otomatis','Program langsung berhenti','Muncul error FileNotFoundError','Mengembalikan string kosong'],ans:2,exp:'Mode "r" mengharuskan file sudah ada. Jika tidak ada, Python melempar exception FileNotFoundError. Gunakan try-except untuk mengatasinya.'},
+  {q:'Karakter apa yang digunakan untuk membuat baris baru dalam file teks?',opts:['\\t','\\r','\\n','\\b'],ans:2,exp:'Karakter \\n (newline/line feed) digunakan untuk pindah ke baris baru dalam file teks. Tanpa \\n, semua teks akan tersambung dalam satu baris.'},
+  {q:'Manakah kode yang benar untuk MENAMBAH data ke file tanpa menghapus isi lama?',opts:['open("log.txt","w")','open("log.txt","r")','open("log.txt","a")','open("log.txt","x")'],ans:2,exp:'Mode "a" (append) membuka file untuk menambahkan data di akhir, tanpa menghapus isi yang sudah ada sebelumnya.'},
+  {q:'Apa kegunaan metode strip() saat membaca file?',opts:['Membagi string menjadi list','Menghapus spasi dan newline di awal/akhir string','Mengubah huruf menjadi kapital','Mencari teks dalam string'],ans:1,exp:'strip() menghapus whitespace (spasi, tab, newline \\n) di awal dan akhir string. Sangat berguna setelah readlines() yang menyertakan \\n di akhir setiap baris.'},
+  {q:'Dalam integrasi Tkinter + File I/O, bagaimana cara yang benar untuk MENGHAPUS satu baris dari file?',opts:['Gunakan f.delete(baris)','Baca semua baris → filter yang tidak dihapus → tulis ulang dengan "w"','Buka file dengan mode "d"','Gunakan os.delete_line()'],ans:1,exp:'Python tidak punya fungsi hapus baris secara langsung. Cara standarnya: baca semua baris dengan readlines(), buat list baru tanpa baris yang dihapus, lalu tulis ulang file dengan mode "w".'}
+];
+
+const SNIPPETS = [
+  {label:'Tulis & Baca File',code:`# Tulis file
+with open("contoh.txt", "w") as f:
+    f.write("Baris pertama\\n")
+    f.write("Baris kedua\\n")
+    f.write("Baris ketiga\\n")
+print("File dibuat!")
+
+# Baca file
+with open("contoh.txt", "r") as f:
+    isi = f.read()
+print("Isi file:")
+print(isi)`},
+  {label:'Mode Append',code:`# Buat file awal
+with open("log.txt", "w") as f:
+    f.write("Log Aktivitas\\n")
+    f.write("============\\n")
+
+# Tambah data (append)
+import datetime
+waktu = "2025-01-15 10:00"
+with open("log.txt", "a") as f:
+    f.write(f"[{waktu}] User login\\n")
+    f.write(f"[{waktu}] Buka menu\\n")
+
+# Tampilkan
+with open("log.txt", "r") as f:
+    print(f.read())`},
+  {label:'readlines() + Loop',code:`# Simpan daftar nilai
+nilai = ["Andi:90\\n", "Budi:75\\n", "Citra:88\\n", "Dina:95\\n"]
+with open("nilai.txt", "w") as f:
+    f.writelines(nilai)
+
+# Baca dan proses per baris
+print("Daftar Nilai:")
+total = 0
+count = 0
+with open("nilai.txt", "r") as f:
+    for baris in f.readlines():
+        nama, n = baris.strip().split(":")
+        n = int(n)
+        total += n
+        count += 1
+        print(f"  {nama}: {n}")
+print(f"Rata-rata: {total/count:.1f}")`},
+  {label:'Try-Except File',code:`def baca_file(nama_file):
+    try:
+        with open(nama_file, "r") as f:
+            return f.read()
+    except FileNotFoundError:
+        return f"ERROR: File '{nama_file}' tidak ada!"
+    except Exception as e:
+        return f"ERROR: {e}"
+
+# Coba baca file yang ada
+with open("test.txt", "w") as f:
+    f.write("Ini file test\\n")
+
+print(baca_file("test.txt"))
+print(baca_file("tidak_ada.txt"))`},
+  {label:'Buku Tamu Digital',code:`def tambah_tamu(nama, pesan):
+    with open("buku_tamu.txt", "a") as f:
+        f.write(f"Nama  : {nama}\\n")
+        f.write(f"Pesan : {pesan}\\n")
+        f.write("-" * 30 + "\\n")
+
+def tampilkan_tamu():
+    try:
+        with open("buku_tamu.txt", "r") as f:
+            print(f.read())
+    except FileNotFoundError:
+        print("Buku tamu masih kosong.")
+
+# Isi buku tamu
+tambah_tamu("Andi", "Halo semua, selamat belajar!")
+tambah_tamu("Budi", "Python seru banget!")
+tambah_tamu("Citra", "File I/O mudah dipahami.")
+
+print("=== BUKU TAMU DIGITAL ===")
+tampilkan_tamu()`},
+  {label:'Simpan Data Input',code:`# Program simpan data mahasiswa
+print("=== Input Data Mahasiswa ===")
+nama = input("Nama: ")
+nim  = input("NIM: ")
+prodi = input("Prodi: ")
+
+data = f"Nama : {nama}\\nNIM  : {nim}\\nProdi: {prodi}\\n"
+
+with open("mhs_baru.txt", "a") as f:
+    f.write(data)
+    f.write("-" * 25 + "\\n")
+
+print("\\nData tersimpan! Isi file:")
+with open("mhs_baru.txt", "r") as f:
+    print(f.read())`}
+];
+
+const LATIHAN = [
+  {
+    num:1, title:'Tulis & Baca Biodata',
+    desc:'Buat program yang meminta nama, NIM, dan prodi dari pengguna, lalu simpan ke file <code>biodata.txt</code>. Setelah disimpan, baca dan tampilkan isi file tersebut.',
+    hint:'Gunakan input() untuk ambil data, open("biodata.txt","w") untuk menulis, dan open("biodata.txt","r") untuk membaca kembali.',
+    expected:`Masukkan nama: Andi
+Masukkan NIM: 2301001
+Masukkan prodi: D3 MI
+Data tersimpan ke biodata.txt!
+
+Isi file biodata.txt:
+Nama : Andi
+NIM  : 2301001
+Prodi: D3 MI`,
+    starter:`# Latihan 1: Tulis & Baca Biodata
+nama  = input("Masukkan nama: ")
+nim   = input("Masukkan NIM: ")
+prodi = input("Masukkan prodi: ")
+
+# Tulis ke file
+# Kode kamu di sini...
+
+# Baca dan tampilkan
+# Kode kamu di sini...
+`
+  },
+  {
+    num:2, title:'Log Aktivitas (Append)',
+    desc:'Buat program yang meminta nama aktivitas dari pengguna dan menyimpannya ke file <code>log_aktivitas.txt</code> menggunakan mode append. Jalankan 3x input berbeda dan pastikan semua tersimpan.',
+    hint:'Gunakan mode "a" agar data lama tidak terhapus. Setelah menulis, baca file untuk memastikan semua data tersimpan.',
+    expected:`Masukkan aktivitas: Login sistem
+Masukkan aktivitas: Buka laporan
+Masukkan aktivitas: Logout
+
+Isi log_aktivitas.txt:
+1. Login sistem
+2. Buka laporan
+3. Logout`,
+    starter:`# Latihan 2: Log Aktivitas
+# Kamu bisa loop 3x atau input langsung 3 aktivitas
+for i in range(3):
+    aktivitas = input("Masukkan aktivitas: ")
+    # Tulis ke file dengan append
+    # Kode kamu di sini...
+
+# Baca dan tampilkan semua isi file
+# Kode kamu di sini...
+`
+  },
+  {
+    num:3, title:'Hitung Rata-Rata dari File',
+    desc:'Buat program yang menyimpan 5 nilai ujian ke file <code>nilai.txt</code> (satu nilai per baris), lalu membaca file dan menghitung rata-rata nilainya.',
+    hint:'Gunakan readlines() untuk membaca semua baris. Konversi setiap baris dengan int() atau float() setelah strip().',
+    expected:`Nilai disimpan ke nilai.txt
+
+Membaca file nilai.txt:
+Nilai 1: 85
+Nilai 2: 90
+Nilai 3: 78
+Nilai 4: 92
+Nilai 5: 88
+Rata-rata: 86.6`,
+    starter:`# Latihan 3: Hitung Rata-Rata dari File
+nilai_list = [85, 90, 78, 92, 88]
+
+# Simpan ke file (satu nilai per baris)
+# Kode kamu di sini...
+
+# Baca file dan hitung rata-rata
+# Kode kamu di sini...
+`
+  },
+  {
+    num:4, title:'Try-Except File Tidak Ada',
+    desc:'Buat fungsi <code>baca_file(nama)</code> yang membaca file. Jika file tidak ada, tampilkan pesan error yang ramah. Jika ada, tampilkan isinya. Coba dengan file yang ada dan yang tidak ada.',
+    hint:'Gunakan try-except FileNotFoundError. Pertama buat file test dulu, lalu panggil fungsi dengan nama file yang ada dan yang tidak ada.',
+    expected:`Mencoba baca 'ada.txt'...
+Isi file: Ini isi file percobaan
+
+Mencoba baca 'tidak_ada.txt'...
+⚠️ File 'tidak_ada.txt' tidak ditemukan!`,
+    starter:`# Latihan 4: Try-Except
+def baca_file(nama_file):
+    # Tulis try-except di sini
+    pass
+
+# Buat file percobaan dulu
+with open("ada.txt", "w") as f:
+    f.write("Ini isi file percobaan")
+
+# Test fungsi
+print("Mencoba baca 'ada.txt'...")
+baca_file("ada.txt")
+
+print("\\nMencoba baca 'tidak_ada.txt'...")
+baca_file("tidak_ada.txt")
+`
+  },
+  {
+    num:5, title:'Buku Tamu Digital (Tantangan!)',
+    desc:'Buat program buku tamu: pengguna bisa menambah entri (nama + pesan) ke file <code>buku_tamu.txt</code>, atau menampilkan semua entri yang sudah ada. Gunakan menu pilihan: (1) Tambah, (2) Tampilkan, (3) Keluar.',
+    hint:'Gunakan while True untuk loop menu. Mode "a" untuk tambah, mode "r" untuk tampilkan. Gunakan break untuk keluar dari loop.',
+    expected:`=== BUKU TAMU DIGITAL ===
+1. Tambah entri
+2. Tampilkan semua
+3. Keluar
+Pilihan: 1
+Nama: Andi
+Pesan: Halo semua!
+✅ Entri ditambahkan!
+
+Pilihan: 2
+--- Buku Tamu ---
+[Andi]: Halo semua!
+Pilihan: 3
+Sampai jumpa!`,
+    starter:`# Latihan 5: Buku Tamu Digital
+FILE = "buku_tamu.txt"
+
+def tambah_entri():
+    nama  = input("Nama: ")
+    pesan = input("Pesan: ")
+    # Simpan ke file dengan append
+    # Format: [nama]: pesan
+    pass
+
+def tampilkan_semua():
+    # Baca dan tampilkan semua isi file
+    pass
+
+# Loop menu
+while True:
+    print("\\n=== BUKU TAMU DIGITAL ===")
+    print("1. Tambah entri")
+    print("2. Tampilkan semua")
+    print("3. Keluar")
+    pilihan = input("Pilihan: ")
+    
+    if pilihan == "1":
+        tambah_entri()
+    elif pilihan == "2":
+        tampilkan_semua()
+    elif pilihan == "3":
+        print("Sampai jumpa!")
+        break
+    else:
+        print("Pilihan tidak valid!")
+`
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let quizAnswers = new Array(QUIZ.length).fill(null);
+let quizDone = 0;
+let inputResolve = null;
+let currentOutputId = null;
+
+// ─── INIT ────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildQuiz();
+  buildSnippets();
+  buildLatihan();
+  loadTheme();
+  renderVFS();
+  document.addEventListener('keydown', e => {
+    if (e.shiftKey && e.key === 'Enter' && document.activeElement.tagName === 'TEXTAREA') {
+      e.preventDefault();
+      const ta = document.activeElement;
+      const outId = ta.id.replace('Editor','Output').replace('Ed','Out').replace('mainEditor','mainOutput');
+      const stId  = ta.id.replace('Editor','Status').replace('Ed','St').replace('mainEditor','mainStatus');
+      runPython(ta.id, outId, stId);
+    }
+  });
+});
+
+// ─── NAV ─────────────────────────────────────────────────────────────────
+function gotoPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ─── THEME ────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.querySelector('[onclick="toggleTheme()"]').textContent = dark ? '🌙' : '☀️';
+  localStorage.setItem('theme', dark ? 'light' : 'dark');
+}
+function loadTheme() {
+  const t = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelector('[onclick="toggleTheme()"]').textContent = t === 'dark' ? '☀️' : '🌙';
+}
+
+// ─── ACC ─────────────────────────────────────────────────────────────────
+function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
+
+// ─── COPY ────────────────────────────────────────────────────────────────
+function copyCode(btn) {
+  const code = btn.closest('.code-wrap').querySelector('.code-body').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Tersalin!';
+    setTimeout(() => btn.textContent = 'Salin', 2000);
+  });
+}
+
+// ─── QUIZ ────────────────────────────────────────────────────────────────
+function buildQuiz() {
+  const c = document.getElementById('quizContainer');
+  c.innerHTML = '';
+  quizAnswers = new Array(QUIZ.length).fill(null);
+  quizDone = 0;
+  document.getElementById('quizProgress').style.width = '0%';
+  document.getElementById('quizProgressLbl').textContent = '0 dari ' + QUIZ.length + ' soal dijawab';
+  document.getElementById('quizScore').style.display = 'none';
+  QUIZ.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `
+      <div class="quiz-num">SOAL ${qi+1}</div>
+      <div class="quiz-text">${q.q.replace(/\n/g,'<br>')}</div>
+      <div class="quiz-opts">${q.opts.map((o,oi)=>`<button class="quiz-opt" onclick="answerQuiz(${qi},${oi},this)">${String.fromCharCode(65+oi)}. ${o}</button>`).join('')}</div>
+      <div class="quiz-feedback" id="qf${qi}"></div>`;
+    c.appendChild(div);
+  });
+}
+function answerQuiz(qi, oi, btn) {
+  if (quizAnswers[qi] !== null) return;
+  quizAnswers[qi] = oi; quizDone++;
+  btn.parentElement.querySelectorAll('.quiz-opt').forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === QUIZ[qi].ans) o.classList.add('correct');
+    else if (i === oi) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('qf'+qi);
+  fb.className = 'quiz-feedback show '+(oi===QUIZ[qi].ans?'ok':'fail');
+  fb.textContent = (oi===QUIZ[qi].ans?'✅ Benar! ':'❌ Salah. ')+QUIZ[qi].exp;
+  const pct = Math.round(quizDone/QUIZ.length*100);
+  document.getElementById('quizProgress').style.width = pct+'%';
+  document.getElementById('quizProgressLbl').textContent = quizDone+' dari '+QUIZ.length+' soal dijawab';
+  if (quizDone === QUIZ.length) {
+    const score = quizAnswers.filter((a,i)=>a===QUIZ[i].ans).length;
+    document.getElementById('quizScore').style.display = 'block';
+    document.getElementById('scoreNum').textContent = score+'/'+QUIZ.length;
+    const msgs=['Perlu banyak review, terutama mode file!','Cukup baik! Pelajari soal yang salah.','Bagus! Kamu paham File I/O dengan baik.','Luar biasa! File I/O sudah sangat dikuasai 💪'];
+    document.getElementById('scoreFeedback').textContent = msgs[Math.min(3,Math.floor(score/3))];
+    document.getElementById('quizScore').scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+function resetQuiz() { buildQuiz(); }
+
+// ─── SNIPPETS ────────────────────────────────────────────────────────────
+function buildSnippets() {
+  const g = document.getElementById('snippetGrid');
+  SNIPPETS.forEach(s => {
+    const b = document.createElement('button');
+    b.textContent = s.label;
+    b.style.cssText='padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text-primary);font-size:13px;cursor:pointer;text-align:left;transition:all .2s';
+    b.onmouseover=()=>{b.style.background='var(--blue-light)';b.style.borderColor='var(--blue-mid)'};
+    b.onmouseout=()=>{b.style.background='var(--surface)';b.style.borderColor='var(--border)'};
+    b.onclick=()=>{
+      document.getElementById('mainEditor').value=s.code;
+      document.getElementById('mainOutput').innerHTML='<span style="color:#475569">— Kode dimuat. Klik ▶ Jalankan —</span>';
+    };
+    g.appendChild(b);
+  });
+}
+
+// ─── LATIHAN ─────────────────────────────────────────────────────────────
+function buildLatihan() {
+  const tabs = document.getElementById('latihanTabs');
+  const panels = document.getElementById('latihanPanels');
+  LATIHAN.forEach((lat, i) => {
+    const tab = document.createElement('button');
+    tab.className='lat-tab'+(i===0?' active':'');
+    tab.textContent='Soal '+lat.num;
+    tab.onclick=()=>{
+      document.querySelectorAll('.lat-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.lat-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('latpanel'+i).classList.add('active');
+    };
+    tabs.appendChild(tab);
+
+    const edId='latEd'+i, outId='latOut'+i, stId='latSt'+i;
+    const panel=document.createElement('div');
+    panel.className='lat-panel'+(i===0?' active':'');
+    panel.id='latpanel'+i;
+    panel.innerHTML=`
+      <div class="lat-desc"><strong>📋 Soal ${lat.num}: ${lat.title}</strong><br><br>${lat.desc}</div>
+      <div class="lat-hint" onclick="this.classList.toggle('open')">
+        💡 <strong>Klik untuk lihat petunjuk</strong>
+        <div class="lat-hint-text">${lat.hint}</div>
+      </div>
+      <div class="lab-wrap">
+        <div class="lab-top">
+          <span class="lab-title">✏️ Soal ${lat.num} — ${lat.title}</span>
+          <div class="lab-badges"><span class="lab-badge badge-py">Python</span><span class="lab-badge badge-vfs">VFS</span></div>
+        </div>
+        <textarea class="lab-editor" id="${edId}" spellcheck="false">${lat.starter}</textarea>
+        <div class="lab-toolbar">
+          <button class="btn-run" onclick="runPython('${edId}','${outId}','${stId}')">▶ Jalankan</button>
+          <button class="btn-clear" onclick="clearOutput('${outId}')">Bersihkan</button>
+          <button class="btn-clear" onclick="document.getElementById('${edId}').value=${JSON.stringify(lat.starter)}">Reset Kode</button>
+        </div>
+        <div class="lab-output" id="${outId}"><span style="color:#475569">— Output akan muncul di sini —</span></div>
+        <div class="lab-status" id="${stId}">Siap</div>
+      </div>
+      <div class="lat-expected"><strong>📌 Contoh output yang diharapkan:</strong>\n\n${escHtml(lat.expected)}</div>`;
+    panels.appendChild(panel);
+  });
+}
+
+// ─── UTIL ────────────────────────────────────────────────────────────────
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function clearOutput(outId) {
+  const el=document.getElementById(outId);
+  if(el){el.innerHTML='<span style="color:#475569">— Output bersih —</span>';el.className='lab-output';}
+}
+
+// ─── PYTHON ENGINE ────────────────────────────────────────────────────────
+function builtinRead(x) {
+  if (Sk.builtinFiles===undefined||Sk.builtinFiles.files[x]===undefined)
+    throw "File not found: '"+x+"'";
+  return Sk.builtinFiles.files[x];
+}
+
+// Inject VFS & os override into Skulpt
+function buildPrelude() {
+  // We'll inject VFS ops via Skulpt's __future__ hooks + sys.modules override
+  return `
+import sys
+
+class _VFSFile:
+    def __init__(self, name, mode):
+        self._name = name
+        self._mode = mode
+        self._buf = ""
+        self._pos = 0
+        if mode in ("r", "r+"):
+            import _vfs
+            self._buf = _vfs.read(name)
+        elif mode == "a":
+            import _vfs
+            try:
+                self._buf = _vfs.read(name)
+            except:
+                self._buf = ""
+            self._pos = len(self._buf)
+    def write(self, s):
+        import _vfs
+        if self._mode == "w":
+            self._buf += s
+        elif self._mode == "a":
+            self._buf += s
+        elif self._mode in ("r+",):
+            self._buf += s
+        _vfs.write(self._name, self._buf)
+        return len(s)
+    def writelines(self, lines):
+        for l in lines:
+            self.write(l)
+    def read(self, size=-1):
+        data = self._buf[self._pos:]
+        self._pos = len(self._buf)
+        return data
+    def readline(self):
+        idx = self._buf.find("\\n", self._pos)
+        if idx == -1:
+            line = self._buf[self._pos:]
+            self._pos = len(self._buf)
+        else:
+            line = self._buf[self._pos:idx+1]
+            self._pos = idx+1
+        return line
+    def readlines(self):
+        lines = []
+        while self._pos < len(self._buf):
+            lines.append(self.readline())
+        return lines
+    def __iter__(self):
+        return iter(self.readlines())
+    def close(self): pass
+    def __enter__(self): return self
+    def __exit__(self, *a): self.close()
+
+class _BuiltinOpen:
+    def __call__(self, name, mode="r", encoding=None):
+        import _vfs
+        if mode == "x":
+            if _vfs.exists(name):
+                raise FileExistsError(f"File '{name}' sudah ada!")
+            _vfs.write(name, "")
+            return _VFSFile(name, "w")
+        if mode in ("r","r+") and not _vfs.exists(name):
+            raise FileNotFoundError(f"[Errno 2] No such file or directory: '{name}'")
+        if mode == "w":
+            _vfs.write(name, "")
+        return _VFSFile(name, mode)
+
+import builtins
+builtins.open = _BuiltinOpen()
+`;
+}
+
+async function runPython(edId, outId, stId) {
+  const code = document.getElementById(edId).value.trim();
+  if (!code) return;
+  const outEl = document.getElementById(outId);
+  outEl.className = 'lab-output';
+  outEl.textContent = '';
+  const stEl = document.getElementById(stId);
+  const btn = document.querySelector(`[onclick*="runPython('${edId}'"]`) ||
+               document.querySelector(`button.btn-run`);
+
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Menjalankan...'; }
+  currentOutputId = outId;
+  let outputBuf = '';
+
+  // Build VFS module for Skulpt
+  const vfsSnapshot = {...VFS};
+
+  Sk.configure({
+    output(text) {
+      outputBuf += text;
+      outEl.textContent = outputBuf;
+      outEl.scrollTop = outEl.scrollHeight;
+    },
+    read(x) {
+      // Handle _vfs internal module
+      if (x === '_vfs') return ''; // handled below
+      return builtinRead(x);
+    },
+    inputfun(prompt) {
+      return new Promise(resolve => {
+        inputResolve = resolve;
+        document.getElementById('inputPromptText').textContent = prompt || 'Masukkan nilai:';
+        document.getElementById('inputField').value = '';
+        document.getElementById('inputModal').classList.add('show');
+        setTimeout(() => document.getElementById('inputField').focus(), 100);
+        document.getElementById('inputField').onkeydown = e => { if(e.key==='Enter') submitInput(); };
+      });
+    },
+    inputfunTakesPrompt: true,
+    __future__: Sk.python3
+  });
+
+  // Register _vfs as a built-in module
+  Sk.builtinFiles = Sk.builtinFiles || {files:{}};
+
+  // Create _vfs module inline
+  const vfsModSrc = `
+vfs_data = {}
+
+def read(name):
+    if name not in vfs_data:
+        raise Exception("FileNotFoundError: " + name)
+    return vfs_data[name]
+
+def write(name, content):
+    vfs_data[name] = content
+
+def exists(name):
+    return name in vfs_data
+
+def list_files():
+    return list(vfs_data.keys())
+`;
+
+  // We'll use a different approach: patch via JS callbacks
+  // Override Skulpt's import to inject _vfs
+  const origImport = Sk.importModule;
+
+  // Inject our VFS via Skulpt external module
+  Sk.externalLibraries = Sk.externalLibraries || {};
+
+  // Use Skulpt's syspath and provide _vfs as a built-in
+  // Approach: inject via __builtin__ override using prelude code
+  const prelude = buildPrelude();
+  const fullCode = prelude + '\n' + code;
+
+  // Set up VFS bridge: when Python calls _vfs functions, delegate to JS VFS
+  // We'll inject via a special skulpt hook
+  Sk.builtins = Sk.builtins || {};
+
+  // The cleanest approach: define _vfs as a Skulpt module
+  // We monkeypatch Sk.misceval to intercept _vfs import
+  const origImportMod = Sk.importMainWithBody;
+
+  // Instead, provide _vfs via Sk.externalLibraries mechanism
+  // Simpler: just inject via a globals trick in prelude + override open with pure Python wrapper
+  // Let's use a completely different approach: pre-inject VFS state as Python string
+
+  const vfsInit = Object.entries(VFS).map(([k,v]) =>
+    `_vfs_store[${JSON.stringify(k)}] = ${JSON.stringify(v)}`
+  ).join('\n');
+
+  const fullProg = `
+# ── VFS BOOTSTRAP ──────────────────────────────────────────────
+import builtins as _bt
+
+_vfs_store = {}
+${vfsInit}
+
+class _VFSFile:
+    def __init__(self, name, mode):
+        self._name = name
+        self._mode = mode
+        self._buf = ""
+        self._pos = 0
+        if mode in ("r", "r+"):
+            if name not in _vfs_store:
+                raise FileNotFoundError(f"[Errno 2] No such file or directory: '{name}'")
+            self._buf = _vfs_store[name]
+        elif mode == "a":
+            self._buf = _vfs_store.get(name, "")
+            self._pos = len(self._buf)
+        elif mode == "w":
+            _vfs_store[name] = ""
+            self._buf = ""
+    def write(self, s):
+        if self._mode == "w":
+            self._buf += s
+        elif self._mode == "a":
+            self._buf += s
+        _vfs_store[self._name] = self._buf
+        _vfs_sync(self._name, self._buf)
+        return len(s)
+    def writelines(self, lines):
+        for l in lines:
+            self.write(l)
+    def read(self, size=-1):
+        result = self._buf[self._pos:]
+        self._pos = len(self._buf)
+        return result
+    def readline(self):
+        nl = self._buf.find("\\n", self._pos)
+        if nl == -1:
+            line = self._buf[self._pos:]
+            self._pos = len(self._buf)
+        else:
+            line = self._buf[self._pos:nl+1]
+            self._pos = nl+1
+        return line
+    def readlines(self):
+        lines = []
+        while self._pos < len(self._buf):
+            lines.append(self.readline())
+        return lines
+    def __iter__(self):
+        return iter(self.readlines())
+    def close(self): pass
+    def __enter__(self): return self
+    def __exit__(self, *a): self.close()
+
+class _OpenOverride:
+    def __call__(self, name, mode="r", encoding=None):
+        if mode == "x":
+            if name in _vfs_store:
+                raise FileExistsError(f"File '{name}' sudah ada!")
+            _vfs_store[name] = ""
+            _vfs_sync(name, "")
+            return _VFSFile(name, "w")
+        if mode in ("r","r+") and name not in _vfs_store:
+            raise FileNotFoundError(f"[Errno 2] No such file or directory: '{name}'")
+        if mode == "w":
+            _vfs_store[name] = ""
+        return _VFSFile(name, mode)
+
+_bt.open = _OpenOverride()
+
+# os.path & os mock
+import sys
+class _OsMock:
+    class path:
+        @staticmethod
+        def exists(name):
+            return name in _vfs_store
+        @staticmethod
+        def isfile(name):
+            return name in _vfs_store
+    @staticmethod
+    def remove(name):
+        if name not in _vfs_store:
+            raise FileNotFoundError(f"File '{name}' tidak ada!")
+        del _vfs_store[name]
+        _vfs_delete(name)
+    @staticmethod
+    def listdir(path="."):
+        return list(_vfs_store.keys())
+
+sys.modules["os"] = _OsMock()
+sys.modules["os.path"] = _OsMock.path
+
+# ── USER CODE ───────────────────────────────────────────────────
+${code}
+`;
+
+  // Provide JS callbacks via Skulpt's external function bridge
+  Sk.globals = {};
+
+  // Skulpt doesn't support JS callbacks natively, but we can use
+  // a post-run hook to sync VFS by reading Sk's global _vfs_store
+  const startTime = Date.now();
+  try {
+    const mod = await Sk.misceval.asyncToPromise(() =>
+      Sk.importMainWithBody('<stdin>', false, fullProg, true)
+    );
+    // Sync VFS from Skulpt globals
+    syncVFSFromSkulpt(mod);
+    const elapsed = ((Date.now()-startTime)/1000).toFixed(2);
+    if(stEl) stEl.textContent=`✅ Selesai dalam ${elapsed}s`;
+  } catch(err) {
+    outEl.className='lab-output has-error';
+    const msg = err.toString().replace(/skulpt[^\s]*\.js:\d+/g,'').trim();
+    outEl.textContent += (outputBuf?'\n':'') + '🚨 ' + msg;
+    if(stEl) stEl.textContent='❌ Error ditemukan';
+  } finally {
+    if(btn){btn.disabled=false;btn.textContent='▶ Jalankan';}
+    document.getElementById('inputModal').classList.remove('show');
+  }
+}
+
+function syncVFSFromSkulpt(mod) {
+  // Read _vfs_store from Skulpt module globals
+  try {
+    const store = Sk.globals && Sk.globals['_vfs_store'];
+    if (store && store.entries) {
+      store.entries.forEach((v, k) => {
+        const key = Sk.ffi.remapToJs(k);
+        const val = Sk.ffi.remapToJs(v);
+        if (typeof key === 'string' && typeof val === 'string') {
+          VFS[key] = val;
+        }
+      });
+    } else if (store && store.$d) {
+      Object.entries(store.$d).forEach(([k,v]) => {
+        if (typeof k === 'string' && k !== '__class__') {
+          try {
+            const val = Sk.ffi.remapToJs(v);
+            if (typeof val === 'string') VFS[k] = val;
+          } catch(e){}
+        }
+      });
+    }
+    // Also check via Sk.globals directly
+    if (Sk.globals && Sk.globals['_vfs_store']) {
+      const sd = Sk.globals['_vfs_store'];
+      if (sd && sd.$d) {
+        Object.entries(sd.$d).forEach(([k,v]) => {
+          if (typeof k === 'string') {
+            try {
+              const val = Sk.ffi.remapToJs(v);
+              if (typeof val === 'string') VFS[k] = val;
+            } catch(e){}
+          }
+        });
+      }
+    }
+  } catch(e) { console.warn('VFS sync:', e); }
+  renderVFS();
+}
+
+// Also provide _vfs_sync and _vfs_delete as Skulpt built-ins
+// We inject them before each run
+Sk.configure = (function(origConfigure){
+  return function(opts) {
+    origConfigure.call(Sk, opts);
+    // Inject JS bridge functions
+    if (!Sk.builtins) Sk.builtins = {};
+    Sk.builtins['_vfs_sync'] = new Sk.builtin.func(function(nameObj, contentObj) {
+      const name = Sk.ffi.remapToJs(nameObj);
+      const content = Sk.ffi.remapToJs(contentObj);
+      VFS[name] = content;
+      renderVFS();
+      return Sk.builtin.none.none$;
+    });
+    Sk.builtins['_vfs_delete'] = new Sk.builtin.func(function(nameObj) {
+      const name = Sk.ffi.remapToJs(nameObj);
+      delete VFS[name];
+      renderVFS();
+      return Sk.builtin.none.none$;
+    });
+  };
+})(Sk.configure);
+
+function submitInput() {
+  const val = document.getElementById('inputField').value;
+  const outEl = document.getElementById(currentOutputId);
+  if(outEl) outEl.textContent += val + '\n';
+  document.getElementById('inputModal').classList.remove('show');
+  if(inputResolve){inputResolve(val);inputResolve=null;}
+}
+</script>
+</body>
+</html>

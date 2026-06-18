@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Materi Python — String & UI Tkinter</title>
+<style>
+:root {
+  --bg: #F5F7FF;
+  --surface: #FFFFFF;
+  --border: #E0E6FF;
+  --blue: #3B5BDB;
+  --blue-light: #E8EEFF;
+  --blue-dark: #1A2F9A;
+  --green: #0CA678;
+  --green-light: #D3F5EC;
+  --amber: #F59F00;
+  --amber-light: #FFF3BF;
+  --red: #E03131;
+  --red-light: #FFE3E3;
+  --purple: #7048E8;
+  --purple-light: #EDE9FF;
+  --teal: #0C8599;
+  --teal-light: #D3F9FF;
+  --gray: #6B7280;
+  --text: #1E2340;
+  --text-muted: #6B7280;
+  --code-bg: #13172B;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(59,91,219,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:var(--blue-dark);color:#fff;height:52px;display:flex;align-items:center;padding:0 16px;gap:0;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.nav-logo{font-weight:700;font-size:14px;white-space:nowrap;margin-right:auto;letter-spacing:.3px}
+.nav-logo span{font-size:11px;opacity:.65;font-weight:400;margin-left:4px}
+.tab-bar{display:flex;height:100%;overflow-x:auto;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{padding:0 14px;height:100%;display:flex;align-items:center;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:rgba(255,255,255,.65);border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.tab-btn:hover,.tab-btn.active{color:#fff;border-bottom-color:#A5C8FF}
+
+/* ── MAIN CONTENT ── */
+.page{display:none;max-width:860px;margin:0 auto;padding:28px 16px 60px}
+.page.active{display:block}
+
+/* ── HERO BANNER ── */
+.hero{border-radius:var(--radius);padding:32px 28px;margin-bottom:24px;color:#fff;position:relative;overflow:hidden}
+.hero-string{background:linear-gradient(135deg,#1A2F9A 0%,#3B5BDB 60%,#0C8599 100%)}
+.hero-ui{background:linear-gradient(135deg,#3B2D8A 0%,#7048E8 60%,#1098AD 100%)}
+.hero::after{content:'';position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 14px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(18px,4vw,28px);font-weight:800;margin-bottom:6px;line-height:1.2}
+.hero p{font-size:13px;opacity:.85;max-width:480px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.hero-chips span{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:600}
+
+/* ── SECTION HEADER ── */
+.sec-hd{display:flex;align-items:center;gap:10px;margin:32px 0 16px}
+.sec-line{flex:1;height:1px;background:var(--border)}
+.sec-label{font-size:11px;font-weight:800;color:var(--blue);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+
+/* ── CARD ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px}
+.mini-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;transition:border-color .2s,transform .2s}
+.mini-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.mini-card .icon{font-size:22px;margin-bottom:6px}
+.mini-card h4{font-size:13px;font-weight:700;margin-bottom:3px}
+.mini-card p{font-size:12px;color:var(--text-muted);margin:0}
+
+/* ── INFO BOX ── */
+.info-box{border-radius:var(--radius-sm);padding:12px 16px;margin:12px 0;font-size:13px;line-height:1.7;display:flex;gap:10px;align-items:flex-start}
+.info-box.info{background:var(--blue-light);border-left:3px solid var(--blue)}
+.info-box.success{background:var(--green-light);border-left:3px solid var(--green)}
+.info-box.warn{background:var(--amber-light);border-left:3px solid var(--amber)}
+.info-box.danger{background:var(--red-light);border-left:3px solid var(--red)}
+.info-box.purple{background:var(--purple-light);border-left:3px solid var(--purple)}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:2px}
+
+/* ── CODE BLOCK ── */
+.code-wrap{background:var(--code-bg);border-radius:var(--radius-sm);overflow:hidden;margin:12px 0}
+.code-top{background:#1E2540;padding:7px 14px;display:flex;justify-content:space-between;align-items:center}
+.code-lang{font-size:10px;color:#64748B;font-weight:700;letter-spacing:.8px;font-family:'Courier New',monospace}
+.copy-btn{background:none;border:1px solid #334155;color:#64748B;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .2s}
+.copy-btn:hover{border-color:#60A5FA;color:#93C5FD}
+.code-body{padding:14px 16px;font-family:'Courier New',monospace;font-size:13px;line-height:1.8;overflow-x:auto;color:#C9D1F0;white-space:pre}
+.kw{color:#93C5FD} .fn{color:#6EE7B7} .st{color:#FCD34D} .cm{color:#4A5580;font-style:italic} .nm{color:#FCA5A5} .op{color:#F9A8D4}
+
+/* ── COMPARE TABLE ── */
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.cmp-table th{background:var(--blue-dark);color:#fff;padding:10px 14px;text-align:left;font-size:11px;font-weight:700}
+.cmp-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.cmp-table tr:nth-child(even) td{background:#F9FAFF}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.tag-py{background:#DCFCE7;color:#166534}
+.tag-cpp{background:#FEF9C3;color:#854D0E}
+.tag-tk{background:var(--purple-light);color:var(--purple)}
+
+/* ── WIDGET TABLE ── */
+.tbl-wrap{overflow-x:auto;margin:12px 0}
+table.w-table{width:100%;border-collapse:collapse;font-size:13px}
+table.w-table th{background:#13172B;color:#A5C8FF;padding:9px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px}
+table.w-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text-muted)}
+table.w-table tr:hover td{background:var(--blue-light)}
+
+/* ── INTERACTIVE SIM ── */
+.sim-box{background:linear-gradient(135deg,#EEF2FF,#E8EEFF);border:1px solid #C0CEFF;border-radius:var(--radius);padding:20px;margin:14px 0}
+.sim-box h4{font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.input-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.sim-input{border:2px solid #C0CEFF;border-radius:var(--radius-sm);padding:8px 12px;font-size:14px;font-weight:700;color:var(--text);background:#fff;outline:none;flex:1;min-width:120px;font-family:inherit;transition:border-color .2s}
+.sim-input:focus{border-color:var(--blue)}
+.sim-input.num{max-width:80px;flex:none}
+.sim-btn{background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,transform .1s;font-family:inherit}
+.sim-btn:hover{background:var(--blue-dark);transform:translateY(-1px)}
+.sim-btn.green{background:var(--green)}
+.sim-btn.green:hover{background:#089264}
+.sim-btn.amber{background:var(--amber);color:#1E2340}
+.result-box{background:#fff;border:2px solid #C0CEFF;border-radius:var(--radius-sm);padding:10px 14px;font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:var(--blue-dark);margin-top:10px;min-height:40px;word-break:break-all}
+.result-box.ok{border-color:var(--green);color:#065f46;background:var(--green-light)}
+.result-box.err{border-color:var(--red);color:#9B1239;background:var(--red-light)}
+
+/* ── CHAR VISUAL ── */
+.char-row{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}
+.char-box{display:flex;flex-direction:column;align-items:center}
+.ch{width:42px;height:42px;background:var(--blue-light);border:2px solid var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:16px;font-weight:700;color:var(--blue-dark);transition:all .2s}
+.ch.hl{background:var(--amber);border-color:#B45309;color:#1E2340;transform:translateY(-3px);box-shadow:0 4px 12px rgba(245,159,0,.35)}
+.ch.sl{background:var(--green);border-color:#065F46;color:#fff;transform:translateY(-3px);box-shadow:0 4px 12px rgba(12,166,120,.35)}
+.ch-idx{font-size:10px;font-family:'Courier New',monospace;color:var(--text-muted);margin-top:3px}
+
+/* ── LOOP ANIM ── */
+#loop-display{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:52px;align-items:center}
+.lchar{background:var(--blue-light);border:2px solid var(--blue);border-radius:8px;padding:6px 12px;font-family:'Courier New',monospace;font-size:18px;font-weight:700;color:var(--blue-dark);opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s}
+.lchar.visible{opacity:1;transform:translateY(0)}
+
+/* ── PLAYGROUND ── */
+.playground{background:linear-gradient(135deg,var(--blue-dark),var(--blue));border-radius:var(--radius);padding:24px;color:#fff;margin-top:16px}
+.playground h3{font-size:16px;font-weight:800;margin-bottom:6px}
+.playground p{font-size:13px;opacity:.85;margin-bottom:14px}
+.playground .sim-input{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff;width:100%}
+.playground .sim-input::placeholder{color:rgba(255,255,255,.5)}
+.playground .sim-input:focus{border-color:#fff}
+.pg-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pg-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+.pg-btn:hover{background:rgba(255,255,255,.28)}
+.pg-result{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-sm);padding:12px 16px;font-family:'Courier New',monospace;font-size:13px;margin-top:12px;min-height:40px;color:#90E0EF}
+.pg-code{margin-top:6px;font-family:'Courier New',monospace;font-size:11px;color:rgba(255,255,255,.4)}
+
+/* ── STEP LIST ── */
+.steps{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:'Courier New',monospace}
+.step-body h4{font-size:13px;font-weight:700;margin-bottom:3px}
+.step-body p{font-size:13px;color:var(--text-muted);margin:0}
+
+/* ── QUIZ ── */
+.quiz-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.quiz-q{font-size:14px;font-weight:700;margin-bottom:12px}
+.quiz-opts{display:flex;flex-direction:column;gap:6px}
+.quiz-opt{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 13px;cursor:pointer;transition:all .2s;font-size:13px;color:var(--text-muted);text-align:left}
+.quiz-opt:hover{border-color:var(--blue);color:var(--text)}
+.quiz-opt.correct{border-color:var(--green);color:var(--green);background:var(--green-light)}
+.quiz-opt.wrong{border-color:var(--red);color:var(--red);background:var(--red-light)}
+.quiz-opt.disabled{cursor:default;pointer-events:none}
+.quiz-fb{margin-top:8px;font-size:13px;display:none}
+.quiz-fb.show{display:block}
+
+/* ── ACCORDION ── */
+.acc{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden}
+.acc-head{padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700;background:var(--surface);transition:background .2s;user-select:none}
+.acc-head:hover{background:var(--blue-light)}
+.acc-arrow{font-size:11px;transition:transform .2s;color:var(--text-muted)}
+.acc-body{display:none;padding:14px 16px;border-top:1px solid var(--border);font-size:13px;background:var(--surface);line-height:1.8}
+.acc.open .acc-body{display:block}
+.acc.open .acc-arrow{transform:rotate(180deg)}
+
+/* ── LATIHAN BOX ── */
+.lat-desc{background:var(--blue-light);border-radius:var(--radius-sm);padding:12px 16px;font-size:13px;color:var(--blue-dark);line-height:1.7;border-left:3px solid var(--blue);margin-bottom:10px}
+.jawaban-box{display:none;background:var(--code-bg);color:#6EE7B7;border-radius:var(--radius-sm);padding:12px 16px;font-family:'Courier New',monospace;font-size:13px;margin-top:8px;line-height:1.8}
+.jawaban-box.shown{display:block}
+.show-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--text-muted);margin-top:8px;transition:all .2s;font-family:inherit}
+.show-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ── UI DEMO PREVIEW ── */
+.ui-preview{background:#F0F0F0;border:2px solid #CCC;border-radius:var(--radius);padding:20px;margin:14px 0;font-family:'Segoe UI',sans-serif}
+.ui-title-bar{background:var(--blue-dark);color:#fff;border-radius:6px 6px 0 0;padding:6px 14px;font-size:12px;font-weight:700;margin:-20px -20px 16px;display:flex;align-items:center;gap:6px}
+.ui-dots{display:flex;gap:4px}
+.ui-dot{width:10px;height:10px;border-radius:50%}
+.ui-label{font-size:13px;font-weight:700;margin-bottom:4px;color:#333}
+.ui-entry{width:100%;padding:6px 10px;border:1px solid #999;border-radius:4px;font-size:13px;margin-bottom:10px;font-family:inherit}
+.ui-btn-demo{background:var(--blue);color:#fff;border:none;padding:8px 18px;border-radius:4px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:700;transition:background .2s}
+.ui-btn-demo:hover{background:var(--blue-dark)}
+.ui-result{margin-top:10px;background:#fff;border:1px solid #CCC;border-radius:4px;padding:8px 12px;font-size:13px;min-height:32px;color:#333}
+
+/* ── MISC ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.text-muted{color:var(--text-muted)}
+code{background:var(--blue-light);border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:12px;color:var(--blue-dark)}
+strong{font-weight:700}
+p{margin-bottom:10px;font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🐍 Python Materi <span>D3 Manajemen Informatika</span></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="gotoPage('string',this)">🔤 String</button>
+    <button class="tab-btn" onclick="gotoPage('ui',this)">🖥️ UI Tkinter</button>
+    <button class="tab-btn" onclick="gotoPage('latihan',this)">🎯 Latihan</button>
+    <button class="tab-btn" onclick="gotoPage('kuis',this)">📝 Kuis</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PAGE: STRING -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page active" id="page-string">
+
+  <div class="hero hero-string">
+    <div class="hero-badge">Pertemuan 10</div>
+    <h1>String dalam Python</h1>
+    <p>Belajar mengolah data teks — dari karakter, slicing, pencarian, hingga method string yang sering dipakai.</p>
+    <div class="hero-chips">
+      <span>🔤 Karakter &amp; Indeks</span>
+      <span>✂️ Slicing</span>
+      <span>🔍 Pencarian</span>
+      <span>🔗 Gabung</span>
+      <span>🔁 Loop</span>
+    </div>
+  </div>
+
+  <!-- 1. KONSEP DASAR -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">01 — Konsep Dasar</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p><strong>String</strong> adalah kumpulan karakter yang ditulis di antara tanda kutip. Bayangkan string seperti array — tapi khusus untuk teks.</p>
+    <div class="info-box info"><span class="info-icon">💡</span><div><strong>Ingat dari materi sebelumnya:</strong> List = kumpulan data apa saja. String = kumpulan <em>karakter</em> (huruf, angka, simbol).</div></div>
+    <p style="margin-top:10px">Setiap karakter punya <strong>indeks</strong> mulai dari 0:</p>
+    <div class="char-row">
+      <div class="char-box"><div class="ch">B</div><div class="ch-idx">0</div></div>
+      <div class="char-box"><div class="ch">u</div><div class="ch-idx">1</div></div>
+      <div class="char-box"><div class="ch">d</div><div class="ch-idx">2</div></div>
+      <div class="char-box"><div class="ch">i</div><div class="ch-idx">3</div></div>
+    </div>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body"><span class="cm"># Penulisan string — bisa kutip satu atau dua</span>
+nama  = <span class="st">"Budi"</span>
+kota  = <span class="st">'Jakarta'</span>
+salam = <span class="st">"Selamat pagi!"</span>
+
+<span class="cm"># Akses karakter per indeks</span>
+<span class="fn">print</span>(nama[<span class="nm">0</span>])   <span class="cm"># B</span>
+<span class="fn">print</span>(nama[-<span class="nm">1</span>])  <span class="cm"># i (dari belakang)</span>
+<span class="fn">print</span>(<span class="fn">type</span>(nama)) <span class="cm"># &lt;class 'str'&gt;</span></div>
+    </div>
+  </div>
+
+  <!-- 2. PANJANG STRING -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">02 — Panjang String</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Fungsi <code>len()</code> menghitung jumlah karakter dalam string, termasuk spasi.</p>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body">nama = <span class="st">"Budi Santoso"</span>
+<span class="fn">print</span>(<span class="fn">len</span>(nama))   <span class="cm"># 12 (termasuk spasi)</span>
+
+<span class="cm"># Cek apakah panjang minimal 5</span>
+<span class="kw">if</span> <span class="fn">len</span>(nama) >= <span class="nm">5</span>:
+    <span class="fn">print</span>(<span class="st">"Nama cukup panjang"</span>)</div>
+    </div>
+
+    <div class="sim-box">
+      <h4>⚡ Coba Langsung — Hitung Panjang</h4>
+      <div class="input-row">
+        <input class="sim-input" id="len-input" placeholder="Ketik teks di sini..." oninput="hitungLen()"/>
+      </div>
+      <div id="len-chars" class="char-row"></div>
+      <div class="result-box" id="len-result">Ketik sesuatu di atas 👆</div>
+    </div>
+  </div>
+
+  <!-- 3. CONCATENATION -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">03 — Gabung String</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Menggabungkan dua string atau lebih disebut <strong>concatenation</strong>. Gunakan operator <code>+</code> atau f-string.</p>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body">nama  = <span class="st">"Budi"</span>
+kota  = <span class="st">"Bandung"</span>
+
+<span class="cm"># Cara 1: operator +</span>
+pesan = <span class="st">"Halo, "</span> + nama + <span class="st">"!"</span>
+<span class="fn">print</span>(pesan)            <span class="cm"># Halo, Budi!</span>
+
+<span class="cm"># Cara 2: f-string (DISARANKAN)</span>
+<span class="fn">print</span>(<span class="st">f"Halo, <span class="op">{nama}</span>! Dari <span class="op">{kota}</span>"</span>)
+
+<span class="cm"># Cara 3: * untuk pengulangan</span>
+<span class="fn">print</span>(<span class="st">"Ha"</span> * <span class="nm">3</span>)           <span class="cm"># HaHaHa</span></div>
+    </div>
+
+    <div class="sim-box">
+      <h4>⚡ Coba — F-String</h4>
+      <div class="input-row">
+        <input class="sim-input" id="concat-input" placeholder="Nama kamu..." oninput="simulasiConcat()"/>
+      </div>
+      <div class="result-box" id="concat-result">Ketik namamu 🙂</div>
+    </div>
+  </div>
+
+  <!-- 4. PENCARIAN -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">04 — Pencarian dalam String</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Cari apakah suatu kata/karakter ada di dalam string menggunakan <code>in</code> atau <code>.find()</code>.</p>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body">teks = <span class="st">"Selamat pagi, Budi!"</span>
+
+<span class="cm"># Operator in — hasil True/False</span>
+<span class="fn">print</span>(<span class="st">"Budi"</span> <span class="kw">in</span> teks)     <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="st">"Sari"</span> <span class="kw">in</span> teks)     <span class="cm"># False</span>
+
+<span class="cm"># .find() — posisi pertama ditemukan, atau -1</span>
+<span class="fn">print</span>(teks.<span class="fn">find</span>(<span class="st">"Budi"</span>))  <span class="cm"># 14</span>
+<span class="fn">print</span>(teks.<span class="fn">find</span>(<span class="st">"Sari"</span>))  <span class="cm"># -1 (tidak ditemukan)</span>
+
+<span class="cm"># .count() — hitung kemunculan</span>
+<span class="fn">print</span>(teks.<span class="fn">count</span>(<span class="st">"a"</span>))    <span class="cm"># 3</span></div>
+    </div>
+
+    <div class="sim-box">
+      <h4>⚡ Coba — Cari Karakter</h4>
+      <div class="input-row">
+        <input class="sim-input" id="search-text" placeholder="Teks..." value="Selamat belajar Python!" oninput="simulasiSearch()"/>
+        <input class="sim-input" id="search-char" placeholder="Cari..." style="max-width:120px" oninput="simulasiSearch()"/>
+      </div>
+      <div id="search-visual" class="char-row"></div>
+      <div class="result-box" id="search-result">Ketik kata yang dicari</div>
+    </div>
+  </div>
+
+  <!-- 5. SLICING -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">05 — Slicing</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p><strong>Slicing</strong> mengambil sebagian karakter dari string. Sintaks: <code>string[start:end]</code> — ambil dari indeks <em>start</em> sampai sebelum <em>end</em>.</p>
+    <div class="info-box warn"><span class="info-icon">⚠️</span><div>Ingat: indeks <em>end</em> tidak ikut terambil! <code>"Python"[0:3]</code> → <code>"Pyt"</code> (bukan "Pyt<strong>h</strong>")</div></div>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body">s = <span class="st">"Pemrograman"</span>
+
+<span class="fn">print</span>(s[<span class="nm">0</span>:<span class="nm">3</span>])    <span class="cm"># Pem</span>
+<span class="fn">print</span>(s[<span class="nm">4</span>:])     <span class="cm"># rograman (sampai akhir)</span>
+<span class="fn">print</span>(s[:<span class="nm">5</span>])     <span class="cm"># Pemro (dari awal)</span>
+<span class="fn">print</span>(s[::-<span class="nm">1</span>])   <span class="cm"># namargormeP (balik)</span>
+<span class="fn">print</span>(s[<span class="nm">0</span>:<span class="nm">10</span>:<span class="nm">2</span>]) <span class="cm"># Pmgmn (setiap 2 langkah)</span></div>
+    </div>
+
+    <div class="sim-box">
+      <h4>⚡ Coba — Slicing Visual</h4>
+      <div class="input-row">
+        <input class="sim-input" id="slice-text" placeholder="Teks..." value="Pemrograman"/>
+        <input class="sim-input num" id="slice-start" type="number" placeholder="start" value="0"/>
+        <input class="sim-input num" id="slice-end" type="number" placeholder="end" value="5"/>
+        <button class="sim-btn" onclick="simulasiSlice()">Potong</button>
+      </div>
+      <div id="slice-visual" class="char-row"></div>
+      <div class="result-box" id="slice-result"></div>
+    </div>
+  </div>
+
+  <!-- 6. METHOD STRING -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">06 — Method String</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Python menyediakan banyak method bawaan untuk memanipulasi string:</p>
+    <div class="acc open">
+      <div class="acc-head" onclick="toggleAcc(this)">Ubah Huruf: upper(), lower(), title(), capitalize() <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap">
+          <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+          <div class="code-body">s = <span class="st">"pemrograman dasar"</span>
+<span class="fn">print</span>(s.<span class="fn">upper</span>())      <span class="cm"># PEMROGRAMAN DASAR</span>
+<span class="fn">print</span>(s.<span class="fn">lower</span>())      <span class="cm"># pemrograman dasar</span>
+<span class="fn">print</span>(s.<span class="fn">title</span>())      <span class="cm"># Pemrograman Dasar</span>
+<span class="fn">print</span>(s.<span class="fn">capitalize</span>()) <span class="cm"># Pemrograman dasar</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-head" onclick="toggleAcc(this)">strip(), replace(), split() <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap">
+          <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+          <div class="code-body">s = <span class="st">"  Halo, Budi!  "</span>
+<span class="fn">print</span>(s.<span class="fn">strip</span>())        <span class="cm"># "Halo, Budi!" — hapus spasi tepi</span>
+<span class="fn">print</span>(s.<span class="fn">replace</span>(<span class="st">"Budi"</span>, <span class="st">"Sari"</span>))  <span class="cm"># "  Halo, Sari!  "</span>
+
+kata = <span class="st">"nasi,ayam,sayur"</span>
+<span class="fn">print</span>(kata.<span class="fn">split</span>(<span class="st">","</span>))   <span class="cm"># ['nasi', 'ayam', 'sayur']</span>
+
+<span class="cm"># join — kebalikan split</span>
+daftar = [<span class="st">"nasi"</span>, <span class="st">"ayam"</span>, <span class="st">"sayur"</span>]
+<span class="fn">print</span>(<span class="st">", "</span>.<span class="fn">join</span>(daftar))  <span class="cm"># nasi, ayam, sayur</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-head" onclick="toggleAcc(this)">startswith(), endswith(), isdigit(), isalpha() <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap">
+          <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+          <div class="code-body">email = <span class="st">"budi@email.com"</span>
+<span class="fn">print</span>(email.<span class="fn">endswith</span>(<span class="st">".com"</span>))   <span class="cm"># True</span>
+<span class="fn">print</span>(email.<span class="fn">startswith</span>(<span class="st">"budi"</span>)) <span class="cm"># True</span>
+
+angka = <span class="st">"12345"</span>
+<span class="fn">print</span>(angka.<span class="fn">isdigit</span>())     <span class="cm"># True</span>
+<span class="fn">print</span>(angka.<span class="fn">isalpha</span>())     <span class="cm"># False (semua huruf?)</span>
+
+teks = <span class="st">"Python"</span>
+<span class="fn">print</span>(teks.<span class="fn">isalpha</span>())      <span class="cm"># True</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. LOOP STRING -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">07 — Perulangan pada String</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>String bisa di-loop karena setiap karakter bisa diakses satu per satu.</p>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body"><span class="cm"># Loop setiap karakter</span>
+<span class="kw">for</span> huruf <span class="kw">in</span> <span class="st">"Python"</span>:
+    <span class="fn">print</span>(huruf, end=<span class="st">" "</span>)   <span class="cm"># P y t h o n</span>
+
+<span class="cm"># Hitung huruf vokal</span>
+teks = <span class="st">"Pemrograman"</span>
+vokal = <span class="st">"aiueoAIUEO"</span>
+count = <span class="nm">0</span>
+<span class="kw">for</span> h <span class="kw">in</span> teks:
+    <span class="kw">if</span> h <span class="kw">in</span> vokal:
+        count += <span class="nm">1</span>
+<span class="fn">print</span>(<span class="st">f"Vokal: <span class="op">{count}</span>"</span>)     <span class="cm"># Vokal: 4</span></div>
+    </div>
+
+    <div class="sim-box">
+      <h4>⚡ Animasi Loop Karakter</h4>
+      <div class="input-row">
+        <input class="sim-input" id="loop-input" placeholder="Ketik kata..." value="Python"/>
+        <button class="sim-btn" onclick="animasiLoop()">▶ Animasi</button>
+        <button class="sim-btn" style="background:var(--gray)" onclick="resetLoop()">Reset</button>
+      </div>
+      <div id="loop-display"></div>
+    </div>
+  </div>
+
+  <!-- PLAYGROUND -->
+  <div class="playground">
+    <h3>🎮 String Playground</h3>
+    <p>Ketik teks lalu pilih operasi untuk lihat hasilnya langsung.</p>
+    <input class="sim-input" id="pg-input" placeholder="Ketik teks kamu di sini..." value="Pemrograman Dasar"/>
+    <div class="pg-btns">
+      <button class="pg-btn" onclick="pgLen()">📏 Panjang</button>
+      <button class="pg-btn" onclick="pgUpper()">🔠 BESAR</button>
+      <button class="pg-btn" onclick="pgLower()">🔡 kecil</button>
+      <button class="pg-btn" onclick="pgTitle()">📝 Title</button>
+      <button class="pg-btn" onclick="pgReverse()">↩️ Balik</button>
+      <button class="pg-btn" onclick="pgVokal()">🅰️ Hitung Vokal</button>
+      <button class="pg-btn" onclick="pgHapusSpasi()">❌ Hapus Spasi</button>
+    </div>
+    <div class="pg-result" id="pg-result">Pilih operasi di atas...</div>
+    <div class="pg-code" id="pg-code"></div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PAGE: UI TKINTER -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page" id="page-ui">
+
+  <div class="hero hero-ui">
+    <div class="hero-badge">Materi Python — GUI</div>
+    <h1>UI Sederhana dengan Tkinter</h1>
+    <p>Buat antarmuka grafis (GUI) menggunakan library bawaan Python — widget, layout, event, hingga template siap pakai.</p>
+    <div class="hero-chips">
+      <span>📦 Bawaan Python</span>
+      <span>🖥️ Cross-Platform</span>
+      <span>🎓 Mudah Dipelajari</span>
+    </div>
+  </div>
+
+  <!-- 1. APA ITU TKINTER -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">01 — Pengenalan</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p><strong>Tkinter</strong> adalah library GUI (Graphical User Interface) bawaan Python. Tidak perlu install — langsung <code>import</code> dan pakai. Jalan di Windows, macOS, dan Linux.</p>
+    <div class="card-row">
+      <div class="mini-card"><div class="icon">📦</div><h4>Bawaan Python</h4><p>Tidak perlu pip install apapun.</p></div>
+      <div class="mini-card"><div class="icon">🖥️</div><h4>Cross-Platform</h4><p>Jalan di Windows, macOS, Linux.</p></div>
+      <div class="mini-card"><div class="icon">🎓</div><h4>Cocok Pemula</h4><p>Sintaks sederhana, dokumentasi lengkap.</p></div>
+      <div class="mini-card"><div class="icon">⚡</div><h4>Cepat Prototipe</h4><p>Dari nol ke UI yang berjalan dengan beberapa baris.</p></div>
+    </div>
+    <div class="info-box info"><span class="info-icon">💡</span><div><strong>Kapan pakai Tkinter?</strong> Kalkulator, form input, tools sederhana, proyek belajar. Untuk UI kompleks atau mobile, pertimbangkan PyQt5 atau Kivy.</div></div>
+  </div>
+
+  <!-- 2. PROGRAM PERTAMA -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">02 — Program Pertama</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Verifikasi Tkinter sudah ada dengan: <code>python -m tkinter</code>. Jika muncul jendela kecil, siap dipakai.</p>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body"><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+
+<span class="cm"># 1. Buat jendela utama</span>
+root = tk.<span class="fn">Tk</span>()
+
+<span class="cm"># 2. Atur properti jendela</span>
+root.<span class="fn">title</span>(<span class="st">"Aplikasi Pertamaku"</span>)
+root.<span class="fn">geometry</span>(<span class="st">"400x300"</span>)        <span class="cm"># lebar x tinggi (pixel)</span>
+root.<span class="fn">configure</span>(bg=<span class="st">"#f0f4ff"</span>)
+
+<span class="cm"># 3. Tambah label</span>
+label = tk.<span class="fn">Label</span>(root, text=<span class="st">"Halo, Dunia!"</span>, font=(<span class="st">"Segoe UI"</span>, <span class="nm">16</span>))
+label.<span class="fn">pack</span>(pady=<span class="nm">40</span>)
+
+<span class="cm"># 4. Jalankan — wajib ada di paling akhir!</span>
+root.<span class="fn">mainloop</span>()</div>
+    </div>
+    <div class="info-box danger"><span class="info-icon">🚨</span><div><code>mainloop()</code> WAJIB ada di paling akhir. Fungsi ini yang membuat jendela tetap terbuka dan merespons interaksi pengguna.</div></div>
+  </div>
+
+  <!-- 3. WIDGET DASAR -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">03 — Widget Dasar</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Widget adalah komponen UI. Berikut yang paling sering dipakai:</p>
+    <div class="tbl-wrap">
+      <table class="w-table">
+        <thead><tr><th>Widget</th><th>Fungsi</th><th>Contoh</th></tr></thead>
+        <tbody>
+          <tr><td><code>Label</code></td><td>Tampilkan teks / gambar</td><td>Judul, output hasil</td></tr>
+          <tr><td><code>Entry</code></td><td>Kotak input satu baris</td><td>Username, angka</td></tr>
+          <tr><td><code>Button</code></td><td>Tombol klik</td><td>Submit, hitung, reset</td></tr>
+          <tr><td><code>Text</code></td><td>Kotak teks multi-baris</td><td>Editor, catatan</td></tr>
+          <tr><td><code>Frame</code></td><td>Wadah / kontainer</td><td>Grouping widget</td></tr>
+          <tr><td><code>Checkbutton</code></td><td>Centang on/off</td><td>Opsi opsional</td></tr>
+          <tr><td><code>Radiobutton</code></td><td>Pilihan tunggal</td><td>Jenis kelamin, mode</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col" style="margin-top:14px">
+      <div>
+        <p style="font-size:12px;font-weight:800;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Label</p>
+        <div class="code-wrap">
+          <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+          <div class="code-body">label = tk.<span class="fn">Label</span>(
+    root,
+    text=<span class="st">"Halo!"</span>,
+    font=(<span class="st">"Segoe UI"</span>, <span class="nm">14</span>, <span class="st">"bold"</span>),
+    fg=<span class="st">"#3B5BDB"</span>,
+    bg=<span class="st">"#E8EEFF"</span>,
+)
+label.<span class="fn">pack</span>(pady=<span class="nm">20</span>)</div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:800;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Entry + Button</p>
+        <div class="code-wrap">
+          <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+          <div class="code-body">entry = tk.<span class="fn">Entry</span>(root, font=(<span class="st">"Segoe UI"</span>, <span class="nm">12</span>))
+entry.<span class="fn">pack</span>(padx=<span class="nm">20</span>, fill=<span class="st">"x"</span>)
+
+<span class="kw">def</span> <span class="fn">klik</span>():
+    teks = entry.<span class="fn">get</span>()
+    label.<span class="fn">config</span>(text=teks)
+
+btn = tk.<span class="fn">Button</span>(root, text=<span class="st">"Tampilkan"</span>,
+                command=klik)
+btn.<span class="fn">pack</span>(pady=<span class="nm">8</span>)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. LAYOUT -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">04 — Sistem Layout</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Tkinter punya 3 geometry manager untuk mengatur posisi widget. <strong style="color:var(--red)">Jangan campur</strong> dalam satu container.</p>
+    <div class="card-row">
+      <div class="mini-card"><div class="icon">📦</div><h4>pack()</h4><p>Susun widget berurutan atas-bawah atau kiri-kanan. Paling mudah.</p></div>
+      <div class="mini-card"><div class="icon">📐</div><h4>grid()</h4><p>Susun dalam baris dan kolom seperti tabel. Cocok untuk form.</p></div>
+      <div class="mini-card"><div class="icon">📍</div><h4>place()</h4><p>Posisi tepat dengan koordinat x, y. Paling fleksibel tapi manual.</p></div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-head" onclick="toggleAcc(this)">Contoh pack() — susun vertikal <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap">
+          <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+          <div class="code-body">tk.<span class="fn">Label</span>(root, text=<span class="st">"Nama:"</span>).<span class="fn">pack</span>(anchor=<span class="st">"w"</span>, padx=<span class="nm">20</span>)
+tk.<span class="fn">Entry</span>(root).<span class="fn">pack</span>(fill=<span class="st">"x"</span>, padx=<span class="nm">20</span>, pady=(<span class="nm">0</span>,<span class="nm">10</span>))
+tk.<span class="fn">Button</span>(root, text=<span class="st">"Kirim"</span>).<span class="fn">pack</span>()</div>
+        </div>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-head" onclick="toggleAcc(this)">Contoh grid() — form dengan label + entry <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap">
+          <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+          <div class="code-body"><span class="cm"># grid(row=baris, column=kolom)</span>
+tk.<span class="fn">Label</span>(root, text=<span class="st">"Nama:"</span>).<span class="fn">grid</span>(row=<span class="nm">0</span>, column=<span class="nm">0</span>, padx=<span class="nm">10</span>, pady=<span class="nm">8</span>, sticky=<span class="st">"e"</span>)
+tk.<span class="fn">Entry</span>(root).<span class="fn">grid</span>(row=<span class="nm">0</span>, column=<span class="nm">1</span>, padx=<span class="nm">10</span>)
+
+tk.<span class="fn">Label</span>(root, text=<span class="st">"Usia:"</span>).<span class="fn">grid</span>(row=<span class="nm">1</span>, column=<span class="nm">0</span>, padx=<span class="nm">10</span>, pady=<span class="nm">8</span>, sticky=<span class="st">"e"</span>)
+tk.<span class="fn">Entry</span>(root).<span class="fn">grid</span>(row=<span class="nm">1</span>, column=<span class="nm">1</span>, padx=<span class="nm">10</span>)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. EVENT & BINDING -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">05 — Event & Binding</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Event adalah kejadian yang dipantau — misalnya klik mouse, tekan tombol keyboard, atau gerakan kursor.</p>
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body"><span class="cm"># Cara 1: command= pada Button (paling umum)</span>
+<span class="kw">def</span> <span class="fn">klik_tombol</span>():
+    label.<span class="fn">config</span>(text=<span class="st">"Tombol diklik!"</span>)
+
+btn = tk.<span class="fn">Button</span>(root, text=<span class="st">"Klik"</span>, command=klik_tombol)
+
+<span class="cm"># Cara 2: bind() — untuk event apapun</span>
+entry.<span class="fn">bind</span>(<span class="st">"&lt;Return&gt;"</span>, <span class="kw">lambda</span> e: klik_tombol())  <span class="cm"># tekan Enter</span>
+root.<span class="fn">bind</span>(<span class="st">"&lt;Escape&gt;"</span>, <span class="kw">lambda</span> e: root.<span class="fn">quit</span>())   <span class="cm"># tekan Esc = keluar</span>
+
+<span class="cm"># Cara 3: StringVar — update otomatis</span>
+var = tk.<span class="fn">StringVar</span>()
+var.<span class="fn">trace</span>(<span class="st">"w"</span>, <span class="kw">lambda</span> *a: label.<span class="fn">config</span>(text=var.<span class="fn">get</span>()))
+entry = tk.<span class="fn">Entry</span>(root, textvariable=var)</div>
+    </div>
+    <div class="info-box warn"><span class="info-icon">⚠️</span><div>Hindari operasi berat (download file, query besar) di dalam event handler. Ini akan membekukan UI. Gunakan <code>threading</code> untuk operasi lambat.</div></div>
+  </div>
+
+  <!-- 6. TEMPLATE UI LENGKAP -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">06 — Template UI Lengkap</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <p>Template berikut bisa langsung dipakai — cukup ganti fungsi <code>proses_teks()</code> sesuai kebutuhan.</p>
+
+    <div class="ui-preview">
+      <div class="ui-title-bar">
+        <div class="ui-dots">
+          <div class="ui-dot" style="background:#F87171"></div>
+          <div class="ui-dot" style="background:#FBBF24"></div>
+          <div class="ui-dot" style="background:#22D3A5"></div>
+        </div>
+        <span style="margin-left:8px">Aplikasi Pengolah Teks</span>
+      </div>
+      <div class="ui-label">Masukkan teks:</div>
+      <input class="ui-entry" id="demo-entry" placeholder="Contoh: pemrograman dasar"/>
+      <button class="ui-btn-demo" onclick="demoProses()">🔄 Proses Teks</button>
+      <div class="ui-result" id="demo-result">Hasil akan muncul di sini...</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-top"><span class="code-lang">PYTHON — TEMPLATE TKINTER</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+      <div class="code-body"><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+
+<span class="cm"># ── GANTI FUNGSI INI sesuai kebutuhan ──────────</span>
+<span class="kw">def</span> <span class="fn">proses_teks</span>(teks):
+    <span class="kw">return</span> teks.<span class="fn">upper</span>()  <span class="cm"># ubah jadi huruf besar</span>
+<span class="cm"># ──────────────────────────────────────────────</span>
+
+<span class="kw">def</span> <span class="fn">klik_proses</span>():
+    teks = entry.<span class="fn">get</span>().<span class="fn">strip</span>()
+    <span class="kw">if not</span> teks:
+        label_hasil.<span class="fn">config</span>(text=<span class="st">"⚠️ Teks masih kosong!"</span>, fg=<span class="st">"#E03131"</span>)
+        <span class="kw">return</span>
+    hasil = <span class="fn">proses_teks</span>(teks)
+    label_hasil.<span class="fn">config</span>(text=hasil, fg=<span class="st">"#0CA678"</span>)
+    entry.<span class="fn">delete</span>(<span class="nm">0</span>, <span class="st">"end"</span>)
+
+<span class="cm"># Setup jendela</span>
+root = tk.<span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="st">"Pengolah Teks"</span>)
+root.<span class="fn">geometry</span>(<span class="st">"400x220"</span>)
+root.<span class="fn">configure</span>(bg=<span class="st">"#F5F7FF"</span>)
+root.<span class="fn">resizable</span>(<span class="nm">False</span>, <span class="nm">False</span>)
+
+<span class="cm"># Widget</span>
+tk.<span class="fn">Label</span>(root, text=<span class="st">"Masukkan teks:"</span>, font=(<span class="st">"Segoe UI"</span>, <span class="nm">10</span>), bg=<span class="st">"#F5F7FF"</span>
+        ).<span class="fn">pack</span>(anchor=<span class="st">"w"</span>, padx=<span class="nm">20</span>, pady=(<span class="nm">20</span>,<span class="nm">4</span>))
+
+entry = tk.<span class="fn">Entry</span>(root, font=(<span class="st">"Segoe UI"</span>, <span class="nm">12</span>), relief=<span class="st">"solid"</span>, bd=<span class="nm">1</span>)
+entry.<span class="fn">pack</span>(fill=<span class="st">"x"</span>, padx=<span class="nm">20</span>, ipady=<span class="nm">5</span>)
+entry.<span class="fn">bind</span>(<span class="st">"&lt;Return&gt;"</span>, <span class="kw">lambda</span> e: <span class="fn">klik_proses</span>())
+
+btn = tk.<span class="fn">Button</span>(root, text=<span class="st">"🔄 Proses"</span>, command=klik_proses,
+               font=(<span class="st">"Segoe UI"</span>, <span class="nm">11</span>), bg=<span class="st">"#3B5BDB"</span>, fg=<span class="st">"white"</span>,
+               relief=<span class="st">"flat"</span>, padx=<span class="nm">20</span>, pady=<span class="nm">6</span>, cursor=<span class="st">"hand2"</span>)
+btn.<span class="fn">pack</span>(pady=<span class="nm">12</span>)
+
+label_hasil = tk.<span class="fn">Label</span>(root, text=<span class="st">"Hasil muncul di sini..."</span>,
+                       font=(<span class="st">"Segoe UI"</span>, <span class="nm">13</span>, <span class="st">"bold"</span>), bg=<span class="st">"#F5F7FF"</span>, fg=<span class="st">"#6B7280"</span>)
+label_hasil.<span class="fn">pack</span>(pady=<span class="nm">4</span>)
+
+root.<span class="fn">mainloop</span>()</div>
+    </div>
+
+    <div class="info-box success"><span class="info-icon">✅</span><div><strong>Cara kustomisasi:</strong> Cukup ganti isi fungsi <code>proses_teks(teks)</code>. Bagian lainnya (UI, event, layout) tidak perlu diubah!</div></div>
+
+    <!-- Variasi proses_teks -->
+    <p style="font-weight:700;margin:14px 0 8px">Contoh variasi <code>proses_teks()</code>:</p>
+    <div class="acc">
+      <div class="acc-head" onclick="toggleAcc(this)">[A] Hitung Kata <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap"><div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+        <div class="code-body"><span class="kw">def</span> <span class="fn">proses_teks</span>(teks):
+    <span class="kw">return</span> <span class="st">f"Jumlah kata: <span class="op">{len(teks.split())}</span>"</span></div></div>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-head" onclick="toggleAcc(this)">[B] Cek Palindrom <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap"><div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+        <div class="code-body"><span class="kw">def</span> <span class="fn">proses_teks</span>(teks):
+    b = teks.<span class="fn">replace</span>(<span class="st">" "</span>, <span class="st">""</span>).<span class="fn">lower</span>()
+    <span class="kw">return</span> <span class="st">"✅ Palindrom!"</span> <span class="kw">if</span> b == b[::-<span class="nm">1</span>] <span class="kw">else</span> <span class="st">"❌ Bukan palindrom"</span></div></div>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-head" onclick="toggleAcc(this)">[C] Konversi Suhu Celsius → Fahrenheit <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap"><div class="code-top"><span class="code-lang">PYTHON</span><button class="copy-btn" onclick="copyCode(this)">salin</button></div>
+        <div class="code-body"><span class="kw">def</span> <span class="fn">proses_teks</span>(teks):
+    <span class="kw">try</span>:
+        c = <span class="fn">float</span>(teks)
+        f = c * <span class="nm">9</span>/<span class="nm">5</span> + <span class="nm">32</span>
+        <span class="kw">return</span> <span class="st">f"<span class="op">{c}</span>°C = <span class="op">{f:.2f}</span>°F"</span>
+    <span class="kw">except</span>:
+        <span class="kw">return</span> <span class="st">"⚠️ Masukkan angka yang valid"</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. TIPS -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">07 — Tips & Library Lain</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <div class="info-box success"><span class="info-icon">✅</span><div><strong>Gunakan Frame sebagai kontainer.</strong> Bungkus kelompok widget dalam <code>tk.Frame()</code> agar lebih mudah mengatur posisi dan warna bersama.</div></div>
+    <div class="info-box danger"><span class="info-icon">🚨</span><div><strong>Jangan campur pack() dan grid()</strong> dalam satu container (root atau Frame). Ini menyebabkan jendela hang atau tidak merespons.</div></div>
+    <div class="info-box info"><span class="info-icon">💡</span><div>Gunakan <code>widget.config(text="baru")</code> untuk update widget tanpa membuat ulang dari awal.</div></div>
+
+    <p style="font-weight:700;margin:14px 0 8px">Library GUI Python lainnya:</p>
+    <div class="card-row">
+      <div class="mini-card"><div class="icon">🎨</div><h4>CustomTkinter</h4><p>Tkinter modern dengan tampilan lebih cantik.</p></div>
+      <div class="mini-card"><div class="icon">⚙️</div><h4>PyQt5 / PySide6</h4><p>Sangat powerful, cocok untuk aplikasi enterprise.</p></div>
+      <div class="mini-card"><div class="icon">📱</div><h4>Kivy</h4><p>Untuk aplikasi mobile Android/iOS dengan Python.</p></div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PAGE: LATIHAN -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page" id="page-latihan">
+
+  <div style="margin-bottom:20px">
+    <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">Latihan Mandiri</div><div class="sec-line"></div></div>
+    <div class="info-box info"><span class="info-icon">🎯</span><div>Selesaikan soal-soal di bawah. Klik <strong>Lihat Jawaban</strong> jika sudah mencoba sendiri.</div></div>
+  </div>
+
+  <!-- LATIHAN STRING -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">🔤 String</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <div class="lat-desc"><strong>Soal 1 — Format Nama</strong><br>Minta input nama lengkap dari user. Tampilkan nama dalam format Title Case, panjangnya, dan inisialnya (huruf pertama tiap kata). Contoh: "budi santoso" → "Budi Santoso", panjang: 12, inisial: "B.S"</div>
+    <button class="show-btn" onclick="toggleJawaban('j1')">💡 Lihat Jawaban</button>
+    <div class="jawaban-box" id="j1">nama = input("Nama lengkap: ")
+title = nama.title()
+panjang = len(nama)
+inisial = ".".join(w[0].upper() for w in nama.split())
+print(f"Title Case : {title}")
+print(f"Panjang    : {panjang}")
+print(f"Inisial    : {inisial}")</div>
+  </div>
+
+  <div class="card">
+    <div class="lat-desc"><strong>Soal 2 — Validasi Username</strong><br>Minta input username. Validasi: panjang minimal 5 karakter, tidak boleh ada spasi, tidak boleh mengandung karakter selain huruf dan angka.</div>
+    <button class="show-btn" onclick="toggleJawaban('j2')">💡 Lihat Jawaban</button>
+    <div class="jawaban-box" id="j2">username = input("Masukkan username: ")
+if len(username) < 5:
+    print(f"❌ Terlalu pendek! ({len(username)} karakter, min 5)")
+elif " " in username:
+    print("❌ Tidak boleh ada spasi!")
+elif not username.isalnum():
+    print("❌ Hanya huruf dan angka yang boleh!")
+else:
+    print(f"✅ Username '{username}' valid! ({len(username)} karakter)")</div>
+  </div>
+
+  <div class="card">
+    <div class="lat-desc"><strong>Soal 3 — Hitung Vokal &amp; Konsonan</strong><br>Minta input sebuah kalimat. Hitung jumlah huruf vokal (a,i,u,e,o) dan konsonan. Abaikan spasi dan tanda baca.</div>
+    <button class="show-btn" onclick="toggleJawaban('j3')">💡 Lihat Jawaban</button>
+    <div class="jawaban-box" id="j3">kalimat = input("Masukkan kalimat: ").lower()
+vokal = "aiueo"
+jml_vokal = 0
+jml_konsonan = 0
+for h in kalimat:
+    if h.isalpha():
+        if h in vokal:
+            jml_vokal += 1
+        else:
+            jml_konsonan += 1
+print(f"Vokal    : {jml_vokal}")
+print(f"Konsonan : {jml_konsonan}")</div>
+  </div>
+
+  <!-- LATIHAN TKINTER -->
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">🖥️ Tkinter</div><div class="sec-line"></div></div>
+
+  <div class="card">
+    <div class="lat-desc"><strong>Soal 4 — Kalkulator BMI</strong><br>Buat UI Tkinter dengan 2 Entry (berat dan tinggi badan) dan 1 Button. Ketika diklik, tampilkan nilai BMI dan kategorinya (Kurus &lt; 18.5 / Normal 18.5–24.9 / Gemuk ≥ 25).</div>
+    <button class="show-btn" onclick="toggleJawaban('j4')">💡 Lihat Jawaban</button>
+    <div class="jawaban-box" id="j4">import tkinter as tk
+
+def hitung_bmi():
+    try:
+        berat = float(entry_berat.get())
+        tinggi = float(entry_tinggi.get()) / 100  # cm ke meter
+        bmi = berat / (tinggi ** 2)
+        if bmi < 18.5:   kategori = "Kurus"
+        elif bmi < 25:   kategori = "Normal"
+        else:            kategori = "Gemuk"
+        label_hasil.config(text=f"BMI: {bmi:.1f} — {kategori}", fg="#0CA678")
+    except:
+        label_hasil.config(text="⚠️ Masukkan angka yang valid", fg="#E03131")
+
+root = tk.Tk()
+root.title("Kalkulator BMI")
+root.geometry("360x200")
+root.configure(bg="#F5F7FF")
+
+tk.Label(root, text="Berat (kg):", bg="#F5F7FF").grid(row=0,column=0,padx=16,pady=8,sticky="e")
+entry_berat = tk.Entry(root, relief="solid", bd=1)
+entry_berat.grid(row=0, column=1, padx=16)
+
+tk.Label(root, text="Tinggi (cm):", bg="#F5F7FF").grid(row=1,column=0,padx=16,pady=8,sticky="e")
+entry_tinggi = tk.Entry(root, relief="solid", bd=1)
+entry_tinggi.grid(row=1, column=1, padx=16)
+
+tk.Button(root, text="Hitung BMI", command=hitung_bmi,
+          bg="#3B5BDB", fg="white", relief="flat", padx=16).grid(row=2,columnspan=2,pady=10)
+label_hasil = tk.Label(root, text="", bg="#F5F7FF", font=("Segoe UI",12,"bold"))
+label_hasil.grid(row=3, columnspan=2)
+
+root.mainloop()</div>
+  </div>
+
+  <div class="card">
+    <div class="lat-desc"><strong>Soal 5 — Password Checker (Tantangan!)</strong><br>Buat UI dengan satu Entry untuk password. Secara real-time (saat user mengetik), tampilkan indikator kekuatan: <strong>Lemah</strong> (panjang &lt;6), <strong>Sedang</strong> (ada huruf besar atau angka), <strong>Kuat</strong> (panjang ≥8, ada huruf besar DAN angka).</div>
+    <button class="show-btn" onclick="toggleJawaban('j5')">💡 Lihat Jawaban</button>
+    <div class="jawaban-box" id="j5">import tkinter as tk
+
+def cek_password(*args):
+    pw = var_pw.get()
+    punya_besar = any(c.isupper() for c in pw)
+    punya_angka = any(c.isdigit() for c in pw)
+    if len(pw) == 0:
+        lbl.config(text="Ketik password...", fg="#6B7280")
+    elif len(pw) < 6:
+        lbl.config(text="🔴 Lemah", fg="#E03131")
+    elif len(pw) >= 8 and punya_besar and punya_angka:
+        lbl.config(text="🟢 Kuat", fg="#0CA678")
+    else:
+        lbl.config(text="🟡 Sedang", fg="#F59F00")
+
+root = tk.Tk()
+root.title("Password Checker")
+root.geometry("340x160")
+root.configure(bg="#F5F7FF")
+
+tk.Label(root, text="Password:", bg="#F5F7FF", font=("Segoe UI",10)).pack(anchor="w",padx=20,pady=(20,4))
+var_pw = tk.StringVar()
+var_pw.trace("w", cek_password)
+tk.Entry(root, textvariable=var_pw, show="*", font=("Segoe UI",13),
+         relief="solid", bd=1).pack(fill="x", padx=20, ipady=5)
+lbl = tk.Label(root, text="Ketik password...", bg="#F5F7FF",
+               font=("Segoe UI",13,"bold"), fg="#6B7280")
+lbl.pack(pady=12)
+root.mainloop()</div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PAGE: KUIS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page" id="page-kuis">
+
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">Kuis Pemahaman</div><div class="sec-line"></div></div>
+  <div class="info-box info" style="margin-bottom:16px"><span class="info-icon">📝</span><div>10 soal pilihan ganda — gabungan materi String Python dan UI Tkinter. Pilih jawaban yang paling tepat.</div></div>
+
+  <div id="quiz-container"></div>
+
+  <div id="quiz-score" style="display:none;text-align:center;padding:24px;background:var(--blue-light);border-radius:var(--radius);margin-top:16px">
+    <div style="font-size:48px;font-weight:800;color:var(--blue-dark)" id="score-num">0/10</div>
+    <div style="color:var(--text-muted);margin-top:4px" id="score-msg"></div>
+    <button onclick="resetKuis()" style="margin-top:16px;padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer">Ulangi Kuis</button>
+  </div>
+
+</div>
+
+
+<!-- ── SCRIPTS ── -->
+<script>
+// ─── Navigation ──────────────────────────────────────────────────────────────
+function gotoPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ─── Accordion ───────────────────────────────────────────────────────────────
+function toggleAcc(head) {
+  head.closest('.acc').classList.toggle('open');
+}
+
+// ─── Copy Code ───────────────────────────────────────────────────────────────
+function copyCode(btn) {
+  const text = btn.closest('.code-wrap').querySelector('.code-body').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'tersalin!';
+    setTimeout(() => btn.textContent = 'salin', 2000);
+  });
+}
+
+// ─── Toggle Jawaban ──────────────────────────────────────────────────────────
+function toggleJawaban(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('shown');
+  const btn = el.previousElementSibling;
+  btn.textContent = el.classList.contains('shown') ? '🙈 Sembunyikan' : '💡 Lihat Jawaban';
+}
+
+// ─── Simulasi len() ──────────────────────────────────────────────────────────
+function hitungLen() {
+  const val = document.getElementById('len-input').value;
+  const charRow = document.getElementById('len-chars');
+  const result = document.getElementById('len-result');
+  charRow.innerHTML = '';
+  if (!val) { result.textContent = 'Ketik sesuatu di atas 👆'; result.className = 'result-box'; return; }
+  const show = val.length > 20 ? val.slice(0, 20) + '…' : val;
+  show.split('').forEach((ch, i) => {
+    const box = document.createElement('div');
+    box.className = 'char-box';
+    const d = ch === ' ' ? '·' : ch;
+    box.innerHTML = `<div class="ch" style="width:34px;height:34px;font-size:14px">${d}</div><div class="ch-idx">${i}</div>`;
+    charRow.appendChild(box);
+  });
+  result.textContent = `len("${val}") = ${val.length}`;
+  result.className = 'result-box ok';
+}
+
+// ─── Simulasi Concat ─────────────────────────────────────────────────────────
+function simulasiConcat() {
+  const nama = document.getElementById('concat-input').value;
+  const result = document.getElementById('concat-result');
+  if (!nama) { result.textContent = 'Ketik namamu 🙂'; result.className = 'result-box'; return; }
+  result.textContent = `f"Halo, {nama}!" → "Halo, ${nama}!"`;
+  result.className = 'result-box ok';
+}
+
+// ─── Simulasi Search ─────────────────────────────────────────────────────────
+function simulasiSearch() {
+  const teks = document.getElementById('search-text').value;
+  const cari = document.getElementById('search-char').value;
+  const vis = document.getElementById('search-visual');
+  const result = document.getElementById('search-result');
+  vis.innerHTML = '';
+  if (!teks) return;
+  const idx = cari ? teks.indexOf(cari) : -1;
+  teks.slice(0, 30).split('').forEach((ch, i) => {
+    const box = document.createElement('div');
+    box.className = 'char-box';
+    const d = ch === ' ' ? '·' : ch;
+    const isHit = cari && idx !== -1 && i >= idx && i < idx + cari.length;
+    box.innerHTML = `<div class="ch ${isHit ? 'hl' : ''}" style="width:32px;height:32px;font-size:13px">${d}</div><div class="ch-idx">${i}</div>`;
+    vis.appendChild(box);
+  });
+  if (!cari) { result.textContent = 'Masukkan kata yang dicari'; result.className = 'result-box'; return; }
+  if (idx !== -1) {
+    result.textContent = `"${cari}" ditemukan! in → True | .find() → ${idx}`;
+    result.className = 'result-box ok';
+  } else {
+    result.textContent = `"${cari}" tidak ditemukan. in → False | .find() → -1`;
+    result.className = 'result-box err';
+  }
+}
+
+// ─── Simulasi Slice ──────────────────────────────────────────────────────────
+function simulasiSlice() {
+  const teks = document.getElementById('slice-text').value || 'Pemrograman';
+  const start = parseInt(document.getElementById('slice-start').value) || 0;
+  const end = parseInt(document.getElementById('slice-end').value) || teks.length;
+  const vis = document.getElementById('slice-visual');
+  const result = document.getElementById('slice-result');
+  vis.innerHTML = '';
+  teks.split('').forEach((ch, i) => {
+    const box = document.createElement('div');
+    box.className = 'char-box';
+    const d = ch === ' ' ? '·' : ch;
+    const isSl = i >= start && i < end;
+    box.innerHTML = `<div class="ch ${isSl ? 'sl' : ''}" style="width:34px;height:34px;font-size:13px">${d}</div><div class="ch-idx">${i}</div>`;
+    vis.appendChild(box);
+  });
+  const sliced = teks.slice(start, end);
+  result.textContent = `"${teks}"[${start}:${end}] → "${sliced}"`;
+  result.className = 'result-box ok';
+}
+
+// ─── Loop Animasi ────────────────────────────────────────────────────────────
+function animasiLoop() {
+  resetLoop();
+  const val = document.getElementById('loop-input').value || 'Python';
+  const display = document.getElementById('loop-display');
+  val.split('').forEach((ch, i) => {
+    const span = document.createElement('span');
+    span.className = 'lchar';
+    span.textContent = ch === ' ' ? '⎵' : ch;
+    display.appendChild(span);
+    setTimeout(() => span.classList.add('visible'), i * 300 + 100);
+  });
+}
+function resetLoop() {
+  document.getElementById('loop-display').innerHTML = '';
+}
+
+// ─── Playground ──────────────────────────────────────────────────────────────
+function getPg() { return document.getElementById('pg-input').value || ''; }
+function pgShow(msg, code) {
+  document.getElementById('pg-result').textContent = msg;
+  document.getElementById('pg-code').textContent = code;
+}
+function pgLen()   { const v=getPg(); pgShow(`len("${v}") = ${v.length}`, `len("${v}")`); }
+function pgUpper() { const v=getPg(); pgShow(`"${v}".upper() → "${v.toUpperCase()}"`, `"${v}".upper()`); }
+function pgLower() { const v=getPg(); pgShow(`"${v}".lower() → "${v.toLowerCase()}"`, `"${v}".lower()`); }
+function pgTitle() { const v=getPg(); const t=v.replace(/\b\w/g,c=>c.toUpperCase()); pgShow(`"${v}".title() → "${t}"`, `"${v}".title()`); }
+function pgReverse(){ const v=getPg(); const r=v.split('').reverse().join(''); pgShow(`"${v}"[::-1] → "${r}"`, `"${v}"[::-1]`); }
+function pgVokal() {
+  const v=getPg(), vokal='aiueoAIUEO';
+  let c=0; for(let ch of v) if(vokal.includes(ch)) c++;
+  pgShow(`Jumlah vokal dalam "${v}" = ${c}`, `sum(1 for h in "${v}" if h in "aiueoAIUEO")`);
+}
+function pgHapusSpasi() {
+  const v=getPg(); const r=v.replace(/ /g,'');
+  pgShow(`"${v}".replace(" ","") → "${r}"`, `"${v}".replace(" ", "")`);
+}
+
+// ─── UI Demo Preview ─────────────────────────────────────────────────────────
+function demoProses() {
+  const teks = document.getElementById('demo-entry').value.trim();
+  const result = document.getElementById('demo-result');
+  if (!teks) { result.textContent = '⚠️ Teks masih kosong!'; result.style.color = '#E03131'; return; }
+  result.textContent = teks.toUpperCase();
+  result.style.color = '#0CA678';
+}
+
+// ─── KUIS ────────────────────────────────────────────────────────────────────
+const KUIS = [
+  {q:'Apa output dari: <code>s = "Python"; print(s[2])</code>?', opts:['P','y','t','h'], ans:2, exp:'Indeks dimulai dari 0. s[0]="P", s[1]="y", s[2]="t".'},
+  {q:'Apa output dari: <code>"abc"[1:3]</code>?', opts:['ab','bc','abc','b'], ans:1, exp:'Slicing [1:3] mengambil indeks 1 dan 2 (tidak termasuk 3): "b" dan "c" → "bc".'},
+  {q:'Apa yang dilakukan <code>"halo".upper()</code>?', opts:['halo','HALO','Halo','Error'], ans:1, exp:'.upper() mengubah semua huruf menjadi huruf kapital.'},
+  {q:'Bagaimana cara membalik string <code>s</code> di Python?', opts:['s.reverse()','reverse(s)','s[::-1]','s[-1:0]'], ans:2, exp:'Slicing dengan step -1 membaca string dari belakang ke depan: s[::-1].'},
+  {q:'Apa output dari: <code>len("Budi Santoso")</code>?', opts:['11','12','10','Error'], ans:1, exp:'"Budi Santoso" terdiri dari 12 karakter termasuk 1 spasi.'},
+  {q:'Apa output dari: <code>"abc" * 3</code>?', opts:['abc3','abcabcabc','3abc','Error'], ans:1, exp:'Operator * mengulang string sejumlah kali yang ditentukan.'},
+  {q:'Widget Tkinter apa yang digunakan untuk menerima input teks satu baris?', opts:['Label','Button','Entry','Text'], ans:2, exp:'Entry adalah widget kotak input satu baris. Text digunakan untuk multi-baris.'},
+  {q:'Fungsi apa yang wajib ada di akhir program Tkinter?', opts:['root.run()','root.start()','root.mainloop()','root.open()'], ans:2, exp:'root.mainloop() membuat jendela tetap terbuka dan merespons interaksi pengguna.'},
+  {q:'Bagaimana cara mengambil nilai dari widget Entry bernama <code>e</code>?', opts:['e.value()','e.text','e.get()','e.read()'], ans:2, exp:'Method .get() mengambil teks yang ada di dalam Entry saat ini.'},
+  {q:'Apa yang terjadi jika mencampur pack() dan grid() dalam satu container Tkinter?', opts:['Berjalan normal','UI lebih rapi','Jendela hang / tidak merespons','Layout otomatis dipilih'], ans:2, exp:'Tkinter tidak mengizinkan dua geometry manager dalam satu container. Mencampurnya menyebabkan infinite loop yang membekukan jendela.'},
+];
+
+let kuisJawaban = new Array(KUIS.length).fill(null);
+let kuisDone = 0;
+
+function buildKuis() {
+  const c = document.getElementById('quiz-container');
+  c.innerHTML = '';
+  kuisJawaban = new Array(KUIS.length).fill(null);
+  kuisDone = 0;
+  document.getElementById('quiz-score').style.display = 'none';
+
+  KUIS.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-box';
+    div.innerHTML = `
+      <div class="quiz-q"><strong style="color:var(--blue)">Soal ${qi+1}</strong> — ${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o,oi) => `<button class="quiz-opt" onclick="jawabKuis(${qi},${oi},this)">${String.fromCharCode(65+oi)}. ${o}</button>`).join('')}
+      </div>
+      <div class="quiz-fb" id="kfb${qi}"></div>`;
+    c.appendChild(div);
+  });
+}
+
+function jawabKuis(qi, oi, btn) {
+  if (kuisJawaban[qi] !== null) return;
+  kuisJawaban[qi] = oi;
+  kuisDone++;
+  const opts = btn.parentElement.querySelectorAll('.quiz-opt');
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === KUIS[qi].ans) o.classList.add('correct');
+    else if (i === oi) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('kfb' + qi);
+  fb.className = 'quiz-fb show';
+  fb.style.color = oi === KUIS[qi].ans ? 'var(--green)' : 'var(--red)';
+  fb.textContent = (oi === KUIS[qi].ans ? '✅ Benar! ' : '❌ Salah. ') + KUIS[qi].exp;
+  if (kuisDone === KUIS.length) {
+    const score = kuisJawaban.filter((a,i) => a === KUIS[i].ans).length;
+    const sc = document.getElementById('quiz-score');
+    sc.style.display = 'block';
+    document.getElementById('score-num').textContent = score + '/10';
+    const msgs = ['Perlu lebih banyak belajar — review materi ya!', 'Cukup baik! Pelajari soal yang salah.', 'Bagus! Hampir siap semua.', 'Luar biasa! Semua materi dikuasai 💪'];
+    document.getElementById('score-msg').textContent = msgs[Math.min(3, Math.floor(score/3))];
+    sc.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function resetKuis() { buildKuis(); }
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  simulasiSearch();
+  simulasiSlice();
+  buildKuis();
+});
+</script>
+</body>
+</html>

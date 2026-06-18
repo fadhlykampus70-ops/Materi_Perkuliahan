@@ -1,0 +1,3965 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Design 2 - Framework Responsive Web Design</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ====================================
+   GLOBAL STYLES & RESET
+   ==================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Color Palette - Akademik & Profesional */
+    --primary-color: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #3b82f6;
+    --secondary-color: #64748b;
+    --accent-color: #0ea5e9;
+    
+    /* Semantic Colors */
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --info-color: #06b6d4;
+    
+    /* Neutral Colors */
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
+    
+    /* Border Radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 150ms ease-in-out;
+    --transition-base: 300ms ease-in-out;
+    --transition-slow: 500ms ease-in-out;
+    
+    /* Sidebar */
+    --sidebar-width: 280px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--gray-800);
+    background-color: var(--gray-50);
+    overflow-x: hidden;
+}
+
+/* ====================================
+   SIDEBAR NAVIGATION
+   ==================================== */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--gray-200);
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform var(--transition-base);
+    box-shadow: var(--shadow-lg);
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.sidebar-header h3 {
+    font-size: 1.25rem;
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.close-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color var(--transition-fast);
+}
+
+.close-btn:hover {
+    color: var(--primary-color);
+}
+
+.nav-list {
+    list-style: none;
+    margin-bottom: var(--spacing-xl);
+}
+
+.nav-list li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    color: var(--gray-700);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    font-size: 0.875rem;
+    gap: var(--spacing-sm);
+}
+
+.nav-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--gray-100);
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--gray-600);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.nav-link:hover {
+    background: var(--gray-50);
+    color: var(--primary-color);
+}
+
+.nav-link:hover .nav-number {
+    background: var(--primary-light);
+    color: var(--white);
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: var(--white);
+    font-weight: 500;
+}
+
+.nav-link.active .nav-number {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+}
+
+/* Progress Bar */
+.progress-container {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--gray-200);
+}
+
+.progress-label {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 999px;
+    transition: width var(--transition-base);
+    width: 0%;
+}
+
+/* ====================================
+   MENU TOGGLE (MOBILE)
+   ==================================== */
+
+.menu-toggle {
+    position: fixed;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    z-index: 999;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-fast);
+}
+
+.menu-toggle:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+.menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* ====================================
+   MAIN CONTENT
+   ==================================== */
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+/* ====================================
+   SLIDE SECTIONS
+   ==================================== */
+
+.slide-section {
+    min-height: 100vh;
+    display: none;
+    padding: var(--spacing-xl) 0;
+}
+
+.slide-section.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-xl);
+    font-weight: 700;
+    position: relative;
+    padding-bottom: var(--spacing-md);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 999px;
+}
+
+/* ====================================
+   SECTION 1: HERO
+   ==================================== */
+
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-2xl) 0;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: linear-gradient(135deg, var(--primary-light), var(--accent-color));
+    color: var(--white);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-xl);
+    font-weight: 400;
+}
+
+.hero-description {
+    text-align: left;
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.hero-description > p {
+    font-size: 1.125rem;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-md);
+    font-weight: 500;
+}
+
+.learning-objectives {
+    list-style: none;
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.learning-objectives li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    font-size: 1rem;
+    color: var(--gray-700);
+}
+
+.learning-objectives li i {
+    color: var(--success-color);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.hero-icon {
+    font-size: 6rem;
+    color: var(--primary-light);
+    opacity: 0.1;
+    margin-top: var(--spacing-xl);
+}
+
+/* ====================================
+   SLIDE NAVIGATION
+   ==================================== */
+
+.slide-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    max-width: 1200px;
+    margin: var(--spacing-2xl) auto 0;
+    padding: 0 var(--spacing-lg);
+}
+
+.nav-btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-family: 'Poppins', sans-serif;
+}
+
+.prev-btn {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.prev-btn:hover {
+    background: var(--gray-300);
+    transform: translateX(-5px);
+}
+
+.next-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: var(--white);
+    margin-left: auto;
+}
+
+.next-btn:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    transform: translateX(5px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ====================================
+   SECTION 2: CONTENT BOXES
+   ==================================== */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.content-box {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.content-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.content-box h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.content-box h3 i {
+    font-size: 1.75rem;
+}
+
+.content-box p {
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+}
+
+.content-box.analogy {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(14, 165, 233, 0.05));
+    border-left: 4px solid var(--primary-color);
+}
+
+.content-box ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.content-box ul li {
+    padding: var(--spacing-xs) 0;
+    color: var(--gray-700);
+}
+
+/* Highlight Box */
+.highlight-box {
+    background: var(--white);
+    border-left: 4px solid var(--primary-color);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-xl) 0;
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+}
+
+.highlight-box i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.highlight-box h4 {
+    color: var(--gray-900);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.highlight-box p {
+    color: var(--gray-700);
+    line-height: 1.8;
+}
+
+.highlight-box.warning {
+    border-left-color: var(--warning-color);
+}
+
+.highlight-box.warning i {
+    color: var(--warning-color);
+}
+
+.highlight-box.success {
+    border-left-color: var(--success-color);
+}
+
+.highlight-box.success i {
+    color: var(--success-color);
+}
+
+.highlight-box.info {
+    border-left-color: var(--info-color);
+}
+
+.highlight-box.info i {
+    color: var(--info-color);
+}
+
+/* Visual Example */
+.visual-example {
+    margin: var(--spacing-xl) 0;
+}
+
+.code-comparison {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.code-box {
+    flex: 1;
+    min-width: 200px;
+    background: var(--gray-900);
+    color: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.code-box h4 {
+    margin-bottom: var(--spacing-md);
+    color: var(--accent-color);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.code-box code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    display: block;
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+}
+
+.code-note {
+    margin-top: var(--spacing-sm);
+    font-size: 0.75rem;
+    color: var(--gray-400);
+}
+
+.arrow {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* ====================================
+   SECTION 3: CASE STUDY & COMPARISON
+   ==================================== */
+
+.case-study {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.case-study h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.timeline {
+    position: relative;
+    padding-left: var(--spacing-xl);
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-lg);
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -28px;
+    top: 0;
+    width: 36px;
+    height: 36px;
+    background: var(--white);
+    border: 3px solid var(--danger-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--danger-color);
+    font-size: 0.875rem;
+}
+
+.timeline-content h4 {
+    color: var(--gray-900);
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.timeline-content p {
+    color: var(--gray-600);
+    line-height: 1.6;
+}
+
+/* Comparison Table */
+.comparison-table {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-xl) 0;
+    overflow-x: auto;
+}
+
+.comparison-table h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.comparison-table thead {
+    background: var(--gray-100);
+}
+
+.comparison-table th {
+    font-weight: 600;
+    color: var(--gray-900);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.comparison-table th.manual {
+    color: var(--danger-color);
+}
+
+.comparison-table th.framework {
+    color: var(--success-color);
+}
+
+.comparison-table td.manual {
+    color: var(--danger-color);
+    font-weight: 500;
+}
+
+.comparison-table td.framework {
+    color: var(--success-color);
+    font-weight: 500;
+}
+
+.comparison-table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+/* ====================================
+   SECTION 4: FRAMEWORK GRID
+   ==================================== */
+
+.framework-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.framework-card {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    border-top: 4px solid;
+    position: relative;
+}
+
+.framework-card.bootstrap {
+    border-top-color: #7952b3;
+}
+
+.framework-card.foundation {
+    border-top-color: #008cba;
+}
+
+.framework-card.metro {
+    border-top-color: #1ba1e2;
+}
+
+.framework-card.frameless {
+    border-top-color: #ff6b6b;
+}
+
+.framework-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.framework-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.framework-card.bootstrap .framework-icon {
+    color: #7952b3;
+}
+
+.framework-card.foundation .framework-icon {
+    color: #008cba;
+}
+
+.framework-card.metro .framework-icon {
+    color: #1ba1e2;
+}
+
+.framework-card.frameless .framework-icon {
+    color: #ff6b6b;
+}
+
+.framework-card h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.framework-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+}
+
+.framework-badge.popular {
+    background: linear-gradient(135deg, var(--success-color), #34d399);
+    color: var(--white);
+}
+
+.framework-features {
+    list-style: none;
+    margin-bottom: var(--spacing-md);
+}
+
+.framework-features li {
+    padding: var(--spacing-xs) 0;
+    color: var(--gray-700);
+    font-size: 0.875rem;
+}
+
+.framework-use {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--gray-200);
+    color: var(--gray-600);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+/* Framework Comparison Table */
+.comparison-overview {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-xl) 0;
+    overflow-x: auto;
+}
+
+.comparison-overview h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.framework-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.framework-table th,
+.framework-table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.framework-table thead {
+    background: var(--gray-100);
+}
+
+.framework-table th {
+    font-weight: 600;
+    color: var(--gray-900);
+    font-size: 0.875rem;
+}
+
+.framework-table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+/* ====================================
+   SECTION 5: CONCEPT CARDS
+   ==================================== */
+
+.concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.concept-card {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.concept-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.concept-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.concept-icon.reusable {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2));
+    color: var(--success-color);
+}
+
+.concept-icon.consistency {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(37, 99, 235, 0.2));
+    color: var(--primary-color);
+}
+
+.concept-icon.responsive {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2));
+    color: var(--warning-color);
+}
+
+.concept-icon.efficiency {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.2));
+    color: var(--danger-color);
+}
+
+.concept-card h3 {
+    color: var(--gray-900);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.concept-description {
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+}
+
+.concept-example {
+    background: var(--gray-50);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin: var(--spacing-md) 0;
+}
+
+.concept-example h4 {
+    color: var(--gray-800);
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.code-snippet {
+    background: var(--gray-900);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+}
+
+.code-snippet code {
+    font-family: 'Courier New', monospace;
+    color: var(--accent-color);
+    font-size: 0.875rem;
+}
+
+.consistency-demo {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.demo-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+}
+
+.responsive-demo {
+    display: flex;
+    justify-content: space-around;
+    gap: var(--spacing-md);
+}
+
+.device {
+    text-align: center;
+}
+
+.device i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+}
+
+.device span {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+.time-comparison {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.time-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.time-bar span:first-child {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    width: 80px;
+}
+
+.time-bar .bar {
+    flex: 1;
+    max-width: 300px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.time-bar.manual-time .bar {
+    background: linear-gradient(135deg, var(--danger-color), #f87171);
+}
+
+.time-bar.framework-time .bar {
+    background: linear-gradient(135deg, var(--success-color), #34d399);
+}
+
+.concept-benefit {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--gray-200);
+    color: var(--gray-600);
+    font-size: 0.875rem;
+}
+
+.concept-benefit strong {
+    color: var(--primary-color);
+}
+
+/* ====================================
+   SECTION 6: REASONS & STATISTICS
+   ==================================== */
+
+.reasons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.reason-card {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.reason-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.reason-number {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-light), var(--accent-color));
+    color: var(--white);
+    font-size: 2rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    opacity: 0.1;
+}
+
+.reason-card h3 {
+    color: var(--gray-900);
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.reason-card h3 i {
+    color: var(--primary-color);
+}
+
+.reason-card p {
+    color: var(--gray-700);
+    line-height: 1.8;
+    font-size: 0.9375rem;
+}
+
+/* Statistics Section */
+.statistics-section {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-xl) 0;
+}
+
+.statistics-section h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.chart-container {
+    margin-top: var(--spacing-lg);
+}
+
+.chart-bar-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.chart-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.chart-label {
+    width: 120px;
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 0.875rem;
+}
+
+.chart-bar-wrapper {
+    flex: 1;
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    height: 36px;
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: var(--spacing-md);
+    transition: width 1s ease-out;
+}
+
+.chart-bar.plain {
+    background: linear-gradient(90deg, var(--gray-400), var(--gray-500));
+}
+
+.chart-value {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.chart-note {
+    margin-top: var(--spacing-md);
+    font-size: 0.75rem;
+    color: var(--gray-600);
+    font-style: italic;
+}
+
+/* ====================================
+   SECTION 7: BOOTSTRAP PREVIEW
+   ==================================== */
+
+.bootstrap-intro {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto var(--spacing-xl);
+}
+
+.bootstrap-logo {
+    font-size: 6rem;
+    color: #7952b3;
+    margin-bottom: var(--spacing-md);
+}
+
+.bootstrap-intro h3 {
+    color: var(--gray-900);
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
+}
+
+.intro-text {
+    color: var(--gray-700);
+    line-height: 1.8;
+    font-size: 1.125rem;
+}
+
+.why-popular {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.why-popular h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.popularity-reasons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.pop-reason {
+    text-align: center;
+}
+
+.pop-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, rgba(121, 82, 179, 0.1), rgba(121, 82, 179, 0.2));
+    color: #7952b3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin: 0 auto var(--spacing-md);
+}
+
+.pop-reason h4 {
+    color: var(--gray-900);
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.pop-reason p {
+    color: var(--gray-700);
+    line-height: 1.6;
+    font-size: 0.875rem;
+}
+
+/* Component Preview */
+.component-preview {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-xl) 0;
+}
+
+.component-preview h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.preview-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.preview-tab {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.preview-tab:hover {
+    color: var(--primary-color);
+}
+
+.preview-tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.preview-content {
+    min-height: 300px;
+}
+
+.preview-item {
+    display: none;
+}
+
+.preview-item.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.preview-item h4 {
+    color: var(--gray-900);
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+}
+
+.component-display {
+    background: var(--gray-50);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.demo-btn {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 0.875rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.demo-btn.btn-primary {
+    background: #0d6efd;
+    color: var(--white);
+}
+
+.demo-btn.btn-secondary {
+    background: #6c757d;
+    color: var(--white);
+}
+
+.demo-btn.btn-success {
+    background: #198754;
+    color: var(--white);
+}
+
+.demo-btn.btn-danger {
+    background: #dc3545;
+    color: var(--white);
+}
+
+.demo-btn.btn-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.demo-btn.btn-info {
+    background: #0dcaf0;
+    color: #212529;
+}
+
+.demo-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Card Demo */
+.demo-card {
+    max-width: 400px;
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.demo-card-header {
+    background: var(--gray-100);
+    padding: var(--spacing-md);
+    font-weight: 600;
+    color: var(--gray-900);
+    border-bottom: 1px solid var(--gray-300);
+}
+
+.demo-card-body {
+    padding: var(--spacing-lg);
+}
+
+.demo-card-body h5 {
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.125rem;
+}
+
+.demo-card-body p {
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Alert Demo */
+.demo-alert {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-sm);
+    border-left: 4px solid;
+}
+
+.demo-alert.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #065f46;
+    border-left-color: var(--success-color);
+}
+
+.demo-alert.alert-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+    border-left-color: var(--danger-color);
+}
+
+.demo-alert.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #92400e;
+    border-left-color: var(--warning-color);
+}
+
+.demo-alert.alert-info {
+    background: rgba(6, 182, 212, 0.1);
+    color: #155e75;
+    border-left-color: var(--info-color);
+}
+
+.code-preview {
+    background: var(--gray-900);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+}
+
+.code-preview code {
+    font-family: 'Courier New', monospace;
+    color: var(--accent-color);
+    font-size: 0.875rem;
+}
+
+/* ====================================
+   SECTION 8: SUMMARY
+   ==================================== */
+
+.summary-intro {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    background: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.summary-intro i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+.summary-intro p {
+    color: var(--gray-700);
+    line-height: 1.8;
+    font-size: 1.125rem;
+    text-align: left;
+}
+
+.key-points {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.key-point {
+    display: flex;
+    gap: var(--spacing-lg);
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.key-point:hover {
+    transform: translateX(10px);
+    box-shadow: var(--shadow-xl);
+}
+
+.point-number {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.point-number i {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.point-content h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
+}
+
+.point-content p {
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+}
+
+.point-tags {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 0.25rem 0.75rem;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.takeaway-box {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(14, 165, 233, 0.05));
+    border: 2px solid var(--primary-light);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-xl) 0;
+}
+
+.takeaway-box h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.takeaway-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--white);
+    border-radius: var(--radius-md);
+}
+
+.takeaway-item i {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.takeaway-item p {
+    color: var(--gray-700);
+    line-height: 1.6;
+    font-size: 0.9375rem;
+}
+
+/* ====================================
+   SECTION 9: MINI PRACTICE
+   ==================================== */
+
+.practice-intro {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    background: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.practice-intro i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.practice-intro p {
+    color: var(--gray-700);
+    line-height: 1.8;
+    text-align: left;
+}
+
+.practice-questions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.question-card {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.question-number {
+    padding: 0.25rem 0.75rem;
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.question-header i {
+    font-size: 1.5rem;
+    color: var(--primary-light);
+}
+
+.question-card h3 {
+    color: var(--gray-900);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.question-text {
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+}
+
+.answer-input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    resize: vertical;
+    transition: border-color var(--transition-fast);
+}
+
+.answer-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.char-counter {
+    text-align: right;
+    margin-top: var(--spacing-xs);
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+.practice-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.submit-btn,
+.reset-btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-family: 'Poppins', sans-serif;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: var(--white);
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.reset-btn {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.reset-btn:hover {
+    background: var(--gray-300);
+}
+
+.practice-result {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+    border: 2px solid var(--success-color);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.result-icon {
+    font-size: 4rem;
+    color: var(--success-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.practice-result h3 {
+    color: var(--gray-900);
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 700;
+}
+
+.practice-result p {
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+}
+
+.result-summary {
+    background: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    text-align: left;
+}
+
+/* ====================================
+   SECTION 10: PREVIEW NEXT
+   ==================================== */
+
+.next-preview {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto var(--spacing-xl);
+}
+
+.next-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: linear-gradient(135deg, var(--primary-light), var(--accent-color));
+    color: var(--white);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+}
+
+.next-title {
+    font-size: 3rem;
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 800;
+}
+
+.next-subtitle {
+    font-size: 1.25rem;
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-xl);
+}
+
+.preview-topics {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.preview-topics h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.topic-card {
+    background: var(--gray-50);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+}
+
+.topic-card:hover {
+    background: var(--white);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.topic-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: var(--white);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.topic-card h4 {
+    color: var(--gray-900);
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.topic-card p {
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+    font-size: 0.875rem;
+}
+
+.topic-list {
+    list-style: none;
+}
+
+.topic-list li {
+    padding: 0.25rem 0;
+    color: var(--gray-600);
+    font-size: 0.875rem;
+}
+
+.topic-list li::before {
+    content: '→ ';
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.preview-project {
+    background: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.preview-project h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.project-showcase {
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: center;
+}
+
+.project-image {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(14, 165, 233, 0.1));
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--primary-color);
+}
+
+.project-desc h4 {
+    color: var(--gray-900);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+}
+
+.project-desc p {
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-md);
+}
+
+.project-features {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.feature-tag {
+    padding: 0.5rem 1rem;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.feature-tag i {
+    color: var(--success-color);
+}
+
+.preparation-box {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(37, 99, 235, 0.05));
+    border: 2px solid var(--accent-color);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.preparation-box h3 {
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.prep-checklist {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.prep-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--white);
+    border-radius: var(--radius-md);
+}
+
+.prep-item i {
+    font-size: 1.5rem;
+    color: var(--success-color);
+}
+
+.prep-item p {
+    color: var(--gray-700);
+    line-height: 1.6;
+}
+
+.prep-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.prep-item a:hover {
+    text-decoration: underline;
+}
+
+.final-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-xl);
+}
+
+.action-btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-family: 'Poppins', sans-serif;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: var(--white);
+}
+
+.action-btn.primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.action-btn.secondary {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.action-btn.secondary:hover {
+    background: var(--gray-300);
+}
+
+/* ====================================
+   SCROLL TO TOP BUTTON
+   ==================================== */
+
+.scroll-top {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    width: 48px;
+    height: 48px;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+    z-index: 999;
+    box-shadow: var(--shadow-lg);
+}
+
+.scroll-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-top:hover {
+    background: var(--primary-dark);
+    transform: translateY(-5px);
+}
+
+/* ====================================
+   RESPONSIVE DESIGN
+   ==================================== */
+
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 260px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Sidebar menjadi overlay di mobile */
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .close-btn {
+        display: block;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+    }
+    
+    .container {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .slide-nav {
+        flex-direction: column;
+    }
+    
+    .next-btn {
+        margin-left: 0;
+    }
+    
+    .code-comparison {
+        flex-direction: column;
+    }
+    
+    .arrow {
+        transform: rotate(90deg);
+    }
+    
+    .project-showcase {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .key-point {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .point-number {
+        margin: 0 auto;
+    }
+    
+    .final-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .next-title {
+        font-size: 2rem;
+    }
+    
+    .framework-grid,
+    .content-grid,
+    .concept-grid,
+    .reasons-grid,
+    .topics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .comparison-table {
+        font-size: 0.875rem;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: var(--spacing-sm);
+    }
+}
+
+/* ====================================
+   UTILITY CLASSES
+   ==================================== */
+
+.text-center {
+    text-align: center;
+}
+
+.mt-lg {
+    margin-top: var(--spacing-lg);
+}
+
+.mb-lg {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .menu-toggle,
+    .slide-nav,
+    .scroll-top {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .slide-section {
+        display: block !important;
+        page-break-after: always;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Progress Materi</h3>
+            <button class="close-btn" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="nav-list">
+            <li><a href="#section1" class="nav-link active" data-section="1">
+                <span class="nav-number">01</span> Hero / Judul
+            </a></li>
+            <li><a href="#section2" class="nav-link" data-section="2">
+                <span class="nav-number">02</span> Apa itu Framework
+            </a></li>
+            <li><a href="#section3" class="nav-link" data-section="3">
+                <span class="nav-number">03</span> Masalah Tanpa Framework
+            </a></li>
+            <li><a href="#section4" class="nav-link" data-section="4">
+                <span class="nav-number">04</span> Jenis Framework Frontend
+            </a></li>
+            <li><a href="#section5" class="nav-link" data-section="5">
+                <span class="nav-number">05</span> Konsep Dasar Framework CSS
+            </a></li>
+            <li><a href="#section6" class="nav-link" data-section="6">
+                <span class="nav-number">06</span> Kenapa Developer Pakai Framework
+            </a></li>
+            <li><a href="#section7" class="nav-link" data-section="7">
+                <span class="nav-number">07</span> Preview Bootstrap
+            </a></li>
+            <li><a href="#section8" class="nav-link" data-section="8">
+                <span class="nav-number">08</span> Kesimpulan
+            </a></li>
+            <li><a href="#section9" class="nav-link" data-section="9">
+                <span class="nav-number">09</span> Mini Practice
+            </a></li>
+            <li><a href="#section10" class="nav-link" data-section="10">
+                <span class="nav-number">10</span> Preview Materi Selanjutnya
+            </a></li>
+        </ul>
+        
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-label">Progress: <span id="progressPercent">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Toggle Button (Mobile) -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Section 1: Hero / Judul -->
+        <section class="slide-section active" id="section1">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">Pertemuan 3</div>
+                    <h1 class="hero-title">Framework Responsive Web Design</h1>
+                    <p class="hero-subtitle">Pengenalan Framework dalam Pengembangan Web Modern</p>
+                    
+                    <div class="hero-description">
+                        <p>Dalam pertemuan ini, Anda akan mempelajari:</p>
+                        <ul class="learning-objectives">
+                            <li><i class="fas fa-check-circle"></i> Memahami konsep framework dalam web development</li>
+                            <li><i class="fas fa-check-circle"></i> Mengenal berbagai jenis framework CSS populer</li>
+                            <li><i class="fas fa-check-circle"></i> Memahami manfaat penggunaan framework</li>
+                            <li><i class="fas fa-check-circle"></i> Berkenalan dengan Bootstrap sebagai framework pilihan</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hero-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 2: Apa itu Framework -->
+        <section class="slide-section" id="section2">
+            <div class="container">
+                <h2 class="section-title">Apa itu Framework?</h2>
+                
+                <div class="content-grid">
+                    <div class="content-box">
+                        <h3><i class="fas fa-book"></i> Definisi</h3>
+                        <p>Framework adalah <strong>kerangka kerja</strong> atau <strong>fondasi</strong> yang menyediakan struktur dasar untuk membangun aplikasi web. Framework berisi kumpulan kode, library, dan tools yang sudah jadi dan siap digunakan.</p>
+                    </div>
+                    
+                    <div class="content-box analogy">
+                        <h3><i class="fas fa-lightbulb"></i> Analogi Sederhana</h3>
+                        <p>Framework seperti <strong>rumah prefabrikasi</strong>:</p>
+                        <ul>
+                            <li>Fondasi sudah ada ✓</li>
+                            <li>Dinding dan atap tersedia ✓</li>
+                            <li>Anda tinggal menata interior ✓</li>
+                            <li>Lebih cepat dari membangun dari nol ✓</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <i class="fas fa-star"></i>
+                    <div>
+                        <h4>Tujuan Penggunaan Framework</h4>
+                        <p><strong>Mempercepat development</strong>, meningkatkan konsistensi kode, dan menyediakan solusi yang sudah teruji untuk masalah umum dalam web development.</p>
+                    </div>
+                </div>
+                
+                <div class="visual-example">
+                    <div class="code-comparison">
+                        <div class="code-box">
+                            <h4>Tanpa Framework</h4>
+                            <code>Menulis semua kode CSS dari awal ❌</code>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="code-box">
+                            <h4>Dengan Framework</h4>
+                            <code>Gunakan class yang sudah jadi ✓</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 3: Masalah Tanpa Framework -->
+        <section class="slide-section" id="section3">
+            <div class="container">
+                <h2 class="section-title">Masalah Tanpa Framework</h2>
+                
+                <div class="case-study">
+                    <h3><i class="fas fa-user-tie"></i> Studi Kasus: Developer Andi</h3>
+                    <div class="timeline">
+                        <div class="timeline-item problem">
+                            <div class="timeline-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="timeline-content">
+                                <h4>Hari ke-1: Membuat Grid Layout</h4>
+                                <p>Andi menulis 200 baris CSS untuk sistem grid responsif</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item problem">
+                            <div class="timeline-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="timeline-content">
+                                <h4>Hari ke-3: Styling Button</h4>
+                                <p>Membuat berbagai style button dengan hover effect sendiri</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item problem">
+                            <div class="timeline-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="timeline-content">
+                                <h4>Hari ke-5: Browser Compatibility</h4>
+                                <p>Tampilan berbeda di Chrome, Firefox, dan Safari!</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item problem">
+                            <div class="timeline-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="timeline-content">
+                                <h4>Hari ke-7: Responsive Issues</h4>
+                                <p>Harus tulis banyak media queries untuk mobile</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-table">
+                    <h3>Perbandingan: Manual vs Framework</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspek</th>
+                                <th class="manual">Manual (Tanpa Framework)</th>
+                                <th class="framework">Dengan Framework</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Waktu Development</strong></td>
+                                <td class="manual">7-10 hari</td>
+                                <td class="framework">2-3 hari</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jumlah Kode CSS</strong></td>
+                                <td class="manual">1000+ baris</td>
+                                <td class="framework">200-300 baris</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Browser Compatibility</strong></td>
+                                <td class="manual">Harus test manual</td>
+                                <td class="framework">Sudah teruji</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Responsive Design</strong></td>
+                                <td class="manual">Tulis sendiri media queries</td>
+                                <td class="framework">Otomatis tersedia</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Maintenance</strong></td>
+                                <td class="manual">Sulit & rawan bug</td>
+                                <td class="framework">Lebih mudah</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="highlight-box warning">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <h4>Kesimpulan</h4>
+                        <p>Tanpa framework, developer menghabiskan waktu untuk <strong>reinventing the wheel</strong> (membuat ulang hal yang sudah ada). Framework membantu fokus pada <strong>fitur bisnis</strong>, bukan teknis dasar.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 4: Jenis Framework Frontend -->
+        <section class="slide-section" id="section4">
+            <div class="container">
+                <h2 class="section-title">Jenis Framework Frontend Populer</h2>
+                
+                <div class="framework-grid">
+                    <div class="framework-card bootstrap">
+                        <div class="framework-icon">
+                            <i class="fab fa-bootstrap"></i>
+                        </div>
+                        <h3>Bootstrap</h3>
+                        <div class="framework-badge popular">Paling Populer</div>
+                        <ul class="framework-features">
+                            <li>✓ Responsive grid system</li>
+                            <li>✓ Komponen UI lengkap</li>
+                            <li>✓ Dokumentasi excellent</li>
+                            <li>✓ Community besar</li>
+                        </ul>
+                        <div class="framework-use">Cocok untuk: Pemula & proyek cepat</div>
+                    </div>
+                    
+                    <div class="framework-card foundation">
+                        <div class="framework-icon">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <h3>Foundation</h3>
+                        <div class="framework-badge">Professional</div>
+                        <ul class="framework-features">
+                            <li>✓ Fleksibel & customizable</li>
+                            <li>✓ Mobile-first approach</li>
+                            <li>✓ Semantic markup</li>
+                            <li>✓ Enterprise ready</li>
+                        </ul>
+                        <div class="framework-use">Cocok untuk: Proyek enterprise</div>
+                    </div>
+                    
+                    <div class="framework-card metro">
+                        <div class="framework-icon">
+                            <i class="fas fa-th-large"></i>
+                        </div>
+                        <h3>Metro UI</h3>
+                        <div class="framework-badge">Specialized</div>
+                        <ul class="framework-features">
+                            <li>✓ Windows Metro design</li>
+                            <li>✓ Flat design style</li>
+                            <li>✓ Tile-based layout</li>
+                            <li>✓ Modern UI</li>
+                        </ul>
+                        <div class="framework-use">Cocok untuk: Admin dashboard</div>
+                    </div>
+                    
+                    <div class="framework-card frameless">
+                        <div class="framework-icon">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <h3>Frameless</h3>
+                        <div class="framework-badge">Lightweight</div>
+                        <ul class="framework-features">
+                            <li>✓ Minimal footprint</li>
+                            <li>✓ Grid system only</li>
+                            <li>✓ Super lightweight</li>
+                            <li>✓ Easy to customize</li>
+                        </ul>
+                        <div class="framework-use">Cocok untuk: Landing page</div>
+                    </div>
+
+                    <div class="framework-card columnal">
+                        <div class="framework-icon">
+                            <i class="fas fa-columns"></i>
+                        </div>
+                        <h3>Columnal</h3>
+                        <div class="framework-badge">Lightweight</div>
+                        <ul class="framework-features">
+                            <li>✓ Minimal footprint</li>
+                            <li>✓ No dependencies</li>
+                            <li>✓ No JavaScript required</li>
+                            <li>✓ Easy to integrate</li>
+                        </ul>
+                        <div class="framework-use">Cocok untuk: Proyek sederhana</div>
+                    </div>
+                </div>
+                
+                <div class="comparison-overview">
+                    <h3>Perbandingan Quick Overview</h3>
+                    <table class="framework-table">
+                        <thead>
+                            <tr>
+                                <th>Framework</th>
+                                <th>Ukuran</th>
+                                <th>Kompleksitas</th>
+                                <th>Popularitas</th>
+                                <th>Learning Curve</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Bootstrap</strong></td>
+                                <td>~150KB</td>
+                                <td>Medium</td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                                <td>Mudah</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Foundation</strong></td>
+                                <td>~200KB</td>
+                                <td>High</td>
+                                <td>⭐⭐⭐⭐</td>
+                                <td>Medium</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Metro UI</strong></td>
+                                <td>~180KB</td>
+                                <td>Medium</td>
+                                <td>⭐⭐⭐</td>
+                                <td>Mudah</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Frameless</strong></td>
+                                <td>~20KB</td>
+                                <td>Low</td>
+                                <td>⭐⭐</td>
+                                <td>Sangat Mudah</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="highlight-box">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div>
+                        <h4>Catatan Penting</h4>
+                        <p>Dalam mata kuliah ini, kita akan fokus mempelajari <strong>Bootstrap</strong> karena paling populer, mudah dipelajari, dan memiliki dokumentasi lengkap untuk pemula.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 5: Konsep Dasar Framework CSS -->
+        <section class="slide-section" id="section5">
+            <div class="container">
+                <h2 class="section-title">Konsep Dasar Framework CSS</h2>
+                
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-icon reusable">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <h3>1. Reusable Code</h3>
+                        <p class="concept-description">
+                            Komponen dapat digunakan berulang kali tanpa menulis ulang kode
+                        </p>
+                        <div class="concept-example">
+                            <h4>Contoh:</h4>
+                            <div class="code-snippet">
+                                <code>&lt;button class="btn btn-primary"&gt;Submit&lt;/button&gt;</code>
+                                <p class="code-note">Class "btn" bisa dipakai di semua button</p>
+                            </div>
+                        </div>
+                        <div class="concept-benefit">
+                            <strong>Benefit:</strong> Hemat waktu, kode lebih ringkas
+                        </div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-icon consistency">
+                            <i class="fas fa-equals"></i>
+                        </div>
+                        <h3>2. Consistency</h3>
+                        <p class="concept-description">
+                            Tampilan konsisten di seluruh halaman dan proyek
+                        </p>
+                        <div class="concept-example">
+                            <h4>Contoh:</h4>
+                            <div class="consistency-demo">
+                                <div class="demo-button">Button 1</div>
+                                <div class="demo-button">Button 2</div>
+                                <div class="demo-button">Button 3</div>
+                                <p class="code-note">Semua button memiliki style yang sama</p>
+                            </div>
+                        </div>
+                        <div class="concept-benefit">
+                            <strong>Benefit:</strong> User experience lebih baik, brand identity kuat
+                        </div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-icon responsive">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>3. Responsiveness</h3>
+                        <p class="concept-description">
+                            Otomatis menyesuaikan tampilan untuk berbagai ukuran layar
+                        </p>
+                        <div class="concept-example">
+                            <h4>Contoh:</h4>
+                            <div class="responsive-demo">
+                                <div class="device desktop">
+                                    <i class="fas fa-desktop"></i>
+                                    <span>Desktop</span>
+                                </div>
+                                <div class="device tablet">
+                                    <i class="fas fa-tablet-alt"></i>
+                                    <span>Tablet</span>
+                                </div>
+                                <div class="device mobile">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>Mobile</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="concept-benefit">
+                            <strong>Benefit:</strong> Mobile-friendly, jangkauan user lebih luas
+                        </div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-icon efficiency">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>4. Efisiensi Development</h3>
+                        <p class="concept-description">
+                            Proses development lebih cepat dengan komponen siap pakai
+                        </p>
+                        <div class="concept-example">
+                            <h4>Perbandingan Waktu:</h4>
+                            <div class="time-comparison">
+                                <div class="time-bar manual-time">
+                                    <span>Manual</span>
+                                    <div class="bar" style="width: 100%">10 jam</div>
+                                </div>
+                                <div class="time-bar framework-time">
+                                    <span>Framework</span>
+                                    <div class="bar" style="width: 30%">3 jam</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="concept-benefit">
+                            <strong>Benefit:</strong> Time to market lebih cepat, produktivitas ↑
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box success">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h4>Prinsip Utama Framework CSS</h4>
+                        <p><strong>"Write Once, Use Everywhere"</strong> - Tulis sekali, gunakan di mana saja. Ini adalah filosofi inti dari framework CSS modern.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 6: Kenapa Developer Pakai Framework -->
+        <section class="slide-section" id="section6">
+            <div class="container">
+                <h2 class="section-title">Kenapa Banyak Developer Pakai Framework?</h2>
+                
+                <div class="reasons-grid">
+                    <div class="reason-card">
+                        <div class="reason-number">1</div>
+                        <h3><i class="fas fa-clock"></i> Menghemat Waktu</h3>
+                        <p>Tidak perlu membuat komponen umum dari nol. Framework menyediakan button, form, navigation, card, dll yang sudah siap pakai.</p>
+                    </div>
+                    
+                    <div class="reason-card">
+                        <div class="reason-number">2</div>
+                        <h3><i class="fas fa-shield-alt"></i> Sudah Teruji & Stable</h3>
+                        <p>Framework populer telah diuji oleh jutaan developer. Bug sudah diminimalkan dan browser compatibility sudah dijamin.</p>
+                    </div>
+                    
+                    <div class="reason-card">
+                        <div class="reason-number">3</div>
+                        <h3><i class="fas fa-users"></i> Standar Industri</h3>
+                        <p>Perusahaan besar menggunakan framework. Skill ini sangat dibutuhkan di dunia kerja dan meningkatkan employability.</p>
+                    </div>
+                    
+                    <div class="reason-card">
+                        <div class="reason-number">4</div>
+                        <h3><i class="fas fa-book-open"></i> Dokumentasi Lengkap</h3>
+                        <p>Framework populer memiliki dokumentasi yang sangat lengkap, tutorial, dan community support yang aktif.</p>
+                    </div>
+                    
+                    <div class="reason-card">
+                        <div class="reason-number">5</div>
+                        <h3><i class="fas fa-code-branch"></i> Kemudahan Kolaborasi</h3>
+                        <p>Tim developer lebih mudah bekerja sama karena menggunakan struktur dan naming convention yang sama.</p>
+                    </div>
+                    
+                    <div class="reason-card">
+                        <div class="reason-number">6</div>
+                        <h3><i class="fas fa-tools"></i> Best Practices Built-in</h3>
+                        <p>Framework sudah mengikuti best practices web development. Developer otomatis menulis kode berkualitas.</p>
+                    </div>
+                </div>
+                
+                <div class="statistics-section">
+                    <h3><i class="fas fa-chart-bar"></i> Statistik Penggunaan Framework (2024)</h3>
+                    <div class="chart-container">
+                        <div class="chart-bar-group">
+                            <div class="chart-item">
+                                <div class="chart-label">Bootstrap</div>
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="width: 85%">
+                                        <span class="chart-value">85%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-item">
+                                <div class="chart-label">Tailwind CSS</div>
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="width: 65%">
+                                        <span class="chart-value">65%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-item">
+                                <div class="chart-label">Foundation</div>
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="width: 35%">
+                                        <span class="chart-value">35%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-item">
+                                <div class="chart-label">Bulma</div>
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="width: 28%">
+                                        <span class="chart-value">28%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-item">
+                                <div class="chart-label">Tanpa Framework</div>
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar plain" style="width: 15%">
+                                        <span class="chart-value">15%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="chart-note">*Persentase developer yang menggunakan framework dalam proyek mereka</p>
+                    </div>
+                </div>
+                
+                <div class="highlight-box info">
+                    <i class="fas fa-lightbulb"></i>
+                    <div>
+                        <h4>Insight Profesional</h4>
+                        <p><strong>85% developer profesional</strong> menggunakan framework CSS dalam proyek mereka. Menguasai framework adalah <strong>skill wajib</strong> untuk web developer modern.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 7: Preview Bootstrap -->
+        <section class="slide-section" id="section7">
+            <div class="container">
+                <h2 class="section-title">Preview Bootstrap</h2>
+                
+                <div class="bootstrap-intro">
+                    <div class="bootstrap-logo">
+                        <i class="fab fa-bootstrap"></i>
+                    </div>
+                    <h3>Bootstrap: Framework CSS Paling Populer di Dunia</h3>
+                    <p class="intro-text">
+                        Bootstrap adalah framework front-end yang paling banyak digunakan untuk membangun website responsive dan mobile-first. Dikembangkan oleh Twitter dan sekarang menjadi open-source project.
+                    </p>
+                </div>
+                
+                <div class="why-popular">
+                    <h3><i class="fas fa-star"></i> Kenapa Bootstrap Sangat Populer?</h3>
+                    <div class="popularity-reasons">
+                        <div class="pop-reason">
+                            <div class="pop-icon"><i class="fas fa-puzzle-piece"></i></div>
+                            <h4>Komponen Lengkap</h4>
+                            <p>100+ komponen UI siap pakai: navbar, card, modal, carousel, forms, dll</p>
+                        </div>
+                        <div class="pop-reason">
+                            <div class="pop-icon"><i class="fas fa-mobile-alt"></i></div>
+                            <h4>Mobile-First</h4>
+                            <p>Desain otomatis responsive dari mobile hingga desktop</p>
+                        </div>
+                        <div class="pop-reason">
+                            <div class="pop-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <h4>Mudah Dipelajari</h4>
+                            <p>Dokumentasi excellent, tutorial melimpah, community besar</p>
+                        </div>
+                        <div class="pop-reason">
+                            <div class="pop-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <h4>Cepat Development</h4>
+                            <p>Prototype hingga production dalam waktu singkat</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-preview">
+                    <h3><i class="fas fa-eye"></i> Contoh Komponen Bootstrap</h3>
+                    
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="showPreview('buttons')">Buttons</button>
+                        <button class="preview-tab" onclick="showPreview('cards')">Cards</button>
+                        <button class="preview-tab" onclick="showPreview('alerts')">Alerts</button>
+                    </div>
+                    
+                    <div class="preview-content">
+                        <!-- Buttons Preview -->
+                        <div class="preview-item active" id="preview-buttons">
+                            <h4>Button Components</h4>
+                            <div class="component-display">
+                                <button class="demo-btn btn-primary">Primary</button>
+                                <button class="demo-btn btn-secondary">Secondary</button>
+                                <button class="demo-btn btn-success">Success</button>
+                                <button class="demo-btn btn-danger">Danger</button>
+                                <button class="demo-btn btn-warning">Warning</button>
+                                <button class="demo-btn btn-info">Info</button>
+                            </div>
+                            <div class="code-preview">
+                                <code>&lt;button class="btn btn-primary"&gt;Primary&lt;/button&gt;</code>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Preview -->
+                        <div class="preview-item" id="preview-cards">
+                            <h4>Card Component</h4>
+                            <div class="component-display">
+                                <div class="demo-card">
+                                    <div class="demo-card-header">Card Header</div>
+                                    <div class="demo-card-body">
+                                        <h5>Card Title</h5>
+                                        <p>Card content dengan deskripsi singkat tentang card component di Bootstrap.</p>
+                                        <button class="demo-btn btn-primary">Read More</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="code-preview">
+                                <code>&lt;div class="card"&gt;...&lt;/div&gt;</code>
+                            </div>
+                        </div>
+                        
+                        <!-- Alerts Preview -->
+                        <div class="preview-item" id="preview-alerts">
+                            <h4>Alert Components</h4>
+                            <div class="component-display">
+                                <div class="demo-alert alert-success">
+                                    <strong>Success!</strong> Data berhasil disimpan.
+                                </div>
+                                <div class="demo-alert alert-danger">
+                                    <strong>Error!</strong> Terjadi kesalahan pada sistem.
+                                </div>
+                                <div class="demo-alert alert-warning">
+                                    <strong>Warning!</strong> Periksa kembali input Anda.
+                                </div>
+                                <div class="demo-alert alert-info">
+                                    <strong>Info!</strong> Versi baru tersedia.
+                                </div>
+                            </div>
+                            <div class="code-preview">
+                                <code>&lt;div class="alert alert-success"&gt;...&lt;/div&gt;</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <i class="fas fa-rocket"></i>
+                    <div>
+                        <h4>Yang Akan Dipelajari Selanjutnya</h4>
+                        <p>Di pertemuan berikutnya, kita akan mempelajari Bootstrap secara detail: instalasi, grid system, utilities, dan cara membuat website lengkap dengan Bootstrap.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 8: Kesimpulan -->
+        <section class="slide-section" id="section8">
+            <div class="container">
+                <h2 class="section-title">Kesimpulan Konsep</h2>
+                
+                <div class="summary-intro">
+                    <i class="fas fa-check-double"></i>
+                    <p>Mari kita rangkum apa yang telah kita pelajari hari ini tentang Framework Responsive Web Design</p>
+                </div>
+                
+                <div class="key-points">
+                    <div class="key-point">
+                        <div class="point-number">
+                            <i class="fas fa-book"></i>
+                            <span>1</span>
+                        </div>
+                        <div class="point-content">
+                            <h3>Framework adalah Solusi Efisien</h3>
+                            <p>Framework CSS menyediakan <strong>komponen siap pakai</strong> yang mempercepat development, meningkatkan konsistensi, dan memastikan website responsive tanpa perlu menulis semua kode dari nol.</p>
+                            <div class="point-tags">
+                                <span class="tag">Reusable</span>
+                                <span class="tag">Consistent</span>
+                                <span class="tag">Responsive</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="point-number">
+                            <i class="fas fa-users"></i>
+                            <span>2</span>
+                        </div>
+                        <div class="point-content">
+                            <h3>Framework adalah Standar Industri</h3>
+                            <p>Lebih dari <strong>85% developer profesional</strong> menggunakan framework dalam proyek mereka. Menguasai framework seperti Bootstrap adalah skill yang sangat dibutuhkan di dunia kerja.</p>
+                            <div class="point-tags">
+                                <span class="tag">Industry Standard</span>
+                                <span class="tag">High Demand</span>
+                                <span class="tag">Career Boost</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="point-number">
+                            <i class="fab fa-bootstrap"></i>
+                            <span>3</span>
+                        </div>
+                        <div class="point-content">
+                            <h3>Bootstrap sebagai Starting Point</h3>
+                            <p>Bootstrap adalah framework paling populer dan <strong>mudah dipelajari</strong> untuk pemula. Dengan dokumentasi lengkap dan community besar, Bootstrap menjadi pilihan ideal untuk memulai journey web development.</p>
+                            <div class="point-tags">
+                                <span class="tag">Beginner Friendly</span>
+                                <span class="tag">Complete Docs</span>
+                                <span class="tag">Active Community</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="takeaway-box">
+                    <h3><i class="fas fa-brain"></i> Hal yang Harus Diingat</h3>
+                    <div class="takeaway-grid">
+                        <div class="takeaway-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Framework menghemat waktu & effort development</p>
+                        </div>
+                        <div class="takeaway-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <p>Kode lebih stable, teruji, & cross-browser compatible</p>
+                        </div>
+                        <div class="takeaway-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <p>Responsive design otomatis tanpa effort ekstra</p>
+                        </div>
+                        <div class="takeaway-item">
+                            <i class="fas fa-code"></i>
+                            <p>Best practices sudah built-in dalam framework</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box success">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div>
+                        <h4>Siap Melanjutkan?</h4>
+                        <p>Anda sudah memahami konsep framework! Selanjutnya kita akan <strong>hands-on</strong> langsung dengan Bootstrap di pertemuan berikutnya. Uji pemahaman Anda di bagian Mini Practice di bawah!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 9: Mini Practice -->
+        <section class="slide-section" id="section9">
+            <div class="container">
+                <h2 class="section-title">Mini Practice</h2>
+                
+                <div class="practice-intro">
+                    <i class="fas fa-pencil-alt"></i>
+                    <p>Uji pemahaman Anda tentang konsep framework dengan menjawab pertanyaan refleksi berikut. Tidak ada jawaban benar/salah - yang penting adalah proses berpikir Anda!</p>
+                </div>
+                
+                <div class="practice-questions">
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pertanyaan 1</span>
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>Pemahaman Konsep Framework</h3>
+                        <p class="question-text">Jelaskan dengan kata-kata Anda sendiri: Apa yang dimaksud dengan framework CSS dan mengapa developer menggunakannya?</p>
+                        <textarea 
+                            class="answer-input" 
+                            id="answer1" 
+                            placeholder="Tulis jawaban Anda di sini (min. 50 karakter)..."
+                            rows="4"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="charCount1">0</span> karakter
+                        </div>
+                    </div>
+                    
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pertanyaan 2</span>
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>Analisis Kasus</h3>
+                        <p class="question-text">Bayangkan Anda diminta membuat website company profile dengan deadline 3 hari. Apakah Anda akan menggunakan framework atau menulis CSS manual? Berikan alasan Anda!</p>
+                        <textarea 
+                            class="answer-input" 
+                            id="answer2" 
+                            placeholder="Tulis jawaban Anda di sini (min. 50 karakter)..."
+                            rows="4"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="charCount2">0</span> karakter
+                        </div>
+                    </div>
+                    
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-number">Pertanyaan 3</span>
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>Refleksi Pembelajaran</h3>
+                        <p class="question-text">Dari materi hari ini, apa 3 hal paling penting yang Anda pelajari tentang framework? Sebutkan dan jelaskan singkat!</p>
+                        <textarea 
+                            class="answer-input" 
+                            id="answer3" 
+                            placeholder="Tulis 3 poin penting yang Anda pelajari..."
+                            rows="5"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="charCount3">0</span> karakter
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="practice-actions">
+                    <button class="submit-btn" onclick="submitPractice()">
+                        <i class="fas fa-paper-plane"></i> Submit Jawaban
+                    </button>
+                    <button class="reset-btn" onclick="resetPractice()">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                
+                <div class="practice-result" id="practiceResult" style="display: none;">
+                    <div class="result-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Jawaban Anda Tersimpan!</h3>
+                    <p>Terima kasih telah mengerjakan mini practice. Refleksi Anda menunjukkan pemahaman yang baik tentang konsep framework.</p>
+                    <div class="result-summary" id="resultSummary"></div>
+                </div>
+                
+                <div class="highlight-box info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <h4>Tips Menjawab</h4>
+                        <p>Tidak ada jawaban yang salah! Fokus pada <strong>pemahaman konsep</strong> dan <strong>kemampuan menjelaskan dengan bahasa sendiri</strong>. Ini latihan untuk mengasah critical thinking Anda.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-btn next-btn" onclick="nextSlide()">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 10: Preview Materi Selanjutnya -->
+        <section class="slide-section" id="section10">
+            <div class="container">
+                <h2 class="section-title">Preview Materi Selanjutnya</h2>
+                
+                <div class="next-preview">
+                    <div class="next-badge">Pertemuan 4</div>
+                    <h3 class="next-title">Bootstrap Deep Dive</h3>
+                    <p class="next-subtitle">Menguasai Bootstrap dari Instalasi hingga Implementasi</p>
+                </div>
+                
+                <div class="preview-topics">
+                    <h3><i class="fas fa-list-check"></i> Yang Akan Dipelajari</h3>
+                    
+                    <div class="topics-grid">
+                        <div class="topic-card">
+                            <div class="topic-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <h4>Instalasi Bootstrap</h4>
+                            <p>Cara mengintegrasikan Bootstrap ke dalam project (CDN & Local)</p>
+                            <ul class="topic-list">
+                                <li>Download Bootstrap</li>
+                                <li>Setup via CDN</li>
+                                <li>Struktur file Bootstrap</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="topic-card">
+                            <div class="topic-icon">
+                                <i class="fas fa-th"></i>
+                            </div>
+                            <h4>Grid System</h4>
+                            <p>Memahami sistem grid 12-column untuk layout responsive</p>
+                            <ul class="topic-list">
+                                <li>Container & Row</li>
+                                <li>Column system (col-*)</li>
+                                <li>Responsive breakpoints</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="topic-card">
+                            <div class="topic-icon">
+                                <i class="fas fa-puzzle-piece"></i>
+                            </div>
+                            <h4>Components</h4>
+                            <p>Menggunakan komponen UI Bootstrap yang siap pakai</p>
+                            <ul class="topic-list">
+                                <li>Navbar & Navigation</li>
+                                <li>Cards & Buttons</li>
+                                <li>Forms & Modals</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="topic-card">
+                            <div class="topic-icon">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <h4>Utilities</h4>
+                            <p>Menggunakan utility classes untuk styling cepat</p>
+                            <ul class="topic-list">
+                                <li>Spacing (margin & padding)</li>
+                                <li>Colors & Typography</li>
+                                <li>Display & Flex</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preview-project">
+                    <h3><i class="fas fa-rocket"></i> Project Preview</h3>
+                    <div class="project-showcase">
+                        <div class="project-image">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="project-desc">
+                            <h4>Hands-On Project: Landing Page dengan Bootstrap</h4>
+                            <p>Di akhir pertemuan 4, Anda akan membuat sebuah landing page lengkap menggunakan Bootstrap dengan fitur:</p>
+                            <div class="project-features">
+                                <span class="feature-tag"><i class="fas fa-check"></i> Responsive Navbar</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Hero Section</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Feature Cards</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Contact Form</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Footer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preparation-box">
+                    <h3><i class="fas fa-clipboard-check"></i> Persiapan untuk Pertemuan Selanjutnya</h3>
+                    <div class="prep-checklist">
+                        <div class="prep-item">
+                            <i class="fas fa-square-check"></i>
+                            <p>Install text editor (VS Code recommended)</p>
+                        </div>
+                        <div class="prep-item">
+                            <i class="fas fa-square-check"></i>
+                            <p>Pastikan koneksi internet stabil (untuk CDN)</p>
+                        </div>
+                        <div class="prep-item">
+                            <i class="fas fa-square-check"></i>
+                            <p>Review materi HTML & CSS dasar</p>
+                        </div>
+                        <div class="prep-item">
+                            <i class="fas fa-square-check"></i>
+                            <p>Buka dokumentasi Bootstrap: <a href="https://getbootstrap.com" target="_blank">getbootstrap.com</a></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box success">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div>
+                        <h4>Selamat!</h4>
+                        <p>Anda telah menyelesaikan <strong>Pertemuan 3: Pengenalan Framework</strong>. Konsep yang Anda pelajari hari ini akan menjadi fondasi untuk materi Bootstrap yang lebih teknis di pertemuan selanjutnya. Sampai jumpa!</p>
+                    </div>
+                </div>
+                
+                <div class="final-actions">
+                    <button class="action-btn primary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                        <i class="fas fa-arrow-up"></i> Kembali ke Atas
+                    </button>
+                    <button class="action-btn secondary" onclick="alert('Terima kasih telah belajar! Sampai jumpa di pertemuan berikutnya.')">
+                        <i class="fas fa-hand-wave"></i> Selesai
+                    </button>
+                </div>
+            </div>
+            
+            <div class="slide-nav">
+                <button class="nav-btn prev-btn" onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // ====================================
+// GLOBAL VARIABLES & STATE
+// ====================================
+
+// State management untuk section yang sedang aktif
+let currentSection = 1;
+const totalSections = 10;
+
+// ====================================
+// INITIALIZATION
+// ====================================
+
+// Event listener saat DOM sudah siap
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+});
+
+/**
+ * Fungsi utama untuk inisialisasi semua komponen aplikasi
+ * Dipanggil saat halaman pertama kali dimuat
+ */
+function initializeApp() {
+    // Setup event listeners
+    setupNavigationListeners();
+    setupSidebarToggle();
+    setupScrollToTop();
+    setupCharacterCounters();
+    
+    // Initialize states
+    updateProgress();
+    updateActiveNavLink();
+    
+    // Setup intersection observer untuk auto-update navigation
+    setupIntersectionObserver();
+    
+    console.log('✅ Website pembelajaran berhasil diinisialisasi');
+}
+
+// ====================================
+// NAVIGATION HANDLERS
+// ====================================
+
+/**
+ * Setup event listeners untuk navigasi sidebar
+ * Memungkinkan user klik link untuk pindah section
+ */
+function setupNavigationListeners() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Ambil section number dari data attribute
+            const sectionNum = parseInt(this.getAttribute('data-section'));
+            
+            // Navigate ke section tersebut
+            navigateToSection(sectionNum);
+            
+            // Tutup sidebar di mobile setelah klik
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        });
+    });
+}
+
+/**
+ * Fungsi untuk navigasi ke section tertentu
+ * @param {number} sectionNum - Nomor section yang dituju (1-10)
+ */
+function navigateToSection(sectionNum) {
+    // Validasi section number
+    if (sectionNum < 1 || sectionNum > totalSections) {
+        console.error('Section number invalid:', sectionNum);
+        return;
+    }
+    
+    // Update current section
+    currentSection = sectionNum;
+    
+    // Hide semua section
+    const allSections = document.querySelectorAll('.slide-section');
+    allSections.forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show section yang dipilih
+    const targetSection = document.getElementById(`section${sectionNum}`);
+    if (targetSection) {
+        targetSection.classList.add('active');
+        
+        // Scroll ke atas section dengan smooth behavior
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Update UI elements
+    updateActiveNavLink();
+    updateProgress();
+}
+
+/**
+ * Fungsi untuk navigasi ke section selanjutnya
+ * Dipanggil dari tombol "Selanjutnya"
+ */
+function nextSlide() {
+    if (currentSection < totalSections) {
+        navigateToSection(currentSection + 1);
+    }
+}
+
+/**
+ * Fungsi untuk navigasi ke section sebelumnya
+ * Dipanggil dari tombol "Sebelumnya"
+ */
+function prevSlide() {
+    if (currentSection > 1) {
+        navigateToSection(currentSection - 1);
+    }
+}
+
+/**
+ * Update visual indicator di sidebar untuk section yang aktif
+ */
+function updateActiveNavLink() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+        const sectionNum = parseInt(link.getAttribute('data-section'));
+        
+        if (sectionNum === currentSection) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+}
+
+/**
+ * Update progress bar berdasarkan section yang aktif
+ */
+function updateProgress() {
+    // Hitung persentase progress
+    const progress = (currentSection / totalSections) * 100;
+    
+    // Update width dari progress bar dengan animasi
+    const progressFill = document.getElementById('progressFill');
+    if (progressFill) {
+        progressFill.style.width = `${progress}%`;
+    }
+    
+    // Update text persentase
+    const progressPercent = document.getElementById('progressPercent');
+    if (progressPercent) {
+        progressPercent.textContent = `${Math.round(progress)}%`;
+    }
+}
+
+// ====================================
+// SIDEBAR TOGGLE (MOBILE)
+// ====================================
+
+/**
+ * Setup toggle functionality untuk sidebar di mobile
+ */
+function setupSidebarToggle() {
+    const menuToggle = document.getElementById('menuToggle');
+    const closeSidebarBtn = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+    
+    // Open sidebar
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.add('active');
+        });
+    }
+    
+    // Close sidebar
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+    }
+    
+    // Close sidebar saat klik di luar sidebar (overlay behavior)
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
+            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                closeSidebar();
+            }
+        }
+    });
+}
+
+/**
+ * Fungsi helper untuk menutup sidebar
+ */
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.remove('active');
+    }
+}
+
+// ====================================
+// SCROLL TO TOP BUTTON
+// ====================================
+
+/**
+ * Setup scroll to top button functionality
+ */
+function setupScrollToTop() {
+    const scrollTopBtn = document.getElementById('scrollTop');
+    
+    if (!scrollTopBtn) return;
+    
+    // Show/hide button berdasarkan scroll position
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            scrollTopBtn.classList.add('visible');
+        } else {
+            scrollTopBtn.classList.remove('visible');
+        }
+    });
+    
+    // Scroll to top saat diklik
+    scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
+// ====================================
+// INTERSECTION OBSERVER
+// ====================================
+
+/**
+ * Setup Intersection Observer untuk auto-update navigation
+ * saat user scroll manual
+ */
+function setupIntersectionObserver() {
+    const sections = document.querySelectorAll('.slide-section');
+    
+    const observerOptions = {
+        root: null,
+        rootMargin: '-50% 0px -50% 0px', // Trigger saat section di tengah viewport
+        threshold: 0
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Extract section number dari ID
+                const sectionId = entry.target.id;
+                const sectionNum = parseInt(sectionId.replace('section', ''));
+                
+                // Update current section (tanpa scroll, karena user sudah scroll manual)
+                if (sectionNum !== currentSection) {
+                    currentSection = sectionNum;
+                    updateActiveNavLink();
+                    updateProgress();
+                }
+            }
+        });
+    }, observerOptions);
+    
+    // Observe semua section
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+}
+
+// ====================================
+// SECTION 7: PREVIEW TABS
+// ====================================
+
+/**
+ * Fungsi untuk menampilkan preview component yang dipilih
+ * @param {string} componentName - Nama component yang akan ditampilkan
+ */
+function showPreview(componentName) {
+    // Hide semua preview items
+    const previewItems = document.querySelectorAll('.preview-item');
+    previewItems.forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Show preview item yang dipilih
+    const selectedPreview = document.getElementById(`preview-${componentName}`);
+    if (selectedPreview) {
+        selectedPreview.classList.add('active');
+    }
+    
+    // Update active state pada tabs
+    const tabs = document.querySelectorAll('.preview-tab');
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Add active class ke tab yang diklik
+    event.target.classList.add('active');
+}
+
+// ====================================
+// SECTION 9: MINI PRACTICE
+// ====================================
+
+/**
+ * Setup character counters untuk textarea di mini practice
+ */
+function setupCharacterCounters() {
+    // Setup untuk semua answer input
+    for (let i = 1; i <= 3; i++) {
+        const textarea = document.getElementById(`answer${i}`);
+        const counter = document.getElementById(`charCount${i}`);
+        
+        if (textarea && counter) {
+            // Update counter saat user mengetik
+            textarea.addEventListener('input', function() {
+                const charCount = this.value.length;
+                counter.textContent = charCount;
+                
+                // Change color jika sudah mencapai minimum
+                if (charCount >= 50) {
+                    counter.style.color = 'var(--success-color)';
+                    counter.style.fontWeight = '600';
+                } else {
+                    counter.style.color = 'var(--gray-600)';
+                    counter.style.fontWeight = '400';
+                }
+            });
+        }
+    }
+}
+
+/**
+ * Fungsi untuk submit practice answers
+ * Dipanggil saat user klik tombol Submit
+ */
+function submitPractice() {
+    // Ambil semua jawaban
+    const answer1 = document.getElementById('answer1').value.trim();
+    const answer2 = document.getElementById('answer2').value.trim();
+    const answer3 = document.getElementById('answer3').value.trim();
+    
+    // Validasi: cek apakah semua sudah diisi
+    if (!answer1 || !answer2 || !answer3) {
+        alert('⚠️ Mohon isi semua pertanyaan terlebih dahulu!');
+        return;
+    }
+    
+    // Validasi: cek minimum karakter
+    if (answer1.length < 50 || answer2.length < 50 || answer3.length < 50) {
+        alert('⚠️ Setiap jawaban minimal harus 50 karakter. Silakan lengkapi jawaban Anda.');
+        return;
+    }
+    
+    // Hitung total karakter
+    const totalChars = answer1.length + answer2.length + answer3.length;
+    
+    // Tampilkan result
+    const resultDiv = document.getElementById('practiceResult');
+    const summaryDiv = document.getElementById('resultSummary');
+    
+    if (resultDiv && summaryDiv) {
+        // Generate summary
+        summaryDiv.innerHTML = `
+            <h4 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.125rem;">
+                📊 Ringkasan Jawaban Anda
+            </h4>
+            <div style="display: grid; gap: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                    <span style="color: var(--gray-700); font-weight: 500;">Pertanyaan 1:</span>
+                    <span style="color: var(--primary-color); font-weight: 600;">${answer1.length} karakter</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                    <span style="color: var(--gray-700); font-weight: 500;">Pertanyaan 2:</span>
+                    <span style="color: var(--primary-color); font-weight: 600;">${answer2.length} karakter</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                    <span style="color: var(--gray-700); font-weight: 500;">Pertanyaan 3:</span>
+                    <span style="color: var(--primary-color); font-weight: 600;">${answer3.length} karakter</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 1rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(14, 165, 233, 0.1)); border-radius: 0.5rem; border-left: 4px solid var(--primary-color);">
+                    <span style="color: var(--gray-900); font-weight: 700;">Total:</span>
+                    <span style="color: var(--primary-color); font-weight: 700; font-size: 1.125rem;">${totalChars} karakter</span>
+                </div>
+            </div>
+            <p style="margin-top: 1rem; color: var(--gray-600); font-size: 0.875rem; font-style: italic;">
+                💡 Tip: Review kembali jawaban Anda dan bandingkan dengan materi yang sudah dipelajari.
+            </p>
+        `;
+        
+        // Show result dengan smooth scroll
+        resultDiv.style.display = 'block';
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Disable form inputs setelah submit
+        document.getElementById('answer1').disabled = true;
+        document.getElementById('answer2').disabled = true;
+        document.getElementById('answer3').disabled = true;
+        
+        // Berikan feedback positif dengan delay
+        setTimeout(() => {
+            alert('🎉 Selamat! Anda telah menyelesaikan Mini Practice. Lanjutkan ke section berikutnya untuk melihat preview materi selanjutnya.');
+        }, 500);
+    }
+}
+
+/**
+ * Fungsi untuk reset practice form
+ * Dipanggil saat user klik tombol Reset
+ */
+function resetPractice() {
+    // Konfirmasi dulu
+    const confirmReset = confirm('⚠️ Apakah Anda yakin ingin mereset semua jawaban? Data akan hilang.');
+    
+    if (confirmReset) {
+        // Reset semua textarea
+        document.getElementById('answer1').value = '';
+        document.getElementById('answer2').value = '';
+        document.getElementById('answer3').value = '';
+        
+        // Enable kembali input
+        document.getElementById('answer1').disabled = false;
+        document.getElementById('answer2').disabled = false;
+        document.getElementById('answer3').disabled = false;
+        
+        // Reset character counters
+        document.getElementById('charCount1').textContent = '0';
+        document.getElementById('charCount2').textContent = '0';
+        document.getElementById('charCount3').textContent = '0';
+        
+        // Reset counter colors
+        ['charCount1', 'charCount2', 'charCount3'].forEach(id => {
+            const counter = document.getElementById(id);
+            counter.style.color = 'var(--gray-600)';
+            counter.style.fontWeight = '400';
+        });
+        
+        // Hide result
+        const resultDiv = document.getElementById('practiceResult');
+        if (resultDiv) {
+            resultDiv.style.display = 'none';
+        }
+        
+        // Scroll to top of practice section
+        const practiceSection = document.getElementById('section9');
+        if (practiceSection) {
+            practiceSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        console.log('✅ Practice form berhasil direset');
+    }
+}
+
+// ====================================
+// KEYBOARD SHORTCUTS
+// ====================================
+
+/**
+ * Setup keyboard shortcuts untuk navigasi lebih cepat
+ */
+document.addEventListener('keydown', function(e) {
+    // Arrow Right atau N = Next slide
+    if (e.key === 'ArrowRight' || e.key === 'n' || e.key === 'N') {
+        if (currentSection < totalSections) {
+            nextSlide();
+        }
+    }
+    
+    // Arrow Left atau P = Previous slide
+    if (e.key === 'ArrowLeft' || e.key === 'p' || e.key === 'P') {
+        if (currentSection > 1) {
+            prevSlide();
+        }
+    }
+    
+    // Home = Ke section pertama
+    if (e.key === 'Home') {
+        e.preventDefault();
+        navigateToSection(1);
+    }
+    
+    // End = Ke section terakhir
+    if (e.key === 'End') {
+        e.preventDefault();
+        navigateToSection(totalSections);
+    }
+    
+    // Escape = Close sidebar (mobile)
+    if (e.key === 'Escape') {
+        closeSidebar();
+    }
+});
+
+// ====================================
+// UTILITY FUNCTIONS
+// ====================================
+
+/**
+ * Log informasi berguna untuk debugging
+ */
+function logAppInfo() {
+    console.log('=================================');
+    console.log('📚 Website Pembelajaran Web Design 2');
+    console.log('=================================');
+    console.log('Current Section:', currentSection);
+    console.log('Total Sections:', totalSections);
+    console.log('Progress:', Math.round((currentSection / totalSections) * 100) + '%');
+    console.log('=================================');
+}
+
+// ====================================
+// EASTER EGG
+// ====================================
+
+/**
+ * Easter egg untuk mahasiswa yang curious 😊
+ */
+let konami = [];
+const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+document.addEventListener('keydown', function(e) {
+    konami.push(e.key);
+    konami = konami.slice(-10);
+    
+    if (konami.join(',') === konamiCode.join(',')) {
+        console.log('%c🎉 KONAMI CODE ACTIVATED! 🎉', 'font-size: 24px; color: #2563eb; font-weight: bold;');
+        console.log('%cSelamat! Anda menemukan easter egg ini!', 'font-size: 16px; color: #10b981;');
+        console.log('%cTetap semangat belajar Web Design! 💪', 'font-size: 14px; color: #f59e0b;');
+        
+        // Animasi konfeti sederhana
+        document.body.style.animation = 'confetti 2s ease-out';
+        setTimeout(() => {
+            document.body.style.animation = '';
+        }, 2000);
+    }
+});
+
+// ====================================
+// EXPORT FUNCTIONS (untuk testing)
+// ====================================
+
+// Expose beberapa function ke global scope untuk debugging
+window.navigateToSection = navigateToSection;
+window.nextSlide = nextSlide;
+window.prevSlide = prevSlide;
+window.showPreview = showPreview;
+window.submitPractice = submitPractice;
+window.resetPractice = resetPractice;
+window.logAppInfo = logAppInfo;
+
+// Log info saat app ready
+console.log('%c✅ JavaScript berhasil dimuat!', 'color: #10b981; font-weight: bold; font-size: 14px;');
+console.log('%cGunakan fungsi logAppInfo() untuk melihat info aplikasi', 'color: #6b7280; font-size: 12px;');
+console.log('%cKeyboard shortcuts: Arrow keys untuk navigasi, Home/End untuk jump ke awal/akhir', 'color: #6b7280; font-size: 12px;');
+
+    </script>
+</body>
+</html>
