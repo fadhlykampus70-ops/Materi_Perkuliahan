@@ -121,22 +121,53 @@ const MK_DATA = {
     nama: 'Logika dan Algoritma II',
     folder: 'mata-kuliah/logika-algoritma2',
     pertemuan: [
-      { no:'01', judul:'Reset Cara Berpikir Algoritmik',            topik:'Logika untuk membedakan penalaran benar/keliru, algoritma untuk menyelesaikan masalah.',  html:true,  pdf:true  },
-      { no:'02', judul:'Pseudocode — Langkah Logis Program',        topik:'Pseudocode = Alat Berpikir. Logika dulu, kode belakangan.',                               html:true,  pdf:true  },
-      { no:'03', judul:'Operator Aritmatika, Relasional & Logika',  topik:'Menerapkan operator pada percabangan, validasi data, dan pengambilan keputusan.',          html:true,  pdf:true  },
-      { no:'04', judul:'Percabangan & Pengambilan Keputusan',       topik:'Keputusan diambil dalam setiap percabangan.',                                              html:true,  pdf:true  },
-      { no:'05', judul:'Struktur Perulangan dalam Pemrograman',     topik:'Melakukan aksi yang sama berulang kali sampai kondisi tertentu terpenuhi.',                html:true,  pdf:true  },
-      { no:'06', judul:'Fungsi & Modular Programming',              topik:'Fungsi = "mesin kecil": beri input, mesin mengolah, keluarkan output.',                    html:true,  pdf:true  },
-      { no:'07', judul:'Memahami & Menerapkan Rekursi',             topik:'Fungsi memanggil dirinya sendiri hingga mencapai base case.',                              html:true,  pdf:true  },
-      { no:'08', judul:'Recall C++ & Pengenalan Python',            topik:'"Pindah dari C++ ke Python, apakah harus belajar ulang dari nol?"',                       html:true,  pdf:true  },
-      { no:'09', judul:'Array dalam Python (List) & Pengolahan Data',topik:'Lemari pakaian untuk data — teratur, gampang cari, hemat tempat.',                       html:true,  pdf:true  },
-      { no:'10', judul:'String dalam Python',                       topik:'Kumpulan karakter di antara tanda kutip — seperti array khusus teks.',                     html:true,  pdf:true  },
-      { no:'11', judul:'Membaca & Menulis File',                    topik:'Simpan data ke harddisk supaya bisa dibaca kembali kapan saja.',                           html:true,  pdf:true  },
-      { no:'12', judul:'Bubble Sort & Selection Sort',              topik:'Mengurutkan data secara efisien menggunakan dua algoritma klasik.',                        html:true,  pdf:true  },
-      { no:'13', judul:'Pertemuan 13',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
-      { no:'14', judul:'Pertemuan 14',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
-      { no:'15', judul:'Pertemuan 15',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
-      { no:'16', judul:'Pertemuan 16',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
+      { no:'01', judul:'Reset Cara Berpikir Algoritmik',            topik:'Logika untuk membedakan penalaran benar/keliru, algoritma untuk menyelesaikan masalah.',
+        files:[] }, // ← hanya pptx, tidak bisa ditampilkan di browser
+      { no:'02', judul:'Pseudocode — Langkah Logis Program',        topik:'Pseudocode = Alat Berpikir. Logika dulu, kode belakangan.',
+        files:[
+          { nama:'Materi Pertemuan 2 - Logika dan Algoritma 2.pdf', tipe:'pdf', label:'Download Materi', sub:'Unduh berkas PDF untuk dibaca offline.' },
+        ]},
+      { no:'03', judul:'Operator Aritmatika, Relasional & Logika',  topik:'Menerapkan operator pada percabangan, validasi data, dan pengambilan keputusan.',
+        files:[] }, // ← hanya pptx
+      { no:'04', judul:'Percabangan & Pengambilan Keputusan',       topik:'Keputusan diambil dalam setiap percabangan.',
+        files:[] }, // ← hanya pptx
+      { no:'05', judul:'Struktur Perulangan dalam Pemrograman',     topik:'Melakukan aksi yang sama berulang kali sampai kondisi tertentu terpenuhi.',
+        files:[
+          { nama:'Materi Pertemuan 5 - Struktur Pengulangan.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'06', judul:'Fungsi & Modular Programming',              topik:'Fungsi = "mesin kecil": beri input, mesin mengolah, keluarkan output.',
+        files:[
+          { nama:'Materi Pertemuan 6 - Fungsi dan Modular.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'07', judul:'Memahami & Menerapkan Rekursi',             topik:'Fungsi memanggil dirinya sendiri hingga mencapai base case.',
+        files:[
+          { nama:'Materi Pertemuan 7 - Rekusi dalam Program .html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'08', judul:'Recall C++ & Pengenalan Python',            topik:'"Pindah dari C++ ke Python, apakah harus belajar ulang dari nol?"',
+        files:[
+          { nama:'Materi Pertemuan 8 -  Recall C++ & Pengenalan Python.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'09', judul:'Array dalam Python (List) & Pengolahan Data', topik:'Lemari pakaian untuk data — teratur, gampang cari, hemat tempat.',
+        files:[
+          { nama:'Materi Pertemuan 9 -  Array dalam Python (List) & Pengolahan Data.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'10', judul:'String dalam Python',                       topik:'Kumpulan karakter di antara tanda kutip — seperti array khusus teks.',
+        files:[
+          { nama:'Materi Pertemuan 10 -  String dalam Python (List) & UI Python.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'11', judul:'Membaca & Menulis File',                    topik:'Simpan data ke harddisk supaya bisa dibaca kembali kapan saja.',
+        files:[
+          { nama:'pertemuan11_file_io.html', tipe:'html', label:'Lihat Materi — File I/O',  sub:'Materi konsep membaca & menulis file.' },
+          { nama:'web_p11.html',             tipe:'html', label:'Lihat Materi — Web View',  sub:'Tampilan materi versi web interaktif.' },
+        ]},
+      { no:'12', judul:'Bubble Sort & Selection Sort',              topik:'Mengurutkan data secara efisien menggunakan dua algoritma klasik.',
+        files:[
+          { nama:'web_p12.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'13', judul:'Pertemuan 13', topik:'Segera hadir.', files:[] },
+      { no:'14', judul:'Pertemuan 14', topik:'Segera hadir.', files:[] },
+      { no:'15', judul:'Pertemuan 15', topik:'Segera hadir.', files:[] },
+      { no:'16', judul:'Pertemuan 16', topik:'Segera hadir.', files:[] },
     ]
   },
 
@@ -144,26 +175,62 @@ const MK_DATA = {
     nama: 'Web Desain II',
     folder: 'mata-kuliah/web-desain2',
     pertemuan: [
-      { no:'01', judul:'Pengantar Web Design II: Evolusi dan Interaktivitas',  topik:'Web Design II berfokus pada situs web yang lebih kompleks, dinamis, dan pengalaman pengguna yang responsif.',           html:true,  pdf:true  },
-      { no:'02', judul:'Responsive Web Design',                                topik:'Pendekatan desain web yang membuat halaman beradaptasi otomatis terhadap berbagai ukuran layar dan perangkat.',          html:true,  pdf:true  },
-      { no:'03', judul:'Framework Responsive Web Design',                      topik:'Framework adalah kerangka kerja yang menyediakan struktur dasar untuk membangun aplikasi web.',                         html:true,  pdf:true  },
-      { no:'04', judul:'Pengenalan Bootstrap 4 untuk Pemula',                  topik:'Kenapa kita butuh framework? Memulai Bootstrap 4 dari nol.',                                                            html:true,  pdf:true  },
-      { no:'05', judul:'Grid dan Tipografi Bootstrap 4',                       topik:'Mengatur layout halaman secara efisien dan tampilan teks profesional menggunakan sistem bawaan Bootstrap 4.',           html:true,  pdf:true  },
-      { no:'06', judul:'Responsive Grid & Typography Lanjutan',                topik:'Masalah utama: layout tidak responsif — solusinya ada di sini.',                                                        html:true,  pdf:true  },
-      { no:'07', judul:'Tabel & Form dengan Bootstrap 4',                      topik:'Membuat tampilan data yang rapi dan formulir profesional menggunakan komponen Bootstrap 4.',                            html:true,  pdf:true  },
-      { no:'08', judul:"Let's Use It Bootstrap",                               topik:'Mencobakan Bootstrap langsung ke proyek web nyata.',                                                                    html:true,  pdf:true  },
-      { no:'09', judul:'Bootstrap Button & Image',                             topik:'Styling tombol dan gambar yang konsisten, responsif, dan profesional hanya dengan class Bootstrap.',                   html:true,  pdf:true  },
-      { no:'10', judul:'Helper Class Bootstrap 4',                             topik:'Contextual Color — kelas Bootstrap untuk mengatur warna teks sesuai konteks semantik.',                                html:true,  pdf:true  },
-      { no:'11', judul:"Let's Use It Bootstrap V2",                            topik:'Mencobakan Bootstrap ke web — sesi praktik lanjutan.',                                                                  html:true,  pdf:true  },
-      { no:'12', judul:'Membuat Komponen Dasar Bootstrap',                     topik:'Membangun dan mengeksplorasi komponen Bootstrap secara interaktif.',                                                   html:true,  pdf:true  },
-      { no:'13', judul:'Pertemuan 13',                                         topik:'Segera hadir.',                                                                                                         html:false, pdf:false },
-      { no:'14', judul:'Pertemuan 14',                                         topik:'Segera hadir.',                                                                                                         html:false, pdf:false },
-      { no:'15', judul:'Pertemuan 15',                                         topik:'Segera hadir.',                                                                                                         html:false, pdf:false },
+      { no:'01', judul:'Pengantar Web Design II: Evolusi dan Interaktivitas', topik:'Web Design II berfokus pada situs web yang lebih kompleks, dinamis, dan pengalaman pengguna yang responsif.',
+        files:[] }, // ← hanya pptx
+      { no:'02', judul:'Responsive Web Design',                               topik:'Pendekatan desain web yang membuat halaman beradaptasi otomatis terhadap berbagai ukuran layar.',
+        files:[
+          { nama:'responsive-web-design-complete.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'03', judul:'Framework Responsive Web Design',                     topik:'Framework adalah kerangka kerja yang menyediakan struktur dasar untuk membangun aplikasi web.',
+        files:[
+          { nama:'Web Desain Pertemuan 3.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'04', judul:'Pengenalan Bootstrap 4 untuk Pemula',                 topik:'Kenapa kita butuh framework? Memulai Bootstrap 4 dari nol.',
+        files:[
+          { nama:'Materi Pertemuan 4.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'05', judul:'Grid dan Tipografi Bootstrap 4',                      topik:'Mengatur layout halaman secara efisien dan tampilan teks profesional menggunakan Bootstrap 4.',
+        files:[
+          { nama:'Materi-pertemuan-5-grid-typography-bootstrap4.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'06', judul:'Responsive Grid & Typography Lanjutan',               topik:'Masalah utama: layout tidak responsif — solusinya ada di sini.',
+        files:[
+          { nama:'Materi Pertemuan 6 - Responsive Grid - Typografi.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'07', judul:'Tabel & Form dengan Bootstrap 4',                     topik:'Membuat tampilan data yang rapi dan formulir profesional menggunakan komponen Bootstrap 4.',
+        files:[
+          { nama:'Materi Pertemuan 7 - Web Desain 2.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'08', judul:"Let's Use It Bootstrap",                              topik:'Mencobakan Bootstrap langsung ke proyek web nyata.',
+        files:[
+          { nama:'index.html', tipe:'html', label:'Lihat Materi', sub:'Buka project Bootstrap langsung di browser.' },
+          { nama:'pert8.rar',  tipe:'rar',  label:'Download Project', sub:'Unduh file project untuk dipelajari secara offline.' },
+        ]},
+      { no:'09', judul:'Bootstrap Button & Image',                            topik:'Styling tombol dan gambar yang konsisten, responsif, dan profesional hanya dengan class Bootstrap.',
+        files:[
+          { nama:'Materi Pertemuan 9 - Button dan Image menggunakan Bootstrap.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'10', judul:'Helper Class Bootstrap 4',                            topik:'Contextual Color — kelas Bootstrap untuk mengatur warna teks sesuai konteks semantik.',
+        files:[
+          { nama:'Web Desain 2 - Pertemuan 10.html', tipe:'html', label:'Lihat Materi', sub:'Buka materi pertemuan ini langsung di browser.' },
+        ]},
+      { no:'11', judul:"Let's Use It Bootstrap V2",                           topik:'Mencobakan Bootstrap ke web — sesi praktik lanjutan.',
+        files:[
+          { nama:'index.html',  tipe:'html', label:'Lihat Materi',      sub:'Buka project Bootstrap V2 langsung di browser.' },
+          { nama:'pert11.rar',  tipe:'rar',  label:'Download Project',  sub:'Unduh file project lengkap untuk dipelajari offline.' },
+        ]},
+      { no:'12', judul:'Membuat Komponen Dasar Bootstrap',                    topik:'Membangun dan mengeksplorasi komponen Bootstrap secara interaktif.',
+        files:[
+          { nama:'bootstrap-komponen-dasar-fixed.html', tipe:'html', label:'Lihat Materi — Komponen Bootstrap', sub:'Eksplorasi komponen Bootstrap secara interaktif.' },
+          { nama:'materi-github-pages.html',            tipe:'html', label:'Lihat Materi — GitHub Pages',       sub:'Materi cara deploy ke GitHub Pages.' },
+        ]},
+      { no:'13', judul:'Pertemuan 13', topik:'Segera hadir.', files:[] },
+      { no:'14', judul:'Pertemuan 14', topik:'Segera hadir.', files:[] },
+      { no:'15', judul:'Pertemuan 15', topik:'Segera hadir.', files:[] },
     ]
   },
 
 };
-
 // ================================================================
 // RENDER
 // ================================================================
