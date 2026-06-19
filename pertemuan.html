@@ -271,7 +271,7 @@ if (!mk) {
 
     if (pert.files && pert.files.length > 0) {
       cards = pert.files.map(f => {
-        const url  = `${pertFolder}/${f.nama}`;
+        const url  = `${pertFolder}/${f.nama.split('/').map(encodeURIComponent).join('/')}`;
         const isPdf = f.tipe === 'pdf' || f.tipe === 'pptx' || f.tipe === 'rar';
         const isView = f.tipe === 'html';
 
