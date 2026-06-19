@@ -284,50 +284,35 @@
       <h2>Mata Kuliah</h2>
     </div>
 
-    <div class="course-grid" id="courseGrid">
-
-      <!-- ============================================ -->
-      <!-- TEMPLATE KARTU MATA KULIAH — SALIN BLOK INI    -->
-      <!-- UNTUK SETIAP MATA KULIAH BARU, LALU EDIT:      -->
-      <!-- 1. href -> nama folder mata kuliah             -->
-      <!-- 2. .course-code -> kode/semester (opsional)     -->
-      <!-- 3. <h3> -> nama mata kuliah                     -->
-      <!-- 4. .desc -> deskripsi singkat                   -->
-      <!-- 5. .course-meta span -> info singkat (SKS, dst) -->
-      <!-- ============================================ -->
-      <a class="course-card" href="mata-kuliah/logika-algoritma2/indexalgo2.html">
-        <span class="course-code">Algoritma-2 / Semester II</span>
-        <h3>Logika dan Algoritma 2</h3>
-        <p class="desc">Algoritma dan Pemrograman II merupakan mata kuliah lanjutan yang membahas penerapan konsep algoritma dan pemrograman secara lebih mendalam. Materi meliputi struktur kontrol, fungsi dan rekursi, pengolahan data menggunakan array dan string, operasi file, serta penerapan algoritma sorting dan searching. Selain itu, mahasiswa diperkenalkan pada analisis efisiensi dan kompleksitas algoritma.</p>
-        <div class="course-meta">
-          <span>3 SKS</span>
-        </div>
-        <span class="course-link">
-          Lihat materi
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </span>
-      </a>
-      
-      <a class="course-card" href="mata-kuliah/web-desain2/indexwebdesain2.html">
-        <span class="course-code">webdesain-2 / Semester II</span>
-        <h3>Web Desain 2</h3>
-        <p class="desc">Perancangan web (web design) adalah istilah umum yang digunakan untuk mencakup bagaimana isi web konten ditampilkan, (biasanya berupa hypertext atau hypermedia) yang dikirimkan ke pengguna akhir melalui World Wide Web, dengan menggunakan sebuah browser web atau perangkat lunak berbasis web. Sebuah website dapat berupa sekumpulan teks, gambar, suara dan konten lainnya, serta dapat bersifat statis.</p>
-        <div class="course-meta">
-          <span>3 SKS</span>
-        </div>
-        <span class="course-link">
-          Lihat materi
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </span>
-      </a>
-      <!-- ====== AKHIR TEMPLATE — duplikasi blok <a class="course-card">...</a> di atas untuk MK lain ====== -->
-
-      <!-- Kartu "tambah mata kuliah" — hiasan saja, boleh dihapus 
-      <div class="course-card add-new">
-        <p class="desc">Mata kuliah baru akan ditambahkan di sini.</p>
-      </div>-->
-
-    </div>
+     <div class="course-grid" id="courseGrid">
+  
+    <a class="course-card" href="index-mk.html?mk=algo2">
+      <span class="course-code">Algoritma-2 / Semester II</span>
+      <h3>Logika dan Algoritma 2</h3>
+      <p class="desc">Algoritma dan Pemrograman II merupakan mata kuliah lanjutan yang membahas penerapan konsep algoritma dan pemrograman secara lebih mendalam. Materi meliputi struktur kontrol, fungsi dan rekursi, pengolahan data menggunakan array dan string, operasi file, serta penerapan algoritma sorting dan searching. Selain itu, mahasiswa diperkenalkan pada analisis efisiensi dan kompleksitas algoritma.</p>
+      <div class="course-meta">
+        <span>3 SKS</span>
+      </div>
+      <span class="course-link">
+        Lihat materi
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+  
+    <a class="course-card" href="index-mk.html?mk=webdesain2">
+      <span class="course-code">webdesain-2 / Semester II</span>
+      <h3>Web Desain 2</h3>
+      <p class="desc">Perancangan web (web design) adalah istilah umum yang digunakan untuk mencakup bagaimana isi web konten ditampilkan, (biasanya berupa hypertext atau hypermedia) yang dikirimkan ke pengguna akhir melalui World Wide Web, dengan menggunakan sebuah browser web atau perangkat lunak berbasis web. Sebuah website dapat berupa sekumpulan teks, gambar, suara dan konten lainnya, serta dapat bersifat statis.</p>
+      <div class="course-meta">
+        <span>3 SKS</span>
+      </div>
+      <span class="course-link">
+        Lihat materi
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+  
+  </div>
   </div>
 </section>
 
@@ -365,7 +350,6 @@
 
   // Hitung otomatis jumlah mata kuliah (card asli, bukan kartu "tambah")
   const realCards = document.querySelectorAll('.course-card:not(.add-new)').length;
-  document.getElementById('courseCount').textContent = realCards + ' mata kuliah';
 </script>
 
 </body>
