@@ -37,7 +37,7 @@
   .meeting-hero p{margin:14px 0 0;color:var(--ink-soft);font-size:15.5px;line-height:1.6;}
 
   .actions{padding:8px 0 80px;}
-  .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .action-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:16px;}
 
   .action-card{background:var(--bg-elev);border:1px solid var(--line);border-radius:16px;padding:26px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:flex-start;gap:10px;transition:transform .18s ease,border-color .18s ease;}
   .action-card:hover{transform:translateY(-3px);border-color:var(--accent);}
@@ -198,37 +198,32 @@ if (!mk) {
     document.getElementById('heroTitle').textContent   = pert.judul;
     document.getElementById('heroDesc').textContent    = pert.topik;
 
-    // Susun URL materi
-    // Konvensi folder: BASE/folder/pertXX/
-    // File HTML : materi-XX.html
-    // File PDF  : materi-XX.pdf
+    // Render kartu aksi dari array files
     const pertFolder = `${BASE}/${mk.folder}/pert${pert.no}`;
-    const htmlURL    = `${pertFolder}/materi-${pert.no}.html`;
-    const pdfURL     = `${pertFolder}/materi-${pert.no}.pdf`;
-
-    // Render kartu aksi
     let cards = '';
-    if (pert.html) {
-      cards += `
-      <a class="action-card" href="${htmlURL}" target="_blank" rel="noopener">
-        <span class="action-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-        </span>
-        <strong>Lihat Materi</strong>
-        <span class="sub">Buka materi pertemuan ini langsung di browser.</span>
-      </a>`;
-    }
-    if (pert.pdf) {
-      cards += `
-      <a class="action-card" href="${pdfURL}" download>
-        <span class="action-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
-        </span>
-        <strong>Download Materi</strong>
-        <span class="sub">Unduh berkas PDF untuk dibaca offline.</span>
-      </a>`;
-    }
-    if (!pert.html && !pert.pdf) {
+
+    if (pert.files && pert.files.length > 0) {
+      cards = pert.files.map(f => {
+        const url  = `${pertFolder}/${f.nama}`;
+        const isPdf = f.tipe === 'pdf' || f.tipe === 'pptx' || f.tipe === 'rar';
+        const isView = f.tipe === 'html';
+
+        const icon = isView
+          ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>`;
+
+        const attrs = isView
+          ? `href="${url}" target="_blank" rel="noopener"`
+          : `href="${url}" download`;
+
+        return `
+        <a class="action-card" ${attrs}>
+          <span class="action-icon">${icon}</span>
+          <strong>${f.label}</strong>
+          <span class="sub">${f.sub}</span>
+        </a>`;
+      }).join('');
+    } else {
       cards = `
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-soft);">
         <p style="font-size:15px;">Materi untuk pertemuan ini belum tersedia.<br>Silakan cek kembali nanti.</p>
