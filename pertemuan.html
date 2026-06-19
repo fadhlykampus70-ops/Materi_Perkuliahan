@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materi Pertemuan — Ruang Kelas Digital</title>
+<style>
+  :root[data-theme="light"]{
+    --bg:#F7F6F2;--bg-elev:#FFFFFF;--ink:#1C2321;--ink-soft:#565F5C;
+    --line:#DEDCD3;--accent:#2F5D50;--accent-soft:#E4ECE8;--accent-ink:#FFFFFF;
+    --code-tone:#8A6D3B;--shadow:0 1px 2px rgba(28,35,33,0.04),0 8px 24px rgba(28,35,33,0.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#141816;--bg-elev:#1B201D;--ink:#EDEFEC;--ink-soft:#9AA39E;
+    --line:#2B322E;--accent:#6FBFA3;--accent-soft:#1F2C27;--accent-ink:#0E1411;
+    --code-tone:#D6B377;--shadow:0 1px 2px rgba(0,0,0,0.3),0 12px 32px rgba(0,0,0,0.35);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;transition:background .25s ease,color .25s ease;}
+  h1,h2{font-family:"Fraunces","Iowan Old Style","Georgia",serif;font-weight:600;letter-spacing:-0.01em;margin:0;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+  .site-header{border-bottom:1px solid var(--line);padding:18px 0;}
+  .site-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .breadcrumb{font-size:13.5px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .breadcrumb a{color:var(--accent);font-weight:600;}
+  .breadcrumb a:hover{text-decoration:underline;}
+
+  .theme-toggle{border:1px solid var(--line);background:var(--bg-elev);color:var(--ink);width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:border-color .2s ease;}
+  .theme-toggle:hover{border-color:var(--accent);}
+  .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .meeting-hero{padding:56px 0 36px;}
+  .meeting-hero .eyebrow{color:var(--code-tone);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:12px;}
+  .meeting-hero h1{font-size:clamp(26px,4vw,34px);line-height:1.2;}
+  .meeting-hero p{margin:14px 0 0;color:var(--ink-soft);font-size:15.5px;line-height:1.6;}
+
+  .actions{padding:8px 0 80px;}
+  .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+  .action-card{background:var(--bg-elev);border:1px solid var(--line);border-radius:16px;padding:26px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:flex-start;gap:10px;transition:transform .18s ease,border-color .18s ease;}
+  .action-card:hover{transform:translateY(-3px);border-color:var(--accent);}
+
+  .action-icon{width:42px;height:42px;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .action-icon svg{width:20px;height:20px;}
+  .action-card strong{font-size:16px;}
+  .action-card span.sub{color:var(--ink-soft);font-size:13.5px;line-height:1.5;}
+
+  /* Navigasi pertemuan prev/next */
+  .pert-nav{display:flex;justify-content:space-between;gap:12px;margin-top:32px;}
+  .nav-btn{background:var(--bg-elev);border:1px solid var(--line);border-radius:12px;padding:12px 18px;font-size:13.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:8px;transition:border-color .2s ease,color .2s ease;}
+  .nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .nav-btn:disabled{opacity:.35;cursor:default;pointer-events:none;}
+  .nav-btn svg{width:15px;height:15px;}
+
+  .not-found{text-align:center;padding:80px 24px;color:var(--ink-soft);}
+  .not-found h2{font-size:22px;margin-bottom:12px;}
+
+  @media(max-width:560px){
+    .action-grid{grid-template-columns:1fr;}
+    .meeting-hero{padding:40px 0 24px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="index.html">Ruang Kelas Digital</a>
+      <span>/</span>
+      <a href="#" id="breadcrumbMK">—</a>
+      <span>/</span>
+      <span id="breadcrumbPert">—</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema" title="Ganti tema">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<section class="meeting-hero">
+  <div class="wrap">
+    <span class="eyebrow" id="heroEyebrow">—</span>
+    <h1 id="heroTitle">—</h1>
+    <p id="heroDesc">—</p>
+  </div>
+</section>
+
+<section class="actions">
+  <div class="wrap">
+    <div class="action-grid" id="actionGrid">
+      <!-- diisi JS -->
+    </div>
+
+    <!-- Navigasi prev / next pertemuan -->
+    <div class="pert-nav">
+      <button class="nav-btn" id="btnPrev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Pertemuan sebelumnya
+      </button>
+      <button class="nav-btn" id="btnNext">
+        Pertemuan berikutnya
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ================================================================
+// DATA MATA KULIAH — SAMA PERSIS dengan index-mk.html
+// Jika ada perubahan data, update di KEDUA file ini sekaligus
+// ================================================================
+const BASE = 'https://fadhlykampus70-ops.github.io/Materi_Perkuliahan';
+
+const MK_DATA = {
+
+  algo2: {
+    nama: 'Logika dan Algoritma II',
+    folder: 'mata-kuliah/logika-algoritma2',
+    pertemuan: [
+      { no:'01', judul:'Reset Cara Berpikir Algoritmik',            topik:'Logika untuk membedakan penalaran benar/keliru, algoritma untuk menyelesaikan masalah.',  html:true,  pdf:true  },
+      { no:'02', judul:'Pseudocode — Langkah Logis Program',        topik:'Pseudocode = Alat Berpikir. Logika dulu, kode belakangan.',                               html:true,  pdf:true  },
+      { no:'03', judul:'Operator Aritmatika, Relasional & Logika',  topik:'Menerapkan operator pada percabangan, validasi data, dan pengambilan keputusan.',          html:true,  pdf:true  },
+      { no:'04', judul:'Percabangan & Pengambilan Keputusan',       topik:'Keputusan diambil dalam setiap percabangan.',                                              html:true,  pdf:true  },
+      { no:'05', judul:'Struktur Perulangan dalam Pemrograman',     topik:'Melakukan aksi yang sama berulang kali sampai kondisi tertentu terpenuhi.',                html:true,  pdf:true  },
+      { no:'06', judul:'Fungsi & Modular Programming',              topik:'Fungsi = "mesin kecil": beri input, mesin mengolah, keluarkan output.',                    html:true,  pdf:true  },
+      { no:'07', judul:'Memahami & Menerapkan Rekursi',             topik:'Fungsi memanggil dirinya sendiri hingga mencapai base case.',                              html:true,  pdf:true  },
+      { no:'08', judul:'Recall C++ & Pengenalan Python',            topik:'"Pindah dari C++ ke Python, apakah harus belajar ulang dari nol?"',                       html:true,  pdf:true  },
+      { no:'09', judul:'Array dalam Python (List) & Pengolahan Data',topik:'Lemari pakaian untuk data — teratur, gampang cari, hemat tempat.',                       html:true,  pdf:true  },
+      { no:'10', judul:'String dalam Python',                       topik:'Kumpulan karakter di antara tanda kutip — seperti array khusus teks.',                     html:true,  pdf:true  },
+      { no:'11', judul:'Membaca & Menulis File',                    topik:'Simpan data ke harddisk supaya bisa dibaca kembali kapan saja.',                           html:true,  pdf:true  },
+      { no:'12', judul:'Bubble Sort & Selection Sort',              topik:'Mengurutkan data secara efisien menggunakan dua algoritma klasik.',                        html:true,  pdf:true  },
+      { no:'13', judul:'Pertemuan 13',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
+      { no:'14', judul:'Pertemuan 14',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
+      { no:'15', judul:'Pertemuan 15',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
+      { no:'16', judul:'Pertemuan 16',                              topik:'Segera hadir.',                                                                            html:false, pdf:false },
+    ]
+  },
+
+  webdesain2: {
+    nama: 'Web Desain 2',
+    folder: 'mata-kuliah/web-desain2',
+    pertemuan: [
+      { no:'01', judul:'Pertemuan 01', topik:'Segera hadir.', html:false, pdf:false },
+      { no:'02', judul:'Pertemuan 02', topik:'Segera hadir.', html:false, pdf:false },
+      // Tambahkan pertemuan di sini
+    ]
+  },
+
+};
+
+// ================================================================
+// RENDER
+// ================================================================
+const params  = new URLSearchParams(window.location.search);
+const mkKey   = params.get('mk');
+const pertNo  = params.get('pert');
+const mk      = MK_DATA[mkKey];
+
+function goTo(no){
+  window.location.href = `pertemuan.html?mk=${mkKey}&pert=${no}`;
+}
+
+if (!mk) {
+  document.querySelector('.meeting-hero .wrap').innerHTML =
+    `<div class="not-found"><h2>Mata kuliah tidak ditemukan</h2><p>Kembali ke <a href="index.html" style="color:var(--accent);font-weight:600">Ruang Kelas Digital</a>.</p></div>`;
+} else {
+  const idx  = mk.pertemuan.findIndex(p => p.no === pertNo);
+  const pert = mk.pertemuan[idx];
+
+  if (!pert) {
+    document.getElementById('heroTitle').textContent = 'Pertemuan tidak ditemukan';
+    document.getElementById('heroDesc').textContent  = '';
+  } else {
+    // Breadcrumb
+    document.title = `Pertemuan ${pert.no} — ${mk.nama}`;
+    document.getElementById('breadcrumbMK').textContent = mk.nama;
+    document.getElementById('breadcrumbMK').href        = `index-mk.html?mk=${mkKey}`;
+    document.getElementById('breadcrumbPert').textContent = `Pertemuan ${pert.no}`;
+
+    // Hero
+    document.getElementById('heroEyebrow').textContent = `Pertemuan ${pert.no}`;
+    document.getElementById('heroTitle').textContent   = pert.judul;
+    document.getElementById('heroDesc').textContent    = pert.topik;
+
+    // Susun URL materi
+    // Konvensi folder: BASE/folder/pertXX/
+    // File HTML : materi-XX.html
+    // File PDF  : materi-XX.pdf
+    const pertFolder = `${BASE}/${mk.folder}/pert${pert.no}`;
+    const htmlURL    = `${pertFolder}/materi-${pert.no}.html`;
+    const pdfURL     = `${pertFolder}/materi-${pert.no}.pdf`;
+
+    // Render kartu aksi
+    let cards = '';
+    if (pert.html) {
+      cards += `
+      <a class="action-card" href="${htmlURL}" target="_blank" rel="noopener">
+        <span class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+        <strong>Lihat Materi</strong>
+        <span class="sub">Buka materi pertemuan ini langsung di browser.</span>
+      </a>`;
+    }
+    if (pert.pdf) {
+      cards += `
+      <a class="action-card" href="${pdfURL}" download>
+        <span class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
+        </span>
+        <strong>Download Materi</strong>
+        <span class="sub">Unduh berkas PDF untuk dibaca offline.</span>
+      </a>`;
+    }
+    if (!pert.html && !pert.pdf) {
+      cards = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-soft);">
+        <p style="font-size:15px;">Materi untuk pertemuan ini belum tersedia.<br>Silakan cek kembali nanti.</p>
+      </div>`;
+    }
+    document.getElementById('actionGrid').innerHTML = cards;
+
+    // Navigasi prev/next
+    const prev = mk.pertemuan[idx - 1];
+    const next = mk.pertemuan[idx + 1];
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+
+    if (prev) { btnPrev.onclick = () => goTo(prev.no); }
+    else       { btnPrev.disabled = true; }
+
+    if (next) { btnNext.onclick = () => goTo(next.no); }
+    else       { btnNext.disabled = true; }
+  }
+}
+
+// Tema
+const root = document.documentElement;
+const toggleBtn = document.getElementById('themeToggle');
+const icon = document.getElementById('themeIcon');
+function applyTheme(t){ root.setAttribute('data-theme',t); icon.textContent=t==='dark'?'☀️':'🌙'; localStorage.setItem('theme',t); }
+const saved = localStorage.getItem('theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+applyTheme(saved||(prefersDark?'dark':'light'));
+toggleBtn.addEventListener('click',()=>{ applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'); });
+</script>
+
+</body>
+</html>
