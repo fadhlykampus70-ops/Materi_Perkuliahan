@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materi: Plugin JavaScript Bootstrap 4 &amp; Responsive Web Design</title>
+
+<!-- Font: Inter untuk teks, JetBrains Mono untuk kode -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Bootstrap 4.6 CSS (untuk live demo komponen) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+<!-- Font Awesome 5 (ikon, konsisten dengan web praktik kelas) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<link rel="stylesheet" href="materi.css">
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Buka menu materi">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="topbar-brand">
+    <span class="brand-mark">WD2</span>
+    <div class="brand-text">
+      <strong>Web Desain 2</strong>
+      <small>Pertemuan 12&ndash;14 &middot; D3 Manajemen Informatika</small>
+    </div>
+  </div>
+  <div class="topbar-meta">
+    <span class="badge-version"><i class="fab fa-bootstrap"></i> Bootstrap 4</span>
+  </div>
+</header>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR NAVIGASI ============ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-label">Pengantar</p>
+      <a href="#pengantar" class="sidebar-link"><i class="fas fa-info-circle"></i> Tentang Materi Ini</a>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-label">Bagian 1 &middot; Plugin Dasar</p>
+      <a href="#transitions" class="sidebar-link"><span class="dot"></span> Transitions</a>
+      <a href="#modal" class="sidebar-link"><span class="dot"></span> Modal</a>
+      <a href="#dropdown" class="sidebar-link"><span class="dot"></span> Dropdown</a>
+      <a href="#scrollspy" class="sidebar-link"><span class="dot"></span> Scrollspy</a>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-label">Bagian 2 &middot; Plugin Interaktif</p>
+      <a href="#tab" class="sidebar-link"><span class="dot"></span> Tab</a>
+      <a href="#tooltip" class="sidebar-link"><span class="dot"></span> Tooltip</a>
+      <a href="#popover" class="sidebar-link"><span class="dot"></span> Popover</a>
+      <a href="#alert" class="sidebar-link"><span class="dot"></span> Alert</a>
+      <a href="#button" class="sidebar-link"><span class="dot"></span> Button</a>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-label">Bagian 3 &middot; Studi Kasus</p>
+      <a href="#rwd" class="sidebar-link"><span class="dot"></span> Responsive Web Design</a>
+      <a href="#navbar" class="sidebar-link"><span class="dot"></span> Navbar</a>
+      <a href="#sidebar-demo" class="sidebar-link"><span class="dot"></span> Sidebar Layout</a>
+      <a href="#carousel" class="sidebar-link"><span class="dot"></span> Carousel</a>
+      <a href="#thumbnail" class="sidebar-link"><span class="dot"></span> Thumbnail Item</a>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-label">Penutup</p>
+      <a href="#rangkuman" class="sidebar-link"><i class="fas fa-list-check"></i> Rangkuman</a>
+    </div>
+  </nav>
+
+  <!-- ============ KONTEN UTAMA ============ -->
+  <main class="content" id="content">
+
+    <section id="pengantar" class="topic-section">
+      <p class="eyebrow">Pengantar</p>
+      <h1>Plugin JavaScript Bootstrap 4 &amp; Responsive Web Design</h1>
+      <p class="lead">Materi ini menggabungkan Pertemuan 12, 13, dan 14 &mdash; mengenal komponen interaktif Bootstrap yang digerakkan JavaScript, lalu menerapkannya dalam studi kasus nyata: Sistem Informasi Kampus.</p>
+
+      <div class="callout callout-tip">
+        <i class="fas fa-lightbulb"></i>
+        <div><strong>Cara pakai materi ini:</strong> Setiap komponen punya kotak kode yang bisa Anda lihat tab HTML/CSS/JS-nya, dan kotak hijau <em>"Live Demo"</em> di bawahnya yang elemennya benar&#8209;benar aktif &mdash; bisa langsung diklik, hover, atau dicoba saat ini juga tanpa pindah file.</div>
+      </div>
+
+      <div class="callout callout-warn">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div><strong>Prasyarat wajib:</strong> Semua plugin JavaScript Bootstrap 4 di bawah ini hanya akan berfungsi jika 3 file ini dimuat secara berurutan: <strong>jQuery</strong> &rarr; <strong>Popper.js</strong> &rarr; <strong>bootstrap.min.js</strong>. Tanpa jQuery dan Popper, atribut <code>data-toggle</code> tidak akan bekerja sama sekali.</div>
+      </div>
+    </section>
+
+    <!-- ================= TRANSITIONS ================= -->
+    <section id="transitions" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 1 &middot; Plugin Dasar</p>
+          <h2><i class="fas fa-wand-magic-sparkles"></i> Transitions</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 12</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Bayangkan Anda membuka pintu lemari. Pintu itu tidak langsung "hilang" lalu "muncul" terbuka &mdash; ia bergerak halus dari posisi tertutup ke posisi terbuka. <em>Transitions</em> di Bootstrap adalah "engsel" yang membuat perubahan tampilan (muncul/hilang, geser, pudar) terasa halus, bukan tiba&#8209;tiba.</p>
+
+      <p>Transition bukan komponen yang berdiri sendiri &mdash; ia adalah <strong>modul dasar (base module)</strong> yang dipakai oleh hampir semua plugin lain: Modal saat muncul/hilang, Dropdown saat terbuka, Alert saat ditutup, Tab saat berpindah &mdash; semuanya memanfaatkan efek transisi CSS yang disediakan modul ini secara otomatis.</p>
+
+      <div class="callout callout-tip">
+        <i class="fas fa-circle-info"></i>
+        <div>Bootstrap mendeteksi dukungan transisi CSS3 di browser secara otomatis. Jika browser tidak mendukung (sangat jarang di browser modern), Bootstrap akan menggantinya dengan perubahan langsung tanpa animasi &mdash; jadi komponen tetap berfungsi, hanya tidak halus.</div>
+      </div>
+
+      <h3><i class="fas fa-code"></i> Contoh Efek Transition (fade)</h3>
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="t1-html">HTML</button>
+          <button class="code-tab" data-target="t1-css">CSS</button>
+        </div>
+        <div class="code-pane active" data-pane="t1-html">
+<pre><span class="tag">&lt;div</span> class="box-transition" id="boxFade"<span class="tag">&gt;</span>
+  Klik tombol untuk melihat efek fade
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;button</span> onclick="document.getElementById('boxFade').classList.toggle('show')"<span class="tag">&gt;</span>
+  Toggle Fade
+<span class="tag">&lt;/button&gt;</span></pre>
+        </div>
+        <div class="code-pane" data-pane="t1-css">
+<pre><span class="com">/* Inilah inti dari "transition": */</span>
+.box-transition {
+  opacity: 0;
+  <span class="tag">transition:</span> opacity 0.4s linear; <span class="com">/* <-- bagian penting */</span>
+}
+.box-transition.show {
+  opacity: 1;
+}</pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body">
+          <div id="boxFadeDemo" style="opacity:0; transition: opacity .4s linear; background:var(--accent-soft); color:#3B2868; padding:18px; border-radius:8px; margin-bottom:12px; font-weight:600;">
+            Saya muncul dan hilang dengan halus karena CSS transition ✨
+          </div>
+          <button class="btn btn-primary" onclick="document.getElementById('boxFadeDemo').style.opacity = document.getElementById('boxFadeDemo').style.opacity === '1' ? '0' : '1'">Toggle Fade</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MODAL ================= -->
+    <section id="modal" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 1 &middot; Plugin Dasar</p>
+          <h2><i class="fas fa-window-restore"></i> Modal</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 12</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Modal itu seperti kertas pengumuman yang ditempel di atas meja kerja Anda &mdash; semua yang di bawahnya jadi "ter-blok" sementara, dan Anda harus fokus membaca atau menutup pengumuman itu dulu sebelum lanjut kerja. Itulah Modal: kotak dialog yang muncul di atas konten, melayang, dengan latar belakang gelap (<em>backdrop</em>) di belakangnya.</p>
+
+      <p>Modal biasa dipakai untuk: konfirmasi sebelum hapus data, menampilkan form login/daftar tanpa pindah halaman, menampilkan detail gambar atau info tambahan, atau peringatan penting yang wajib dibaca pengguna.</p>
+
+      <h3><i class="fas fa-rocket"></i> Contoh Penerapan</h3>
+      <p>Modal diaktifkan lewat atribut <code>data-toggle="modal"</code> dan <code>data-target="#idModal"</code> &mdash; tanpa satu baris JavaScript pun dari kita, karena logikanya sudah dibungkus di dalam <code>bootstrap.min.js</code>.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="m1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="m1-html">
+<pre><span class="com">&lt;!-- Tombol pemicu --&gt;</span>
+<span class="tag">&lt;button</span> type="button" class="btn btn-primary"
+  data-toggle="modal" data-target="#modalContoh"<span class="tag">&gt;</span>
+  Buka Modal
+<span class="tag">&lt;/button&gt;</span>
+
+<span class="com">&lt;!-- Struktur Modal --&gt;</span>
+<span class="tag">&lt;div</span> class="modal fade" id="modalContoh" tabindex="-1"<span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> class="modal-dialog"<span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> class="modal-content"<span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> class="modal-header"<span class="tag">&gt;</span>
+        <span class="tag">&lt;h5</span> class="modal-title"<span class="tag">&gt;</span>Judul Modal<span class="tag">&lt;/h5&gt;</span>
+        <span class="tag">&lt;button</span> class="close" data-dismiss="modal"<span class="tag">&gt;</span>&amp;times;<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;div</span> class="modal-body"<span class="tag">&gt;</span>
+        Isi konten modal di sini.
+      <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;div</span> class="modal-footer"<span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> class="btn btn-secondary" data-dismiss="modal"<span class="tag">&gt;</span>Tutup<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalContohDemo">
+            <i class="fas fa-window-restore"></i> Buka Modal
+          </button>
+
+          <div class="modal fade" id="modalContohDemo" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Konfirmasi Pendaftaran</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                  <p>Apakah Anda yakin ingin mendaftar pada mata kuliah <strong>Web Desain 2</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Ya, Daftar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Option (ditulis sebagai data-attribute, contoh: data-backdrop="static")</caption>
+        <tr><th>Nama</th><th>Tipe</th><th>Default</th><th>Keterangan</th></tr>
+        <tr><td>backdrop</td><td>boolean/string</td><td>true</td><td>true = ada backdrop gelap; "static" = backdrop ada tapi modal tidak tertutup saat backdrop diklik; false = tanpa backdrop</td></tr>
+        <tr><td>keyboard</td><td>boolean</td><td>true</td><td>Jika true, modal tertutup saat tombol Esc ditekan</td></tr>
+        <tr><td>focus</td><td>boolean</td><td>true</td><td>Memberi fokus otomatis ke modal saat tampil</td></tr>
+        <tr><td>show</td><td>boolean</td><td>true</td><td>Menampilkan modal langsung saat instance diinisialisasi (via JS)</td></tr>
+      </table>
+
+      <table class="ref-table">
+        <caption>Method (dipanggil lewat JavaScript/jQuery)</caption>
+        <tr><th>Method</th><th>Keterangan</th></tr>
+        <tr><td>$('#myModal').modal(options)</td><td>Mengaktifkan elemen sebagai modal dengan opsi tertentu</td></tr>
+        <tr><td>$('#myModal').modal('toggle')</td><td>Membuka jika tertutup, menutup jika terbuka</td></tr>
+        <tr><td>$('#myModal').modal('show')</td><td>Membuka modal secara manual lewat JS</td></tr>
+        <tr><td>$('#myModal').modal('hide')</td><td>Menutup modal secara manual lewat JS</td></tr>
+      </table>
+
+      <table class="ref-table">
+        <caption>Event</caption>
+        <tr><th>Event</th><th>Terjadi saat</th></tr>
+        <tr><td>show.bs.modal</td><td>Tepat sebelum modal mulai ditampilkan</td></tr>
+        <tr><td>shown.bs.modal</td><td>Setelah modal selesai tampil (animasi sudah selesai)</td></tr>
+        <tr><td>hide.bs.modal</td><td>Tepat sebelum modal mulai disembunyikan</td></tr>
+        <tr><td>hidden.bs.modal</td><td>Setelah modal selesai tersembunyi sepenuhnya</td></tr>
+      </table>
+
+      <div class="callout callout-warn">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div><strong>Catatan penting:</strong> Jangan pernah meletakkan dua Modal yang saling bertumpuk (modal di dalam modal). Bootstrap 4 tidak mendukung hal ini dengan baik dan akan menimbulkan bug pada backdrop.</div>
+      </div>
+    </section>
+
+    <!-- ================= DROPDOWN ================= -->
+    <section id="dropdown" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 1 &middot; Plugin Dasar</p>
+          <h2><i class="fas fa-caret-down"></i> Dropdown</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 12</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Dropdown itu seperti laci kecil di meja. Saat tertutup, laci tidak memakan tempat. Begitu dibuka (diklik), isi di dalamnya baru terlihat &mdash; lalu Anda bisa pilih satu barang dan laci otomatis tertutup lagi.</p>
+
+      <p>Dropdown menampilkan daftar pilihan/menu yang tersembunyi sampai elemen pemicunya (biasanya tombol atau link) diklik. Sangat umum dipakai untuk menu navigasi bertingkat, menu akun pengguna, atau filter pilihan.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="d1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="d1-html">
+<pre><span class="tag">&lt;div</span> class="dropdown"<span class="tag">&gt;</span>
+  <span class="tag">&lt;button</span> class="btn btn-primary dropdown-toggle"
+    type="button" data-toggle="dropdown"<span class="tag">&gt;</span>
+    Menu Akun
+  <span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;div</span> class="dropdown-menu"<span class="tag">&gt;</span>
+    <span class="tag">&lt;a</span> class="dropdown-item" href="#"<span class="tag">&gt;</span>Profil<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;a</span> class="dropdown-item" href="#"<span class="tag">&gt;</span>Pengaturan<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;div</span> class="dropdown-divider"<span class="tag">&gt;&lt;/div&gt;</span>
+    <span class="tag">&lt;a</span> class="dropdown-item" href="#"<span class="tag">&gt;</span>Keluar<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body">
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownDemo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user"></i> Menu Akun
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownDemo">
+              <a class="dropdown-item" href="#">Profil Mahasiswa</a>
+              <a class="dropdown-item" href="#">Kartu Hasil Studi</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Keluar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Option</caption>
+        <tr><th>Nama</th><th>Tipe</th><th>Default</th><th>Keterangan</th></tr>
+        <tr><td>offset</td><td>number/string</td><td>0</td><td>Mengatur jarak/offset posisi dropdown menu dari pemicunya</td></tr>
+        <tr><td>flip</td><td>boolean</td><td>true</td><td>Membalik arah dropdown otomatis jika ruang di bawah tidak cukup</td></tr>
+        <tr><td>boundary</td><td>string/element</td><td>'scrollParent'</td><td>Elemen pembatas area dimana dropdown boleh ditampilkan</td></tr>
+      </table>
+
+      <table class="ref-table">
+        <caption>Method &amp; Event</caption>
+        <tr><th>Nama</th><th>Keterangan</th></tr>
+        <tr><td>$('.dropdown-toggle').dropdown('toggle')</td><td>Method &mdash; membuka/menutup dropdown lewat JS</td></tr>
+        <tr><td>show.bs.dropdown / shown.bs.dropdown</td><td>Event &mdash; sebelum dan setelah dropdown tampil</td></tr>
+        <tr><td>hide.bs.dropdown / hidden.bs.dropdown</td><td>Event &mdash; sebelum dan setelah dropdown tersembunyi</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= SCROLLSPY ================= -->
+    <section id="scrollspy" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 1 &middot; Plugin Dasar</p>
+          <h2><i class="fas fa-location-crosshairs"></i> Scrollspy</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 12</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Sidebar navigasi di sebelah kiri halaman materi ini sebenarnya menggunakan prinsip yang sama dengan Scrollspy &mdash; seperti GPS yang terus memantau "Anda sedang di mana" dan menyalakan penanda lokasi saat ini secara otomatis sambil Anda bergerak (scroll).</p>
+
+      <p>Scrollspy secara otomatis memperbarui link navigasi berdasarkan posisi scroll halaman, menandai menu yang sesuai dengan section yang sedang dilihat pengguna sebagai "aktif".</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="s1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="s1-html">
+<pre><span class="com">&lt;!-- Ditempelkan pada elemen body atau container yang scroll --&gt;</span>
+<span class="tag">&lt;body</span> data-spy="scroll" data-target="#navSpy" data-offset="60"<span class="tag">&gt;</span>
+
+<span class="tag">&lt;nav</span> id="navSpy"<span class="tag">&gt;</span>
+  <span class="tag">&lt;a</span> class="nav-link" href="#bagian1"<span class="tag">&gt;</span>Bagian 1<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;a</span> class="nav-link" href="#bagian2"<span class="tag">&gt;</span>Bagian 2<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/nav&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <i class="fas fa-lightbulb"></i>
+        <div>Sidebar materi ini ("Bagian 1 · Plugin Dasar", dst di sebelah kiri) berperilaku seperti Scrollspy &mdash; coba scroll halaman ini perlahan dan perhatikan link di sidebar kiri akan ikut menyala mengikuti section yang sedang Anda baca.</div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Option</caption>
+        <tr><th>Nama</th><th>Tipe</th><th>Default</th><th>Keterangan</th></tr>
+        <tr><td>target</td><td>selector</td><td>&ndash;</td><td>Selector ke elemen navigasi (nav/list) yang akan diberi class "active"</td></tr>
+        <tr><td>offset</td><td>number</td><td>10</td><td>Jarak (px) dari atas viewport yang dihitung sebelum suatu section dianggap "aktif"</td></tr>
+        <tr><td>method</td><td>string</td><td>'auto'</td><td>Cara mendeteksi posisi scroll: 'auto', 'offset', atau 'position'</td></tr>
+      </table>
+
+      <table class="ref-table">
+        <caption>Method &amp; Event</caption>
+        <tr><th>Nama</th><th>Keterangan</th></tr>
+        <tr><td>$('#navbar').scrollspy('refresh')</td><td>Method &mdash; memuat ulang kalkulasi posisi, dipakai jika konten halaman berubah dinamis</td></tr>
+        <tr><td>activate.bs.scrollspy</td><td>Event &mdash; terpicu setiap kali item navigasi baru menjadi aktif</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= TAB ================= -->
+    <section id="tab" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 2 &middot; Plugin Interaktif</p>
+          <h2><i class="fas fa-folder-open"></i> Tab</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 13</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Tab seperti sekat-sekat pembatas (divider) dalam satu folder ring binder &mdash; semua kertas ada di dalam satu folder yang sama, tapi Anda hanya melihat satu sekat/bagian dalam satu waktu, dan tinggal klik label sekat lain untuk berpindah.</p>
+
+      <p>Tab Plugin memungkinkan beberapa panel konten berbagi satu area tampilan, di mana hanya satu panel yang terlihat dalam satu waktu, dikendalikan oleh navigasi label di atasnya.</p>
+
+      <h3><i class="fas fa-eye"></i> Fade Effect</h3>
+      <p>Tambahkan class <code>fade</code> pada elemen <code>.tab-pane</code> agar perpindahan antar tab terasa halus (transisi opacity), bukan langsung berganti secara kasar.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="tb1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="tb1-html">
+<pre><span class="tag">&lt;ul</span> class="nav nav-tabs" role="tablist"<span class="tag">&gt;</span>
+  <span class="tag">&lt;li</span> class="nav-item"<span class="tag">&gt;</span>
+    <span class="tag">&lt;a</span> class="nav-link active" data-toggle="tab" href="#tabInfo"<span class="tag">&gt;</span>Info<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li</span> class="nav-item"<span class="tag">&gt;</span>
+    <span class="tag">&lt;a</span> class="nav-link" data-toggle="tab" href="#tabJadwal"<span class="tag">&gt;</span>Jadwal<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="tag">&lt;div</span> class="tab-content"<span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> class="tab-pane fade show active" id="tabInfo"<span class="tag">&gt;</span>
+    Konten Info di sini.
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> class="tab-pane fade" id="tabJadwal"<span class="tag">&gt;</span>
+    Konten Jadwal di sini.
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body">
+          <ul class="nav nav-tabs" id="tabDemoNav" role="tablist">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tabInfoDemo">Info Dosen</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabJadwalDemo">Jadwal Mengajar</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tabKontakDemo">Kontak</a></li>
+          </ul>
+          <div class="tab-content" style="padding-top:14px;">
+            <div class="tab-pane fade show active" id="tabInfoDemo">Mengajar mata kuliah Web Desain 2 di Program Studi D3 Manajemen Informatika.</div>
+            <div class="tab-pane fade" id="tabJadwalDemo">Kelas MI&#8209;1, MI&#8209;2, dan MI&#8209;7 &mdash; setiap pekan membahas satu topik baru sesuai RPS.</div>
+            <div class="tab-pane fade" id="tabKontakDemo">Hubungi melalui email kampus atau jam konsultasi di ruang dosen.</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Method &amp; Event</caption>
+        <tr><th>Nama</th><th>Keterangan</th></tr>
+        <tr><td>$('#myTab a').tab('show')</td><td>Method &mdash; menampilkan tab tertentu &amp; panel terkaitnya secara manual lewat JS</td></tr>
+        <tr><td>show.bs.tab / shown.bs.tab</td><td>Event &mdash; terpicu sebelum dan setelah tab baru ditampilkan</td></tr>
+        <tr><td>hide.bs.tab / hidden.bs.tab</td><td>Event &mdash; terpicu sebelum dan setelah tab lama disembunyikan</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= TOOLTIP ================= -->
+    <section id="tooltip" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 2 &middot; Plugin Interaktif</p>
+          <h2><i class="fas fa-comment-dots"></i> Tooltip</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 13</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Tooltip seperti label kecil sticky note yang muncul sesaat saat jari/kursor Anda mengarah pada sebuah tombol &mdash; memberi keterangan singkat tanpa harus membuka halaman atau jendela baru.</p>
+
+      <p>Tooltip menampilkan teks bantuan singkat saat pengguna mengarahkan kursor (hover) atau fokus ke suatu elemen. Cocok untuk menjelaskan ikon tanpa label, atau memberi info tambahan tanpa memenuhi tampilan.</p>
+
+      <div class="callout callout-warn">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div><strong>Wajib diingat:</strong> Tooltip <u>tidak otomatis aktif</u> hanya dengan menulis atributnya di HTML. Harus diinisialisasi lewat JavaScript: <code>$('[data-toggle="tooltip"]').tooltip()</code> &mdash; ini adalah plugin yang paling sering terlewat diinisialisasi oleh mahasiswa.</div>
+      </div>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="tt1-html">HTML</button>
+          <button class="code-tab" data-target="tt1-js">JS (wajib!)</button>
+        </div>
+        <div class="code-pane active" data-pane="tt1-html">
+<pre><span class="tag">&lt;button</span> class="btn btn-secondary" data-toggle="tooltip"
+  data-placement="top" title="Ini adalah tooltip"<span class="tag">&gt;</span>
+  Arahkan kursor ke sini
+<span class="tag">&lt;/button&gt;</span></pre>
+        </div>
+        <div class="code-pane" data-pane="tt1-js">
+<pre><span class="com">// Wajib dipanggil agar tooltip aktif!</span>
+$(<span class="str">'[data-toggle="tooltip"]'</span>).tooltip();</pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body">
+          <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="NIM wajib diisi 10 digit">
+            <i class="fas fa-circle-info"></i> Format NIM
+          </button>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Option</caption>
+        <tr><th>Nama</th><th>Tipe</th><th>Default</th><th>Keterangan</th></tr>
+        <tr><td>placement</td><td>string</td><td>'top'</td><td>Posisi tooltip: top, bottom, left, right, atau "auto"</td></tr>
+        <tr><td>trigger</td><td>string</td><td>'hover focus'</td><td>Cara memunculkan tooltip: click, hover, focus, manual</td></tr>
+        <tr><td>delay</td><td>number/object</td><td>0</td><td>Jeda (ms) sebelum tooltip muncul/hilang</td></tr>
+        <tr><td>html</td><td>boolean</td><td>false</td><td>Mengizinkan tag HTML di dalam isi tooltip</td></tr>
+      </table>
+
+      <table class="ref-table">
+        <caption>Method &amp; Event</caption>
+        <tr><th>Nama</th><th>Keterangan</th></tr>
+        <tr><td>.tooltip('show') / .tooltip('hide')</td><td>Method &mdash; menampilkan/menyembunyikan tooltip lewat JS</td></tr>
+        <tr><td>.tooltip('dispose')</td><td>Method &mdash; menghapus tooltip dan membersihkan data terkait</td></tr>
+        <tr><td>show.bs.tooltip / shown.bs.tooltip</td><td>Event &mdash; sebelum &amp; setelah tooltip tampil</td></tr>
+        <tr><td>hide.bs.tooltip / hidden.bs.tooltip</td><td>Event &mdash; sebelum &amp; setelah tooltip hilang</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= POPOVER ================= -->
+    <section id="popover" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 2 &middot; Plugin Interaktif</p>
+          <h2><i class="fas fa-message"></i> Popover</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 13</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Jika Tooltip adalah sticky note kecil dengan satu baris kalimat, Popover adalah kartu info yang lebih besar lengkap dengan judul dan isi paragraf &mdash; seperti kartu nama yang muncul saat Anda mengklik foto profil seseorang.</p>
+
+      <p>Popover serupa dengan Tooltip, tetapi mendukung konten yang lebih kaya: judul (header) terpisah dan body yang lebih panjang. Umumnya dipicu dengan klik, bukan hover.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="pv1-html">HTML</button>
+          <button class="code-tab" data-target="pv1-js">JS (wajib!)</button>
+        </div>
+        <div class="code-pane active" data-pane="pv1-html">
+<pre><span class="tag">&lt;button</span> class="btn btn-primary" data-toggle="popover"
+  title="Dikenakan Sanksi" data-content="Keterlambatan lebih dari 15 menit dianggap alpa."<span class="tag">&gt;</span>
+  Lihat Aturan
+<span class="tag">&lt;/button&gt;</span></pre>
+        </div>
+        <div class="code-pane" data-pane="pv1-js">
+<pre><span class="com">// Sama seperti tooltip, popover wajib diinisialisasi:</span>
+$(<span class="str">'[data-toggle="popover"]'</span>).popover();</pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body">
+          <button type="button" class="btn btn-primary" data-toggle="popover" title="Aturan Keterlambatan" data-content="Mahasiswa yang terlambat lebih dari 15 menit dianggap tidak hadir pada pertemuan tersebut.">
+            <i class="fas fa-clock"></i> Lihat Aturan Kelas
+          </button>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Option</caption>
+        <tr><th>Nama</th><th>Tipe</th><th>Default</th><th>Keterangan</th></tr>
+        <tr><td>title</td><td>string</td><td>''</td><td>Judul yang tampil di header popover</td></tr>
+        <tr><td>content</td><td>string</td><td>''</td><td>Isi/body teks popover</td></tr>
+        <tr><td>placement</td><td>string</td><td>'right'</td><td>Posisi tampilnya popover relatif terhadap pemicu</td></tr>
+        <tr><td>trigger</td><td>string</td><td>'click'</td><td>Cara memunculkan: click, hover, focus, manual</td></tr>
+      </table>
+
+      <table class="ref-table">
+        <caption>Method &amp; Event</caption>
+        <tr><th>Nama</th><th>Keterangan</th></tr>
+        <tr><td>.popover('show') / .popover('hide')</td><td>Method &mdash; sama prinsipnya dengan tooltip</td></tr>
+        <tr><td>show.bs.popover / shown.bs.popover</td><td>Event &mdash; sebelum &amp; setelah popover tampil</td></tr>
+        <tr><td>hide.bs.popover / hidden.bs.popover</td><td>Event &mdash; sebelum &amp; setelah popover hilang</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= ALERT ================= -->
+    <section id="alert" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 2 &middot; Plugin Interaktif</p>
+          <h2><i class="fas fa-bell"></i> Alert</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 13</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Alert seperti pengumuman tempel di papan mading sekolah &mdash; bisa berwarna sesuai jenis info (hijau = baik, merah = bahaya), dan biasanya ada yang bisa "dicabut/ditutup" setelah dibaca dengan tombol silang.</p>
+
+      <p>Alert menampilkan pesan kontekstual untuk memberi tahu pengguna tentang suatu kondisi (berhasil, gagal, peringatan, info), dan plugin JS-nya menambahkan kemampuan untuk menutup alert tersebut dengan animasi fade.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="al1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="al1-html">
+<pre><span class="tag">&lt;div</span> class="alert alert-success alert-dismissible fade show" role="alert"<span class="tag">&gt;</span>
+  Data berhasil disimpan!
+  <span class="tag">&lt;button</span> type="button" class="close" data-dismiss="alert"<span class="tag">&gt;</span>&amp;times;<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body">
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-circle-check"></i> Nilai UTS berhasil direkap ke sistem!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-bottom:0;">
+            <i class="fas fa-triangle-exclamation"></i> Pengumpulan tugas akan ditutup besok pukul 23:59.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Method &amp; Event</caption>
+        <tr><th>Nama</th><th>Keterangan</th></tr>
+        <tr><td>$('.alert').alert('close')</td><td>Method &mdash; menutup alert secara manual lewat JS (memicu animasi fade lalu menghapus elemen dari DOM)</td></tr>
+        <tr><td>close.bs.alert</td><td>Event &mdash; terpicu tepat saat method close dipanggil</td></tr>
+        <tr><td>closed.bs.alert</td><td>Event &mdash; terpicu setelah alert selesai dihapus dari DOM</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= BUTTON ================= -->
+    <section id="button" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 2 &middot; Plugin Interaktif</p>
+          <h2><i class="fas fa-hand-pointer"></i> Button</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 13</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Button Plugin seperti saklar lampu kamar &mdash; ada yang bersifat satu tombol on/off (Single Toggle), ada yang berkelompok seperti memilih satu dari beberapa channel TV (Radio), dan ada yang bisa pilih banyak sekaligus seperti centang daftar belanja (Checkbox).</p>
+
+      <p>Button Plugin menambahkan perilaku tambahan pada elemen <code>&lt;button&gt;</code>: status "loading" sementara proses berjalan, toggle aktif/nonaktif, dan pengelompokan checkbox/radio bergaya tombol.</p>
+
+      <h3><i class="fas fa-spinner"></i> Loading State</h3>
+      <p>Mengganti teks tombol sementara menjadi indikator "memuat" menggunakan atribut <code>data-loading-text</code>, lalu dikembalikan lagi via JS.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="bt1-html">HTML</button>
+          <button class="code-tab" data-target="bt1-js">JS</button>
+        </div>
+        <div class="code-pane active" data-pane="bt1-html">
+<pre><span class="tag">&lt;button</span> id="btnSimpan" class="btn btn-primary" data-loading-text="Menyimpan..."<span class="tag">&gt;</span>
+  Simpan Data
+<span class="tag">&lt;/button&gt;</span></pre>
+        </div>
+        <div class="code-pane" data-pane="bt1-js">
+<pre>$(<span class="str">'#btnSimpan'</span>).on(<span class="str">'click'</span>, function () {
+  $(this).button(<span class="str">'loading'</span>);   <span class="com">// ganti jadi "Menyimpan..."</span>
+  setTimeout(() =&gt; {
+    $(this).button(<span class="str">'reset'</span>);    <span class="com">// kembalikan ke teks asli</span>
+  }, 1500);
+});</pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body" style="display:flex; flex-wrap:wrap; gap:24px;">
+          <div>
+            <p style="font-size:13px; color:var(--ink-soft); margin-bottom:8px;"><strong>Loading State</strong></p>
+            <button id="btnLoadingDemo" class="btn btn-primary" data-loading-text="<i class='fas fa-spinner fa-spin'></i> Menyimpan...">Simpan Data</button>
+          </div>
+          <div>
+            <p style="font-size:13px; color:var(--ink-soft); margin-bottom:8px;"><strong>Single Toggle</strong></p>
+            <button type="button" class="btn btn-outline-primary" data-toggle="button"><i class="fas fa-bookmark"></i> Tandai Favorit</button>
+          </div>
+          <div>
+            <p style="font-size:13px; color:var(--ink-soft); margin-bottom:8px;"><strong>Radio (pilih 1)</strong></p>
+            <div class="btn-group" data-toggle="buttons">
+              <label class="btn btn-outline-secondary active"><input type="radio" name="hadir" checked> Hadir</label>
+              <label class="btn btn-outline-secondary"><input type="radio" name="hadir"> Izin</label>
+              <label class="btn btn-outline-secondary"><input type="radio" name="hadir"> Alpa</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Method</caption>
+        <tr><th>Method</th><th>Keterangan</th></tr>
+        <tr><td>.button('toggle')</td><td>Mengubah status tombol menjadi aktif/nonaktif (memberi tampilan "tertekan")</td></tr>
+        <tr><td>.button('loading')</td><td>Mengubah tombol ke state loading sesuai data-loading-text</td></tr>
+        <tr><td>.button('reset')</td><td>Mengembalikan tombol ke teks/state aslinya</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= RWD INTRO ================= -->
+    <section id="rwd" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 3 &middot; Studi Kasus</p>
+          <h2><i class="fas fa-mobile-screen-button"></i> Responsive Web Design</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 14</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Bayangkan air yang dituang ke gelas apa pun &mdash; gelas tinggi, gelas lebar, botol kecil &mdash; air akan selalu menyesuaikan bentuknya dengan wadahnya. Itulah prinsip <em>Responsive Web Design</em> (RWD): tampilan website "menyesuaikan diri" dengan ukuran layar perangkat yang dipakai (HP, tablet, laptop, monitor besar), bukan dipaksa satu ukuran untuk semua.</p>
+
+      <p>Mulai dari sini, kita masuk ke <strong>studi kasus utuh</strong>: membangun bagian-bagian dari sebuah <strong>Sistem Informasi Kampus statis</strong> yang responsif, menggabungkan komponen Bootstrap (grid, navbar, carousel, card) dengan prinsip RWD.</p>
+
+      <div class="callout callout-tip">
+        <i class="fas fa-lightbulb"></i>
+        <div><strong>Mengapa Bootstrap memudahkan RWD?</strong> Karena sistem grid Bootstrap (<code>.container</code>, <code>.row</code>, <code>.col-*</code>) dan breakpoint bawaannya (<code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>) sudah dirancang mobile&#8209;first &mdash; kita cukup menambahkan class yang sesuai, tanpa menulis banyak <code>@media query</code> secara manual.</div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Breakpoint Grid Bootstrap 4</caption>
+        <tr><th>Class Prefix</th><th>Lebar Layar</th><th>Perangkat Umum</th></tr>
+        <tr><td>col-</td><td>&lt; 576px</td><td>HP (extra small)</td></tr>
+        <tr><td>col-sm-</td><td>&ge; 576px</td><td>HP besar / landscape</td></tr>
+        <tr><td>col-md-</td><td>&ge; 768px</td><td>Tablet</td></tr>
+        <tr><td>col-lg-</td><td>&ge; 992px</td><td>Laptop</td></tr>
+        <tr><td>col-xl-</td><td>&ge; 1200px</td><td>Monitor besar</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= NAVBAR ================= -->
+    <section id="navbar" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 3 &middot; Studi Kasus</p>
+          <h2><i class="fas fa-bars-staggered"></i> Navbar</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 14</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Navbar adalah etalase depan toko &mdash; bagian pertama yang dilihat pengunjung, menunjukkan "ruangan apa saja yang ada di dalam" sebelum mereka masuk lebih jauh.</p>
+
+      <p>Navbar adalah komponen navigasi utama di bagian atas halaman. Pada layar kecil, Navbar otomatis "terlipat" menjadi ikon hamburger (&#9776;) berkat plugin <strong>Collapse</strong> yang bekerja sama dengan class <code>navbar-expand-*</code>.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="nv1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="nv1-html">
+<pre><span class="tag">&lt;nav</span> class="navbar navbar-expand-lg navbar-dark bg-dark"<span class="tag">&gt;</span>
+  <span class="tag">&lt;a</span> class="navbar-brand" href="#"<span class="tag">&gt;</span>SI Kampus<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;button</span> class="navbar-toggler" data-toggle="collapse" data-target="#navMain"<span class="tag">&gt;</span>
+    <span class="tag">&lt;span</span> class="navbar-toggler-icon"<span class="tag">&gt;&lt;/span&gt;</span>
+  <span class="tag">&lt;/button&gt;</span>
+
+  <span class="tag">&lt;div</span> class="collapse navbar-collapse" id="navMain"<span class="tag">&gt;</span>
+    <span class="tag">&lt;ul</span> class="navbar-nav ml-auto"<span class="tag">&gt;</span>
+      <span class="tag">&lt;li</span> class="nav-item active"<span class="tag">&gt;</span><span class="tag">&lt;a</span> class="nav-link" href="#"<span class="tag">&gt;</span>Home<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;li</span> class="nav-item"<span class="tag">&gt;</span><span class="tag">&lt;a</span> class="nav-link" href="#"<span class="tag">&gt;</span>Akademik<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/nav&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo &mdash; coba perkecil lebar browser Anda</div>
+        <div class="demo-box-body" style="padding:0;">
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border-radius:0;">
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap"></i> SI Kampus</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMainDemo">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMainDemo">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Profil</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Akademik</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Kontak</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <i class="fas fa-circle-info"></i>
+        <div>Navbar otomatis "collapse" ke hamburger menggunakan plugin <strong>Collapse</strong> Bootstrap (bukan plugin baru, melainkan kombinasi <code>data-toggle="collapse"</code> yang sama prinsipnya dengan Accordion).</div>
+      </div>
+    </section>
+
+    <!-- ================= SIDEBAR LAYOUT ================= -->
+    <section id="sidebar-demo" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 3 &middot; Studi Kasus</p>
+          <h2><i class="fas fa-table-columns"></i> Sidebar Layout</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 14</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Sidebar seperti rak buku referensi di pojok ruang perpustakaan &mdash; selalu berada di tempat yang sama, berisi daftar kategori yang membantu Anda berpindah antar bagian tanpa harus keluar ruangan.</p>
+
+      <p>Sidebar bukan plugin JavaScript Bootstrap tersendiri, melainkan <strong>pola layout</strong> yang dibangun dari grid Bootstrap (<code>.col-*</code>) digabung CSS sederhana, sering dipakai untuk halaman dashboard/admin seperti menu Akademik, KRS, dan Nilai pada Sistem Informasi Kampus.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="sb1-html">HTML</button>
+          <button class="code-tab" data-target="sb1-css">CSS</button>
+        </div>
+        <div class="code-pane active" data-pane="sb1-html">
+<pre><span class="tag">&lt;div</span> class="row no-gutters"<span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> class="col-md-3 sidebar-panel"<span class="tag">&gt;</span>
+    <span class="tag">&lt;a</span> class="d-block py-2" href="#"<span class="tag">&gt;</span>Dashboard<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;a</span> class="d-block py-2" href="#"<span class="tag">&gt;</span>KRS<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;a</span> class="d-block py-2" href="#"<span class="tag">&gt;</span>Nilai<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> class="col-md-9"<span class="tag">&gt;</span>
+    Konten utama halaman di sini.
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+        <div class="code-pane" data-pane="sb1-css">
+<pre>.sidebar-panel {
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  min-height: 100%;
+}
+<span class="com">/* Pada layar kecil (di bawah md), col-md-3 otomatis
+   menjadi full-width dan "turun" ke bawah/atas konten
+   — inilah keajaiban grid mobile-first Bootstrap */</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo &mdash; coba perkecil lebar browser Anda</div>
+        <div class="demo-box-body" style="padding:0;">
+          <div class="row no-gutters">
+            <div class="col-md-3" style="background:#f8f9fa; border-right:1px solid #dee2e6; padding:16px;">
+              <strong style="font-size:13px; color:var(--ink-soft); text-transform:uppercase;">Menu Akademik</strong>
+              <a class="d-block py-2" href="#"><i class="fas fa-gauge"></i> Dashboard</a>
+              <a class="d-block py-2" href="#"><i class="fas fa-pen"></i> KRS Online</a>
+              <a class="d-block py-2" href="#"><i class="fas fa-chart-simple"></i> Kartu Hasil Studi</a>
+            </div>
+            <div class="col-md-9" style="padding:16px;">
+              <p style="margin:0; color:var(--ink-soft);">Konten utama halaman (misal: tabel KRS atau grafik nilai) akan tampil di area ini, di sebelah kanan sidebar pada layar besar, dan di bawah sidebar pada layar HP.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CAROUSEL ================= -->
+    <section id="carousel" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 3 &middot; Studi Kasus</p>
+          <h2><i class="fas fa-images"></i> Carousel</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 14</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Carousel seperti komidi putar di pasar malam &mdash; gambar/slide berputar bergantian di tempat yang sama, sehingga satu area kecil bisa menampilkan banyak informasi secara bergilir.</p>
+
+      <p>Carousel banyak dipakai di halaman depan (Home) Sistem Informasi Kampus untuk menampilkan slide berita, pengumuman, atau foto kegiatan kampus secara otomatis bergantian.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="cr1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="cr1-html">
+<pre><span class="tag">&lt;div</span> id="carouselBerita" class="carousel slide" data-ride="carousel"<span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> class="carousel-inner"<span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> class="carousel-item active"<span class="tag">&gt;</span>
+      <span class="tag">&lt;img</span> src="banner1.jpg" class="d-block w-100"<span class="tag">&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> class="carousel-item"<span class="tag">&gt;</span>
+      <span class="tag">&lt;img</span> src="banner2.jpg" class="d-block w-100"<span class="tag">&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;a</span> class="carousel-control-prev" href="#carouselBerita" data-slide="prev"<span class="tag">&gt;</span>&lt;<span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;a</span> class="carousel-control-next" href="#carouselBerita" data-slide="next"<span class="tag">&gt;</span>&gt;<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo</div>
+        <div class="demo-box-body" style="padding:0;">
+          <div id="carouselBeritaDemo" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+              <li data-target="#carouselBeritaDemo" data-slide-to="0" class="active"></li>
+              <li data-target="#carouselBeritaDemo" data-slide-to="1"></li>
+              <li data-target="#carouselBeritaDemo" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <div style="height:220px; background:linear-gradient(135deg,#5C3D99,#7B5BC2); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:18px;">Pendaftaran KRS Semester Ganjil Dibuka</div>
+              </div>
+              <div class="carousel-item">
+                <div style="height:220px; background:linear-gradient(135deg,#1E824C,#39A86B); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:18px;">Wisuda Periode II Tahun 2026</div>
+              </div>
+              <div class="carousel-item">
+                <div style="height:220px; background:linear-gradient(135deg,#B5530B,#D9842F); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:18px;">Lomba Web Desain Antar Mahasiswa</div>
+              </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselBeritaDemo" data-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#carouselBeritaDemo" data-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <table class="ref-table">
+        <caption>Option singkat</caption>
+        <tr><th>Nama</th><th>Default</th><th>Keterangan</th></tr>
+        <tr><td>interval</td><td>5000</td><td>Jeda waktu (ms) antar perpindahan slide otomatis</td></tr>
+        <tr><td>pause</td><td>'hover'</td><td>Slide berhenti otomatis saat kursor di atas carousel</td></tr>
+        <tr><td>wrap</td><td>true</td><td>Apakah carousel berputar terus-menerus (looping) atau berhenti di slide terakhir</td></tr>
+      </table>
+    </section>
+
+    <!-- ================= THUMBNAIL ITEM ================= -->
+    <section id="thumbnail" class="topic-section">
+      <div class="topic-head">
+        <div>
+          <p class="eyebrow">Bagian 3 &middot; Studi Kasus</p>
+          <h2><i class="fas fa-grip"></i> Thumbnail Item</h2>
+        </div>
+        <span class="meeting-tag">Pertemuan 14</span>
+      </div>
+
+      <p><strong>Analogi:</strong> Thumbnail seperti katalog produk di etalase &mdash; tiap item ditampilkan dalam kotak seragam (gambar + judul + sedikit deskripsi) supaya pengunjung mudah membandingkan satu sama lain secara sekilas.</p>
+
+      <p>Di Bootstrap 4, "Thumbnail" umumnya dibangun menggunakan komponen <strong>Card</strong> yang disusun dalam grid, dipakai untuk menampilkan daftar dosen, daftar program studi, atau galeri kegiatan secara rapi dan otomatis menyesuaikan jumlah kolom sesuai lebar layar.</p>
+
+      <div class="code-card">
+        <div class="code-tabs">
+          <button class="code-tab active" data-target="th1-html">HTML</button>
+        </div>
+        <div class="code-pane active" data-pane="th1-html">
+<pre><span class="tag">&lt;div</span> class="row"<span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> class="col-md-4"<span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> class="card"<span class="tag">&gt;</span>
+      <span class="tag">&lt;img</span> src="dosen1.jpg" class="card-img-top"<span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> class="card-body"<span class="tag">&gt;</span>
+        <span class="tag">&lt;h5</span> class="card-title"<span class="tag">&gt;</span>Nama Dosen<span class="tag">&lt;/h5&gt;</span>
+        <span class="tag">&lt;p</span> class="card-text"<span class="tag">&gt;</span>Manajemen Informatika<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="com">&lt;!-- ulangi .col-md-4 untuk item berikutnya --&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <div class="demo-box-label"><i class="fas fa-circle"></i> Live Demo &mdash; coba perkecil lebar browser Anda</div>
+        <div class="demo-box-body">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="card h-100">
+                <div style="height:110px; background:var(--accent-soft); display:flex; align-items:center; justify-content:center;"><i class="fas fa-chalkboard-user fa-2x" style="color:var(--accent);"></i></div>
+                <div class="card-body">
+                  <h5 class="card-title" style="font-size:15px;">Program Studi MI</h5>
+                  <p class="card-text" style="font-size:13.5px; color:var(--ink-soft);">D3 Manajemen Informatika, fokus pada sistem informasi terapan.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card h-100">
+                <div style="height:110px; background:var(--live-soft); display:flex; align-items:center; justify-content:center;"><i class="fas fa-laptop-code fa-2x" style="color:var(--live);"></i></div>
+                <div class="card-body">
+                  <h5 class="card-title" style="font-size:15px;">Web Desain 2</h5>
+                  <p class="card-text" style="font-size:13.5px; color:var(--ink-soft);">HTML, CSS, JavaScript, dan Bootstrap 4 untuk web responsif.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card h-100">
+                <div style="height:110px; background:var(--warn-soft); display:flex; align-items:center; justify-content:center;"><i class="fas fa-trophy fa-2x" style="color:var(--warn);"></i></div>
+                <div class="card-body">
+                  <h5 class="card-title" style="font-size:15px;">UKM &amp; Prestasi</h5>
+                  <p class="card-text" style="font-size:13.5px; color:var(--ink-soft);">Berbagai capaian mahasiswa dalam kompetisi teknologi.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RANGKUMAN ================= -->
+    <section id="rangkuman" class="topic-section">
+      <p class="eyebrow">Penutup</p>
+      <h2><i class="fas fa-list-check"></i> Rangkuman Materi</h2>
+      <p>Materi Pertemuan 12&ndash;14 ini membekali dua kemampuan utama: <strong>(1)</strong> mengaktifkan dan mengonfigurasi komponen interaktif Bootstrap menggunakan data&#8209;attribute maupun JavaScript/jQuery, dan <strong>(2)</strong> menyusun tata letak yang otomatis menyesuaikan ukuran layar (Responsive Web Design) lewat studi kasus Sistem Informasi Kampus.</p>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <h4><i class="fas fa-puzzle-piece"></i> Plugin Dasar</h4>
+          <ul><li>Transitions</li><li>Modal</li><li>Dropdown</li><li>Scrollspy</li></ul>
+        </div>
+        <div class="summary-card">
+          <h4><i class="fas fa-sliders"></i> Plugin Interaktif</h4>
+          <ul><li>Tab</li><li>Tooltip</li><li>Popover</li><li>Alert</li><li>Button</li></ul>
+        </div>
+        <div class="summary-card">
+          <h4><i class="fas fa-mobile-screen"></i> Studi Kasus RWD</h4>
+          <ul><li>Navbar</li><li>Sidebar Layout</li><li>Carousel</li><li>Thumbnail/Card</li></ul>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <i class="fas fa-arrow-right"></i>
+        <div><strong>Selanjutnya:</strong> Pada sesi praktik (lanjutan Pertemuan 14&ndash;15), seluruh komponen pada halaman ini akan dipraktikkan langsung dalam bentuk web demo Sistem Informasi Kampus yang utuh dan dapat dilihat sebagai satu kesatuan.</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- jQuery + Popper + Bootstrap JS Bundle (wajib untuk plugin Bootstrap 4) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script src="materi.js"></script>
+</body>
+</html>
