@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Politeknik Cakra Nusantara</title>
+  <!--
+  ================================================================
+  ▶ STRUKTUR DASAR — CDN & Urutan Pemuatan
+    Urutan pemuatan WAJIB dijaga:
+    CSS  : Bootstrap CSS → Font Awesome → kampus.css
+    JS   : jQuery → Popper.js → Bootstrap JS → kampus.js
+
+    Bootstrap CSS   : framework utama (grid, komponen, utilitas)
+    Font Awesome    : ikon-ikon yang dipakai di seluruh halaman
+    kampus.css      : CSS kustom kampus (brand color, animasi, dll)
+  ================================================================
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="kampus.css">
+  <link rel="stylesheet" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<!--
+================================================================
+▶ STRUKTUR DASAR — NAVBAR
+  Komponen navigasi utama yang muncul di semua halaman.
+  - navbar-dark fixed-top        : menempel di atas, teks putih
+  - navbar-expand-lg             : responsif (collapse di HP)
+  - data-page="..."              : penanda untuk sistem pindah
+                                   halaman di kampus.js
+================================================================
+-->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: var(--navy);">
+  <a class="navbar-brand font-weight-bold" href="#" data-page="home">
+    <i class="fas fa-shapes navbar-brand-icon mr-2"></i>Politeknik Cakra Nusantara
+  </a>
+
+  <!--
+  ▶ PERTEMUAN 12 — Plugin: Collapse (Navbar Mobile / Hamburger)
+    Tombol ini hanya muncul di layar kecil (< lg).
+    data-toggle="collapse"     : aktifkan plugin Collapse Bootstrap
+    data-target="#navbarLinks" : elemen yang akan disembunyikan/tampilkan
+    Hasilnya: menu berubah menjadi tombol ☰ di HP.
+  -->
+  <button class="navbar-toggler" type="button"
+    data-toggle="collapse" data-target="#navbarLinks"
+    aria-controls="navbarLinks" aria-expanded="false">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarLinks">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link nav-link-page active text-white" href="#" data-page="home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-page text-white-50" href="#" data-page="akademik">Akademik</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-page text-white-50" href="#" data-page="dosen">Dosen</a>
+      </li>
+      <li class="nav-item ml-lg-2">
+        <a class="nav-link btn btn-warning btn-sm text-dark font-weight-bold px-3" href="#" data-page="kontak">
+          Kontak <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!--
+================================================================
+▶ STRUKTUR DASAR — HALAMAN HOME
+  Halaman pertama yang tampil saat web dibuka.
+  Berisi: Hero section → Carousel berita → Card keunggulan.
+  class="page-view active" → ditampilkan pertama kali.
+  Halaman lain pakai class="page-view" (tersembunyi).
+================================================================
+-->
+<div id="page-home" class="page-view active" style="padding-top:56px;">
+
+  <!--
+  ▶ STRUKTUR DASAR — Hero Section
+    Section pembuka dengan gradient background dan CTA buttons.
+    Warna gradient dari var(--navy) yang didefinisikan di kampus.css.
+  -->
+  <section class="hero-section text-white text-center">
+    <div class="container">
+      <span class="badge badge-warning text-dark mb-3 px-3 py-2" style="font-size:12px;letter-spacing:.05em;">
+        Politeknik Cakra Nusantara
+      </span>
+      <h1 class="display-4 font-weight-bold mb-3">
+        Membentuk Tenaga Profesional<br>Manajemen Informatika
+      </h1>
+      <p class="lead text-white-50 mb-4">
+        Program vokasi D3 yang memadukan keterampilan web, basis data,<br>
+        dan sistem informasi untuk kebutuhan industri masa kini.
+      </p>
+      <button class="btn btn-warning text-dark font-weight-bold px-4 mr-2" data-page="akademik">
+        Lihat Program Studi
+      </button>
+      <button class="btn btn-outline-light px-4" data-page="kontak">
+        Hubungi Kami
+      </button>
+    </div>
+  </section>
+
+  <!--
+  ▶ PERTEMUAN 12 — Plugin: Carousel
+    Slideshow berita kampus dengan autoplay dan kontrol manual.
+
+    data-ride="carousel"     : autoplay otomatis saat halaman dimuat
+    data-slide="prev/next"   : tombol panah kiri/kanan
+    data-slide-to="n"        : dot indikator melompat ke slide ke-n
+    .carousel-indicators     : titik-titik indikator di bawah slide
+    .carousel-inner          : wrapper semua slide
+    .carousel-item           : satu slide (wajib ada .active di slide pertama)
+
+    Efek transisi antar slide dihandle otomatis oleh Bootstrap (Transitions).
+    Interval 5000ms dikonfigurasi via JS di kampus.js (Pertemuan 14).
+    CSS .slide-placeholder didefinisikan di kampus.css (Pertemuan 12).
+  -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <p class="text-uppercase font-weight-bold small mb-1" style="color:var(--navy);letter-spacing:.06em;">Informasi Terbaru</p>
+      <h2 class="font-weight-bold mb-4" style="color:var(--navy);">Berita &amp; Pengumuman</h2>
+
+      <div id="carouselBerita" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselBerita" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselBerita" data-slide-to="1"></li>
+          <li data-target="#carouselBerita" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner rounded">
+          <div class="carousel-item active">
+            <div class="slide-placeholder" style="background:linear-gradient(120deg,#13294B,#1e4a80);">
+              <span class="badge badge-light mb-2">Akademik</span>
+              <h4 class="font-weight-bold">Pendaftaran KRS Semester Ganjil 2026/2027 Dibuka</h4>
+              <p class="mb-0 text-white-50">Mahasiswa aktif dapat mengisi KRS mulai 1 Juli 2026 via portal akademik.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="slide-placeholder" style="background:linear-gradient(120deg,#1E824C,#2EA866);">
+              <span class="badge badge-light mb-2">Wisuda</span>
+              <h4 class="font-weight-bold">Wisuda Periode II Tahun 2026</h4>
+              <p class="mb-0 text-white-50">Selamat kepada 142 lulusan baru, semoga sukses di dunia kerja.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="slide-placeholder" style="background:linear-gradient(120deg,#B5530B,#D9842F);">
+              <span class="badge badge-light mb-2">Prestasi</span>
+              <h4 class="font-weight-bold">Juara 1 Lomba Web Desain Tingkat Provinsi</h4>
+              <p class="mb-0 text-white-50">Tim mahasiswa D3 Manajemen Informatika raih penghargaan tertinggi.</p>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselBerita" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#carouselBerita" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!--
+  ▶ PERTEMUAN 14 — Thumbnail / Card Grid (RWD)
+    Grid 3 kartu keunggulan kampus yang responsif.
+
+    .row → .col-md-4   : 3 kolom di desktop (≥768px)
+                          otomatis 1 kolom penuh di HP (<768px)
+    .card.h-100        : tinggi kartu seragam dalam satu baris
+    .card-hover        : efek naik saat hover (didefinisikan di kampus.css)
+    .shadow-sm         : bayangan ringan dari utilitas Bootstrap
+  -->
+  <section class="py-5">
+    <div class="container">
+      <p class="text-uppercase font-weight-bold small mb-1" style="color:var(--navy);letter-spacing:.06em;">Keunggulan</p>
+      <h2 class="font-weight-bold mb-4" style="color:var(--navy);">Mengapa Memilih Kami</h2>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card card-hover h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <i class="fas fa-laptop-code fa-2x mb-3" style="color:var(--navy);"></i>
+              <h5 class="font-weight-bold">Kurikulum Terapan</h5>
+              <p class="text-muted mb-0">Materi mengikuti kebutuhan industri: web, basis data, dan sistem informasi.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card card-hover h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <i class="fas fa-user-tie fa-2x mb-3" style="color:var(--navy);"></i>
+              <h5 class="font-weight-bold">Dosen Berpengalaman</h5>
+              <p class="text-muted mb-0">Diampu dosen dengan latar belakang akademik dan industri yang relevan.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card card-hover h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <i class="fas fa-briefcase fa-2x mb-3" style="color:var(--navy);"></i>
+              <h5 class="font-weight-bold">Siap Kerja</h5>
+              <p class="text-muted mb-0">Program magang membekali lulusan pengalaman nyata di industri.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-home -->
+
+
+<!--
+================================================================
+▶ STRUKTUR DASAR — HALAMAN AKADEMIK
+  Halaman kedua. Berisi page header, sidebar navigasi, dan
+  konten mata kuliah. Ditambahi plugin secara bertahap:
+  Pertemuan 12 → Scrollspy + Modal
+  Pertemuan 13 → Tab
+  Pertemuan 14 → Sidebar Layout (RWD) + Card Grid
+================================================================
+-->
+<div id="page-akademik" class="page-view" style="padding-top:56px;">
+
+  <!--
+  ▶ STRUKTUR DASAR — Page Header Akademik
+    Header berwarna navy yang muncul di atas halaman Akademik.
+    Pola yang sama dipakai juga di halaman Dosen dan Kontak.
+  -->
+  <div class="text-white py-4" style="background-color:var(--navy);">
+    <div class="container">
+      <span class="badge badge-warning text-dark mb-2">Program Studi</span>
+      <h1 class="h3 font-weight-bold mb-1">D3 Manajemen Informatika</h1>
+      <p class="mb-0 text-white-50">Informasi lengkap seputar profil, kurikulum, dan mata kuliah.</p>
+    </div>
+  </div>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+
+        <!--
+        ▶ PERTEMUAN 14 — Sidebar Layout (RWD)
+          Pola 2-kolom: sidebar kiri + konten kanan.
+
+          col-md-3 : sidebar — 3/12 kolom di desktop
+          col-md-9 : konten  — 9/12 kolom di desktop
+          Di layar HP (< md) keduanya otomatis full-width
+          dan tersusun vertikal (sidebar dulu, baru konten).
+
+        ▶ PERTEMUAN 12 — Plugin: Scrollspy
+          Sidebar ini menjadi "target" Scrollspy.
+          Scrollspy akan menambahkan class .active ke link sidebar
+          yang section-nya sedang terlihat di area scroll.
+          Konfigurasi di elemen konten (col-md-9) di bawah.
+        -->
+        <div class="col-md-3 mb-4">
+          <nav class="sidebar-nav nav flex-column bg-light rounded p-3 sticky-top"
+            id="sidebarAkademik" style="top:70px;">
+            <p class="text-uppercase font-weight-bold small text-muted mb-2" style="letter-spacing:.05em;">Navigasi</p>
+            <a class="nav-link py-2" href="#blokProfil">Profil Prodi</a>
+            <a class="nav-link py-2" href="#blokMataKuliah">Mata Kuliah</a>
+            <a class="nav-link py-2" href="#blokInfo">Info Tambahan</a>
+          </nav>
+        </div>
+
+        <!--
+        ▶ PERTEMUAN 12 — Plugin: Scrollspy (konfigurasi di elemen ini)
+          data-spy="scroll"              : aktifkan Scrollspy pada div ini
+          data-target="#sidebarAkademik" : sidebar yang link-nya akan diberi .active
+          data-offset="80"               : jarak dari atas sebelum section dianggap aktif
+          max-height + overflow-y:auto   : area ini yang di-scroll, bukan window
+        -->
+        <div class="col-md-9"
+          data-spy="scroll" data-target="#sidebarAkademik" data-offset="80"
+          style="max-height:600px; overflow-y:auto; overflow-x:hidden;">
+
+          <!--
+          ▶ STRUKTUR DASAR — Blok Profil (anchor untuk Scrollspy)
+            id="blokProfil" adalah target dari link sidebar "#blokProfil".
+            Scrollspy memantau posisi elemen ini saat area di-scroll.
+          -->
+          <div id="blokProfil" class="mb-5">
+            <h4 class="font-weight-bold mb-3" style="color:var(--navy);">Profil Program Studi</h4>
+
+            <!--
+            ▶ PERTEMUAN 13 — Plugin: Tab
+              Tab navigasi 3 panel: Profil, Kurikulum, Prospek Karier.
+
+              data-toggle="tab"      : aktifkan plugin Tab Bootstrap
+              href="#isiProfil"      : id panel konten yang akan ditampilkan
+              .tab-pane.fade         : panel konten dengan transisi fade
+              .show.active           : tab/panel yang tampil pertama kali
+              Tidak perlu JS tambahan — cukup data-toggle="tab" di HTML.
+            -->
+            <ul class="nav nav-tabs" id="tabProdi" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="tab-profil" data-toggle="tab" href="#isiProfil" role="tab">Profil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="tab-kurikulum" data-toggle="tab" href="#isiKurikulum" role="tab">Kurikulum</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="tab-karier" data-toggle="tab" href="#isiKarier" role="tab">Prospek Karier</a>
+              </li>
+            </ul>
+            <div class="tab-content border border-top-0 rounded-bottom p-4 bg-white">
+              <div class="tab-pane fade show active" id="isiProfil" role="tabpanel">
+                <p class="mb-0">Program D3 Manajemen Informatika dirancang untuk menghasilkan tenaga ahli madya yang kompeten dalam perancangan, pengembangan, dan pengelolaan sistem informasi berbasis web dan basis data.</p>
+              </div>
+              <div class="tab-pane fade" id="isiKurikulum" role="tabpanel">
+                <p class="mb-0">Kurikulum mencakup pemrograman web (HTML, CSS, JavaScript, Bootstrap), basis data relasional, rekayasa perangkat lunak, serta praktik kerja lapangan pada semester akhir.</p>
+              </div>
+              <div class="tab-pane fade" id="isiKarier" role="tabpanel">
+                <p class="mb-0">Lulusan dapat berkarier sebagai web developer, staf IT support, administrator basis data, atau analis sistem informasi pada berbagai instansi pemerintah maupun swasta.</p>
+              </div>
+            </div>
+          </div>
+
+          <!--
+          ▶ PERTEMUAN 14 — Thumbnail / Card Grid Mata Kuliah (RWD)
+          ▶ PERTEMUAN 12 — Plugin: Modal (trigger tombol "Lihat Detail")
+            Kombinasi: Card grid untuk tampilan, Modal untuk detail konten.
+
+            col-md-4          : 3 kartu sejajar di desktop, 1 kolom di HP
+            data-toggle="modal"    : aktifkan plugin Modal Bootstrap
+            data-target="#modalMK1": id modal yang akan dibuka saat diklik
+          -->
+          <div id="blokMataKuliah" class="mb-5">
+            <h4 class="font-weight-bold mb-3" style="color:var(--navy);">Mata Kuliah Unggulan</h4>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <div class="card card-hover h-100">
+                  <div class="card-body text-center p-4">
+                    <div class="rounded p-3 d-inline-flex mb-3" style="background:var(--navy);">
+                      <i class="fas fa-code text-white fa-lg"></i>
+                    </div>
+                    <h6 class="font-weight-bold">Web Desain 2</h6>
+                    <p class="text-muted small">HTML, CSS, JavaScript &amp; Bootstrap untuk web responsif.</p>
+                    <button class="btn btn-sm btn-outline-secondary"
+                      data-toggle="modal" data-target="#modalMK1">Lihat Detail</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card card-hover h-100">
+                  <div class="card-body text-center p-4">
+                    <div class="rounded p-3 d-inline-flex mb-3" style="background:var(--gold);">
+                      <i class="fas fa-database text-white fa-lg"></i>
+                    </div>
+                    <h6 class="font-weight-bold">Basis Data</h6>
+                    <p class="text-muted small">Perancangan &amp; pengelolaan basis data relasional.</p>
+                    <button class="btn btn-sm btn-outline-secondary"
+                      data-toggle="modal" data-target="#modalMK2">Lihat Detail</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card card-hover h-100">
+                  <div class="card-body text-center p-4">
+                    <div class="rounded p-3 d-inline-flex mb-3" style="background:#1E824C;">
+                      <i class="fas fa-diagram-project text-white fa-lg"></i>
+                    </div>
+                    <h6 class="font-weight-bold">Rekayasa PL</h6>
+                    <p class="text-muted small">Metodologi pengembangan perangkat lunak modern.</p>
+                    <button class="btn btn-sm btn-outline-secondary"
+                      data-toggle="modal" data-target="#modalMK3">Lihat Detail</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--
+          ▶ STRUKTUR DASAR — Blok Info Tambahan
+            Section ketiga yang dipantau Scrollspy.
+            Alert informatif menggunakan komponen Bootstrap bawaan
+            (tidak perlu JS tambahan untuk alert non-dismissible ini).
+          -->
+          <div id="blokInfo" class="mb-5">
+            <h4 class="font-weight-bold mb-3" style="color:var(--navy);">Informasi Tambahan</h4>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle mr-2"></i>
+              Setiap mahasiswa wajib menyelesaikan minimal <strong>110 SKS</strong> termasuk PKL dan Tugas Akhir pada semester 5–6.
+            </div>
+          </div>
+
+        </div><!-- /col konten -->
+      </div><!-- /row -->
+    </div>
+  </section>
+
+  <!--
+  ▶ PERTEMUAN 12 — Plugin: Modal (struktur dialog)
+    Tiga modal untuk detail masing-masing mata kuliah.
+    Modal diletakkan di luar konten utama, langsung sebelum
+    penutup div#page-akademik agar tidak mengganggu layout.
+
+    .modal.fade           : animasi fade muncul/hilang (Transitions)
+    .modal-dialog         : wrapper yang mengatur ukuran dan posisi
+    .modal-content        : isi modal: header + body + footer
+    data-dismiss="modal"  : tombol × dan Tutup menutup modal
+  -->
+  <div class="modal fade" id="modalMK1" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold">Web Desain 2</h5>
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <p>Membahas pembuatan halaman web interaktif menggunakan HTML, CSS, JavaScript, dan Bootstrap 4, termasuk penerapan plugin JavaScript dan prinsip Responsive Web Design.</p>
+          <ul class="text-muted small mb-0">
+            <li>SKS: 3 (2 Teori + 1 Praktik)</li>
+            <li>Semester: 4 &nbsp;|&nbsp; Prasyarat: Web Desain 1</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalMK2" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold">Basis Data</h5>
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <p>Mahasiswa belajar merancang skema basis data relasional, normalisasi, serta menulis query SQL untuk kebutuhan aplikasi sistem informasi.</p>
+          <ul class="text-muted small mb-0">
+            <li>SKS: 3 (2 Teori + 1 Praktik)</li>
+            <li>Semester: 3 &nbsp;|&nbsp; Prasyarat: Pengantar TI</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalMK3" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold">Rekayasa Perangkat Lunak</h5>
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <p>Membahas siklus hidup pengembangan perangkat lunak: analisis kebutuhan, perancangan, implementasi, hingga pengujian secara terstruktur.</p>
+          <ul class="text-muted small mb-0">
+            <li>SKS: 3 (2 Teori + 1 Praktik)</li>
+            <li>Semester: 5 &nbsp;|&nbsp; Prasyarat: Basis Data</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-akademik -->
+
+
+<!--
+================================================================
+▶ STRUKTUR DASAR — HALAMAN DOSEN
+  Halaman ketiga. Berisi page header dan grid kartu dosen.
+  Plugin yang ditambahkan di Pertemuan 13:
+  Tooltip (ikon centang), Popover (tombol Kontak),
+  Button Toggle (tombol bintang favorit), Alert dismissible.
+================================================================
+-->
+<div id="page-dosen" class="page-view" style="padding-top:56px;">
+
+  <!--
+  ▶ STRUKTUR DASAR — Page Header Dosen
+    Header berwarna navy, pola sama dengan halaman Akademik.
+  -->
+  <div class="text-white py-4" style="background-color:var(--navy);">
+    <div class="container">
+      <span class="badge badge-warning text-dark mb-2">Tenaga Pengajar</span>
+      <h1 class="h3 font-weight-bold mb-1">Dosen Program Studi</h1>
+      <p class="mb-0 text-white-50">Tim pengajar berpengalaman di bidang akademik dan industri TI.</p>
+    </div>
+  </div>
+
+  <section class="py-5">
+    <div class="container">
+
+      <!--
+      ▶ PERTEMUAN 13 — Plugin: Alert (Dismissible)
+        Alert ini bisa ditutup oleh pengguna dengan tombol ×.
+
+        .alert-dismissible    : tambahkan ruang untuk tombol ×
+        .fade.show            : animasi fade saat alert ditutup (Transitions)
+        data-dismiss="alert"  : tombol × akan menutup alert ini
+        Tidak perlu JS tambahan — bekerja otomatis dari HTML.
+      -->
+      <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+        <i class="fas fa-lightbulb mr-2"></i>
+        <strong>Demo Plugin P13:</strong>
+        Hover ikon <i class="fas fa-circle-check text-success"></i> → <strong>Tooltip</strong> &nbsp;|&nbsp;
+        Klik <strong>Kontak</strong> → <strong>Popover</strong> &nbsp;|&nbsp;
+        Klik <i class="fas fa-star"></i> → <strong>Button Toggle</strong>
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+      </div>
+
+      <!--
+      ▶ PERTEMUAN 14 — Thumbnail / Card Grid Dosen (RWD)
+        col-md-4 : 3 kartu dosen sejajar di desktop, 1 kolom di HP.
+      -->
+      <div class="row">
+
+        <!-- Kartu Dosen 1 -->
+        <div class="col-md-4 mb-4">
+          <div class="card card-hover h-100 text-center">
+            <div class="card-body p-4">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                style="width:72px;height:72px;background:var(--navy);">
+                <i class="fas fa-chalkboard-user text-white fa-2x"></i>
+              </div>
+              <h6 class="font-weight-bold mb-1">
+                Fadhly, S.Kom., M.T.
+                <!--
+                ▶ PERTEMUAN 13 — Plugin: Tooltip
+                  WAJIB diinisialisasi via JS: $('[data-toggle="tooltip"]').tooltip()
+                  Tanpa baris JS itu, tooltip tidak akan muncul walau HTML sudah benar.
+                  data-placement="top" : tooltip muncul di atas ikon
+                  title="..."          : teks yang ditampilkan di tooltip
+                -->
+                <i class="fas fa-circle-check text-success ml-1"
+                  data-toggle="tooltip" data-placement="top"
+                  title="Dosen Tetap Program Studi"></i>
+              </h6>
+              <p class="text-muted small mb-3">Koordinator MK Web Desain</p>
+              <div class="d-flex justify-content-center">
+                <!--
+                ▶ PERTEMUAN 13 — Plugin: Popover
+                  WAJIB diinisialisasi via JS: $('[data-toggle="popover"]').popover()
+                  data-trigger="click" : popover muncul saat diklik (bukan hover)
+                  title="..."          : judul header popover
+                  data-content="..."   : isi body popover
+                  container:'body'     : dikonfigurasi di JS agar tidak terpotong
+                -->
+                <button class="btn btn-sm btn-outline-secondary mr-2"
+                  data-toggle="popover" data-trigger="click"
+                  title="Kontak Dosen"
+                  data-content="fadhly@cakranusantara.ac.id · Lt.2 · Senin–Rabu 09.00–11.00">
+                  <i class="fas fa-address-card mr-1"></i>Kontak
+                </button>
+                <!--
+                ▶ PERTEMUAN 13 — Plugin: Button Toggle
+                  data-toggle="button" : klik pertama → class .active ditambahkan
+                                         klik lagi    → class .active dihapus
+                  CSS .btn-fav.active di kampus.css mengatur tampilan kuning saat aktif
+                -->
+                <button type="button" class="btn btn-sm btn-outline-warning btn-fav" data-toggle="button">
+                  <i class="fas fa-star"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kartu Dosen 2 -->
+        <div class="col-md-4 mb-4">
+          <div class="card card-hover h-100 text-center">
+            <div class="card-body p-4">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                style="width:72px;height:72px;background:var(--gold);">
+                <i class="fas fa-chalkboard-user text-white fa-2x"></i>
+              </div>
+              <h6 class="font-weight-bold mb-1">
+                Sri Wahyuni, S.Kom., M.Kom.
+                <i class="fas fa-circle-check text-success ml-1"
+                  data-toggle="tooltip" data-placement="top"
+                  title="Dosen Tetap Program Studi"></i>
+              </h6>
+              <p class="text-muted small mb-3">Pengampu MK Basis Data</p>
+              <div class="d-flex justify-content-center">
+                <button class="btn btn-sm btn-outline-secondary mr-2"
+                  data-toggle="popover" data-trigger="click"
+                  title="Kontak Dosen"
+                  data-content="sriwahyuni@cakranusantara.ac.id · Lt.1 · Selasa–Kamis 10.00–12.00">
+                  <i class="fas fa-address-card mr-1"></i>Kontak
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-warning btn-fav" data-toggle="button">
+                  <i class="fas fa-star"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kartu Dosen 3 -->
+        <div class="col-md-4 mb-4">
+          <div class="card card-hover h-100 text-center">
+            <div class="card-body p-4">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                style="width:72px;height:72px;background:#1E824C;">
+                <i class="fas fa-chalkboard-user text-white fa-2x"></i>
+              </div>
+              <h6 class="font-weight-bold mb-1">
+                Rian Hidayat, S.T., M.T.
+                <i class="fas fa-circle-check text-warning ml-1"
+                  data-toggle="tooltip" data-placement="top"
+                  title="Dosen Luar Biasa"></i>
+              </h6>
+              <p class="text-muted small mb-3">Pengampu MK Rekayasa PL</p>
+              <div class="d-flex justify-content-center">
+                <button class="btn btn-sm btn-outline-secondary mr-2"
+                  data-toggle="popover" data-trigger="click"
+                  title="Kontak Dosen"
+                  data-content="rian.hidayat@cakranusantara.ac.id · Lt.2 · Jumat 08.00–11.00">
+                  <i class="fas fa-address-card mr-1"></i>Kontak
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-warning btn-fav" data-toggle="button">
+                  <i class="fas fa-star"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-dosen -->
+
+
+<!--
+================================================================
+▶ STRUKTUR DASAR — HALAMAN KONTAK
+  Halaman keempat. Berisi page header, form kontak, dan
+  info kampus. Plugin yang ditambahkan:
+  Pertemuan 12 → Dropdown (kategori pertanyaan)
+  Pertemuan 13 → Alert sukses (via JS) + Button loading state
+================================================================
+-->
+<div id="page-kontak" class="page-view" style="padding-top:56px;">
+
+  <!--
+  ▶ STRUKTUR DASAR — Page Header Kontak
+    Header berwarna navy, pola sama dengan halaman lainnya.
+  -->
+  <div class="text-white py-4" style="background-color:var(--navy);">
+    <div class="container">
+      <span class="badge badge-warning text-dark mb-2">Hubungi Kami</span>
+      <h1 class="h3 font-weight-bold mb-1">Kontak Kampus</h1>
+      <p class="mb-0 text-white-50">Sampaikan pertanyaan atau masukan Anda melalui formulir di bawah.</p>
+    </div>
+  </div>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-md-7 mb-4">
+
+          <!--
+          ▶ PERTEMUAN 13 — Plugin: Alert (ditampilkan via JS)
+            Alert ini tidak terlihat saat halaman dimuat (display:none).
+            Dimunculkan oleh kampus.js setelah form berhasil dikirim.
+            Menggunakan tiga fitur Alert sekaligus:
+            - Muncul via JS ($alert.css('display','block') + addClass('show'))
+            - Animasi fade (class .fade + .show)
+            - Bisa ditutup manual (data-dismiss="alert")
+          -->
+          <div id="alertSukses" class="alert alert-success alert-dismissible fade"
+            role="alert" style="display:none;">
+            <i class="fas fa-check-circle mr-2"></i>
+            <strong>Terkirim!</strong> Pesan Anda berhasil dikirim. Tim kami akan segera merespons.
+            <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+          </div>
+
+          <form id="formKontak">
+
+            <!--
+            ▶ STRUKTUR DASAR — Input Nama
+              Field teks biasa menggunakan komponen form Bootstrap.
+              .form-group memberi margin bawah otomatis.
+              .form-control memberi styling input sesuai Bootstrap.
+            -->
+            <div class="form-group">
+              <label class="font-weight-bold">Nama Lengkap</label>
+              <input type="text" class="form-control" placeholder="Masukkan nama Anda">
+            </div>
+
+            <!--
+            ▶ PERTEMUAN 12 — Plugin: Dropdown
+              Dropdown kustom untuk memilih kategori pertanyaan.
+
+              data-toggle="dropdown"  : klik tombol → buka/tutup menu
+              .dropdown-menu          : daftar pilihan yang tersembunyi
+              .dropdown-divider       : garis pemisah antar item
+              Teks label (#labelKategori) berubah via JS saat item diklik.
+            -->
+            <div class="form-group">
+              <label class="font-weight-bold">Kategori Pertanyaan</label>
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-left"
+                  type="button" id="dropdownKategori" data-toggle="dropdown">
+                  <span id="labelKategori">Pilih kategori...</span>
+                </button>
+                <div class="dropdown-menu w-100">
+                  <a class="dropdown-item" href="#">Informasi Akademik</a>
+                  <a class="dropdown-item" href="#">Pendaftaran Mahasiswa Baru</a>
+                  <a class="dropdown-item" href="#">Kerja Sama &amp; Magang</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Lainnya</a>
+                </div>
+              </div>
+            </div>
+
+            <!--
+            ▶ STRUKTUR DASAR — Textarea Pesan
+              Field textarea menggunakan komponen form Bootstrap.
+            -->
+            <div class="form-group">
+              <label class="font-weight-bold">Pesan</label>
+              <textarea class="form-control" rows="4" placeholder="Tuliskan pesan Anda..."></textarea>
+            </div>
+
+            <!--
+            ▶ PERTEMUAN 13 — Plugin: Button (Loading State)
+              Tombol kirim berubah teks saat diklik (simulasi proses pengiriman).
+
+              data-loading-text="..." : teks + ikon spinner yang tampil saat loading
+              Diaktifkan via JS : $(this).button('loading')
+              Dikembalikan via JS: $(this).button('reset')
+              Setelah selesai: alert sukses (#alertSukses) dimunculkan.
+            -->
+            <button type="submit" id="btnKirim"
+              class="btn btn-warning text-dark font-weight-bold"
+              data-loading-text="<i class='fas fa-spinner fa-spin'></i> Mengirim...">
+              <i class="fas fa-paper-plane mr-1"></i> Kirim Pesan
+            </button>
+          </form>
+        </div>
+
+        <!--
+        ▶ STRUKTUR DASAR — Kolom Info Kontak
+          Kartu informasi kontak kampus di sisi kanan form.
+          col-md-5 : 5/12 kolom di desktop, full-width di HP.
+          Murni HTML + Bootstrap, tidak ada JS atau plugin tambahan.
+        -->
+        <div class="col-md-5 mb-4">
+          <div class="card border-0 bg-light h-100">
+            <div class="card-body p-4">
+              <h5 class="font-weight-bold mb-4" style="color:var(--navy);">Informasi Kampus</h5>
+              <div class="d-flex mb-3">
+                <i class="fas fa-map-marker-alt mt-1 mr-3" style="color:var(--navy);width:16px;"></i>
+                <div>
+                  <p class="font-weight-bold mb-0 small">Alamat</p>
+                  <p class="text-muted mb-0 small">Jl. Pendidikan Raya No. 88, Pekanbaru, Riau</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3">
+                <i class="fas fa-envelope mt-1 mr-3" style="color:var(--navy);width:16px;"></i>
+                <div>
+                  <p class="font-weight-bold mb-0 small">Email</p>
+                  <p class="text-muted mb-0 small">info@cakranusantara.ac.id</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3">
+                <i class="fas fa-phone mt-1 mr-3" style="color:var(--navy);width:16px;"></i>
+                <div>
+                  <p class="font-weight-bold mb-0 small">Telepon</p>
+                  <p class="text-muted mb-0 small">(0761) 123-4567</p>
+                </div>
+              </div>
+              <hr>
+              <p class="text-muted small mb-0">
+                <i class="fas fa-clock mr-1"></i>Senin–Jumat, 08.00–16.00 WIB
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-kontak -->
+
+
+<!--
+▶ STRUKTUR DASAR — Footer
+  Footer sederhana yang muncul di semua halaman.
+-->
+<footer class="text-center py-4 text-white" style="background-color:var(--navy);">
+  <p class="mb-1">&copy; 2026 Politeknik Cakra Nusantara &middot; D3 Manajemen Informatika</p>
+  <p class="mb-0 small" style="opacity:.5;">Web Demo &mdash; Mata Kuliah Web Desain 2</p>
+</footer>
+
+
+<!--
+▶ STRUKTUR DASAR — Script (urutan pemuatan WAJIB, jangan ditukar!)
+  Urutan ini penting karena setiap file bergantung pada file sebelumnya:
+  1. jQuery       : dibutuhkan Bootstrap JS dan kampus.js
+  2. Popper.js    : dibutuhkan plugin Dropdown, Tooltip, Popover
+  3. Bootstrap JS : semua plugin Bootstrap ada di sini
+  4. kampus.js    : kode custom kita, harus dimuat paling terakhir
+-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+<script src="kampus.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+/* ============================================================
+   kampus.css — Politeknik Cakra Nusantara
+   Prinsip: Bootstrap-first. CSS ini hanya untuk hal yang
+   tidak bisa dilakukan murni dengan class Bootstrap.
+
+   PANDUAN PERTEMUAN:
+   ▶ STRUKTUR DASAR  — CSS fondasi (brand color, navbar, hero,
+                        page system, card hover, footer)
+   ▶ PERTEMUAN 12    — CSS untuk Carousel (slide-placeholder)
+   ▶ PERTEMUAN 13    — CSS untuk Button Toggle favorit (btn-fav)
+   ▶ PERTEMUAN 14    — CSS untuk Scrollspy Sidebar (sidebar-nav)
+   ============================================================ */
+
+
+/* ============================================================
+   ▶ STRUKTUR DASAR — Brand Colors
+   Variabel warna kustom kampus yang tidak tersedia di Bootstrap 4.
+   Dipakai di seluruh file via var(--navy) dan var(--gold).
+   ============================================================ */
+:root {
+  --navy : #13294B;
+  --gold  : #F2A93B;
+}
+
+
+/* ============================================================
+   ▶ STRUKTUR DASAR — Navbar
+   Warna ikon brand dan animasi underline untuk link aktif.
+   Efek ::after pakai CSS transform, bukan plugin Bootstrap.
+   ============================================================ */
+.navbar-brand-icon { color: var(--gold); }
+
+/* Underline animasi untuk link aktif di navbar */
+.nav-link-page { position: relative; }
+.nav-link-page::after {
+  content: '';
+  position: absolute; left: 8px; right: 8px; bottom: 0;
+  height: 2px; background: var(--gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .25s ease;
+}
+.nav-link-page.active::after  { transform: scaleX(1); }
+.nav-link-page:hover::after   { transform: scaleX(1); }
+
+
+/* ============================================================
+   ▶ STRUKTUR DASAR — Hero Section (Halaman Home)
+   Gradient background untuk section pembuka di halaman utama.
+   ============================================================ */
+.hero-section {
+  background: linear-gradient(135deg, var(--navy) 0%, #1e3f6e 100%);
+  padding: 100px 0 70px;
+}
+
+
+/* ============================================================
+   ▶ STRUKTUR DASAR — Page System (SPA sederhana)
+   Mengontrol show/hide antar halaman tanpa reload.
+   .page-view        : semua halaman tersembunyi secara default
+   .page-view.active : halaman yang sedang aktif/tampil
+   Animasi fadeUp murni CSS, tidak butuh plugin Bootstrap.
+   ============================================================ */
+.page-view          { display: none; }
+.page-view.active   { display: block; animation: fadeUp .3s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ============================================================
+   ▶ STRUKTUR DASAR — Card Hover
+   Efek shadow dan naik saat card di-hover.
+   Dipakai di semua halaman (Home, Akademik, Dosen).
+   ============================================================ */
+.card-hover {
+  transition: box-shadow .2s, transform .2s;
+}
+.card-hover:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  transform: translateY(-3px);
+}
+
+
+/* ============================================================
+   ▶ PERTEMUAN 12 — Carousel: Slide Placeholder
+   Dipakai di section Berita & Pengumuman (halaman Home).
+   Karena tidak ada gambar, slide dibuat dengan div berwarna
+   yang tingginya tetap dan teks di dalamnya rata tengah-kiri.
+   ============================================================ */
+.slide-placeholder {
+  height: 260px;
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 0 60px; color: #fff;
+}
+
+/* ============================================================
+   ▶ PERTEMUAN 13 — Button Toggle: Favorit Dosen
+   Dipakai di kartu dosen (halaman Dosen).
+   Class .active ditambah/dihapus otomatis oleh plugin Button
+   Bootstrap saat tombol bintang diklik (data-toggle="button").
+   ============================================================ */
+.btn-fav.active { background: #fff3cd; color: #856404; border-color: #ffc107; }
+
+
+/* ============================================================
+   ▶ PERTEMUAN 14 — Scrollspy: Sidebar Navigasi Akademik
+   Dipakai di halaman Akademik (sidebar kiri).
+   Border kiri emas muncul otomatis saat link menjadi .active
+   karena Scrollspy Bootstrap menambahkan class .active ke link
+   yang section-nya sedang terlihat di layar.
+   ============================================================ */
+.sidebar-nav .nav-link {
+  color: #495057;
+  border-left: 3px solid transparent;
+  padding-left: 16px;
+}
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link.active {
+  color: var(--navy);
+  border-left-color: var(--gold);
+  background: #fff;
+  font-weight: 600;
+}
