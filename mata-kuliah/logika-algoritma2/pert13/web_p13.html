@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan 13 — Mencari Data: Linear Search & Binary Search</title>
+<style>
+  :root {
+    --blue-dark:#1F4E79;--blue-mid:#2E75B6;--blue-light:#DEEBF7;--blue-pale:#EEF5FC;
+    --green-dark:#1E5C2A;--green-mid:#2E7D32;--green-light:#E8F5E9;
+    --amber-dark:#7B4F00;--amber-mid:#F59E0B;--amber-light:#FEF3C7;
+    --red-dark:#7F1D1D;--red-mid:#EF4444;--red-light:#FEE2E2;
+    --gray-100:#F8F9FA;--gray-200:#E9ECEF;--gray-300:#DEE2E6;--gray-500:#6C757D;
+    --purple-mid:#6D4AFF;--purple-light:#EEEDFE;
+    --radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:24px;
+    --font-main:'Segoe UI',system-ui,-apple-system,sans-serif;
+    --font-code:'Fira Code','Courier New',monospace;
+    --shadow-md:0 4px 16px rgba(0,0,0,.1);
+    --transition:.2s ease;
+    --bg:#F0F4F8;--surface:#FFFFFF;--text-primary:#111827;--text-muted:#6C757D;
+    --border:#DEE2E6;
+  }
+  [data-theme="dark"] {
+    --bg:#0F172A;--surface:#1E293B;--text-primary:#F1F5F9;--text-muted:#94A3B8;
+    --border:#334155;--gray-100:#1E293B;--gray-200:#334155;--gray-300:#475569;
+    --blue-light:#1e3a5f;--blue-pale:#172d44;--green-light:#1a3020;
+    --amber-light:#2d2208;--red-light:#2d1515;--purple-light:#1e1a40;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-main);background:var(--bg);color:var(--text-primary);line-height:1.6;min-height:100vh;transition:background var(--transition),color var(--transition)}
+  a{color:var(--blue-mid);text-decoration:none}
+  code{font-family:var(--font-code);font-size:12.5px;background:var(--gray-200);padding:1px 5px;border-radius:3px}
+
+  /* NAV */
+  #topnav{background:var(--blue-dark);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;height:56px;padding:0 16px}
+  .nav-logo{font-weight:700;font-size:15px;white-space:nowrap;margin-right:8px}
+  .nav-logo span{font-weight:400;opacity:.7;font-size:12px;display:block}
+  .nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{padding:8px 12px;border-radius:20px;font-size:12.5px;color:#fff;opacity:.8;white-space:nowrap;transition:all var(--transition)}
+  .nav-links a:hover{opacity:1;background:rgba(255,255,255,.15)}
+  .btn-icon{background:rgba(255,255,255,.12);border:none;color:#fff;width:36px;height:36px;border-radius:var(--radius-sm);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background var(--transition);flex-shrink:0}
+  .btn-icon:hover{background:rgba(255,255,255,.22)}
+
+  /* LAYOUT */
+  .page{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+  section{padding-top:26px;margin-bottom:8px;scroll-margin-top:64px}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,#0F4C81 0%,#1a6fc4 100%);color:#fff;padding:36px 32px;position:relative;overflow:hidden;border-radius:0 0 var(--radius-xl) var(--radius-xl)}
+  .hero::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+  .hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04)}
+  .hero-badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:12px}
+  .hero h1{font-size:clamp(20px,4vw,30px);font-weight:700;margin-bottom:8px;position:relative;max-width:760px}
+  .hero p{font-size:14px;opacity:.85;max-width:560px;position:relative}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+  .hero-stat{background:rgba(255,255,255,.15);border-radius:var(--radius-md);padding:10px 16px}
+  .hero-stat-val{font-size:20px;font-weight:700}
+  .hero-stat-lbl{font-size:11px;opacity:.8;margin-top:2px}
+
+  /* SECTION */
+  .sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .sec-line{flex:1;height:1px;background:var(--border)}
+  .sec-label{font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:.8px;white-space:nowrap}
+  .sec-title{font-size:22px;font-weight:700;margin-bottom:6px}
+  .sec-desc{font-size:14px;color:var(--text-muted);margin-bottom:18px;max-width:760px;line-height:1.7}
+
+  /* CARDS */
+  .card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px 22px;margin-bottom:16px}
+  .card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .card-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .card-title{font-size:15px;font-weight:600}
+  .card-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+
+  /* GRID */
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:16px}
+
+  /* INFO BOX */
+  .info-box{border-radius:var(--radius-md);padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.7;display:flex;gap:12px}
+  .info-box.info{background:var(--blue-light);border-left:3px solid var(--blue-mid)}
+  .info-box.warning{background:var(--amber-light);border-left:3px solid var(--amber-mid)}
+  .info-box.success{background:var(--green-light);border-left:3px solid var(--green-mid)}
+  .info-box.danger{background:var(--red-light);border-left:3px solid var(--red-mid)}
+  .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  [data-theme="dark"] .info-box.info{color:#93C5FD}
+  [data-theme="dark"] .info-box.warning{color:#FCD34D}
+  [data-theme="dark"] .info-box.success{color:#86EFAC}
+  [data-theme="dark"] .info-box.danger{color:#FCA5A5}
+
+  /* STEPS */
+  .steps{display:flex;flex-direction:column;gap:0;margin:14px 0}
+  .step-item{display:flex;gap:14px;padding:10px 0}
+  .step-item:not(:last-child){border-bottom:1px solid var(--border)}
+  .step-dot{width:30px;height:30px;border-radius:50%;background:var(--blue-light);color:var(--blue-dark);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:1px}
+  .step-dot.green{background:var(--green-light);color:var(--green-dark)}
+  .step-dot.red{background:var(--red-light);color:var(--red-dark)}
+  .step-title{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .step-desc{font-size:13px;color:var(--text-muted)}
+
+  /* CHIPS */
+  .chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px}
+  .chip-blue{background:var(--blue-light);color:var(--blue-dark)}
+  .chip-green{background:var(--green-light);color:var(--green-dark)}
+  .chip-amber{background:var(--amber-light);color:var(--amber-dark)}
+  .chip-red{background:var(--red-light);color:var(--red-dark)}
+  [data-theme="dark"] .chip-blue{color:#93C5FD}
+  [data-theme="dark"] .chip-green{color:#86EFAC}
+  [data-theme="dark"] .chip-amber{color:#FCD34D}
+  [data-theme="dark"] .chip-red{color:#FCA5A5}
+
+  /* CODE BLOCK */
+  .code-wrap{background:#0F172A;border-radius:var(--radius-md);overflow:hidden;margin:12px 0}
+  .code-header{background:#1E293B;padding:8px 14px;display:flex;justify-content:space-between;align-items:center}
+  .code-lang{font-size:11px;color:#94A3B8;font-weight:600;letter-spacing:.5px}
+  .code-copy{background:none;border:1px solid #334155;color:#94A3B8;padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all var(--transition)}
+  .code-copy:hover{background:#334155;color:#F1F5F9}
+  .code-body{padding:16px;font-family:var(--font-code);font-size:13px;line-height:1.7;overflow-x:auto;color:#E2E8F0;white-space:pre}
+  .kw{color:#C084FC}.fn{color:#60A5FA}.str{color:#86EFAC}.cm{color:#64748B;font-style:italic}.num{color:#FCA5A5}.op{color:#F9A8D4}
+
+  .thonny-tip{display:flex;align-items:center;gap:8px;background:var(--green-light);color:var(--green-dark);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;margin:10px 0;border-left:3px solid var(--green-mid)}
+  [data-theme="dark"] .thonny-tip{color:#86EFAC}
+
+  /* ─── VISUALIZER ─── */
+  .viz-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin:14px 0}
+  .viz-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .viz-btn{background:var(--blue-mid);color:#fff;border:none;padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;transition:background var(--transition);display:flex;align-items:center;gap:6px}
+  .viz-btn:hover{background:var(--blue-dark)}
+  .viz-btn:disabled{background:var(--gray-300);color:var(--text-muted);cursor:not-allowed}
+  .viz-btn.secondary{background:none;border:1px solid var(--border);color:var(--text-primary)}
+  .viz-btn.secondary:hover{background:var(--gray-100)}
+  [data-theme="dark"] .viz-btn.secondary:hover{background:#334155}
+  .viz-speed{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);margin-left:auto}
+  .viz-speed select{padding:5px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-primary);font-size:12px}
+
+  /* STATUS BOX */
+  .viz-status{background:var(--blue-pale);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;min-height:42px;display:flex;align-items:center;color:var(--blue-dark);font-weight:500;margin-bottom:12px;line-height:1.5}
+  [data-theme="dark"] .viz-status{color:#93C5FD}
+
+  /* LINEAR SEARCH — kotak datar berjajar */
+  .ls-boxes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:8px 0}
+  .ls-box{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface);transition:all .25s ease;position:relative;flex-shrink:0}
+  .ls-box-val{font-size:16px;font-weight:700;font-family:var(--font-code)}
+  .ls-box-idx{font-size:10px;color:var(--text-muted);margin-top:2px}
+  .ls-box.checking{border-color:var(--amber-mid);background:var(--amber-light);transform:translateY(-4px)}
+  .ls-box.found{border-color:var(--green-mid);background:var(--green-light)}
+  .ls-box.passed{border-color:var(--gray-300);background:var(--gray-100);opacity:.55}
+  .ls-box.not-found{border-color:var(--red-mid);background:var(--red-light)}
+  [data-theme="dark"] .ls-box.checking{background:var(--amber-light)}
+  [data-theme="dark"] .ls-box.found{background:var(--green-light)}
+  [data-theme="dark"] .ls-box.passed{background:var(--gray-100)}
+
+  /* BINARY SEARCH — garis pointer */
+  .bs-wrap{overflow-x:auto;padding:8px 0 12px}
+  .bs-boxes{display:flex;gap:6px;margin-bottom:8px;min-width:max-content}
+  .bs-box{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface);transition:all .3s ease;position:relative;flex-shrink:0}
+  .bs-box-val{font-size:16px;font-weight:700;font-family:var(--font-code)}
+  .bs-box-idx{font-size:10px;color:var(--text-muted);margin-top:2px}
+  .bs-box.active-range{border-color:var(--blue-mid);background:var(--blue-pale)}
+  .bs-box.eliminated{opacity:.35;background:var(--gray-100)}
+  .bs-box.mid-check{border-color:var(--purple-mid);background:var(--purple-light);transform:translateY(-4px)}
+  .bs-box.found{border-color:var(--green-mid);background:var(--green-light)}
+  .bs-box.not-found{border-color:var(--red-mid);background:var(--red-light)}
+  [data-theme="dark"] .bs-box.active-range{background:var(--blue-pale)}
+  [data-theme="dark"] .bs-box.eliminated{background:#0F172A}
+  [data-theme="dark"] .bs-box.mid-check{background:var(--purple-light)}
+  [data-theme="dark"] .bs-box.found{background:var(--green-light)}
+
+  /* POINTER LABELS bawah kotak */
+  .bs-labels{display:flex;gap:6px;margin-bottom:6px;min-width:max-content}
+  .bs-lbl{width:52px;text-align:center;font-size:10px;font-weight:700;height:18px;flex-shrink:0}
+  .bs-lbl.lbl-low{color:var(--blue-mid)}
+  .bs-lbl.lbl-high{color:var(--red-mid)}
+  .bs-lbl.lbl-mid{color:var(--purple-mid)}
+
+  /* SEARCH INPUT */
+  .search-input-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  .search-input-row label{font-size:13px;font-weight:600}
+  .search-input-row input{padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-primary);font-family:var(--font-code);font-size:14px;width:80px;outline:none}
+  .search-input-row input:focus{border-color:var(--blue-mid)}
+
+  /* STATS */
+  .viz-stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--text-muted)}
+  .viz-stats b{color:var(--text-primary);font-size:14px}
+
+  /* LEGEND */
+  .viz-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-muted);margin-top:8px}
+  .viz-legend span{display:inline-flex;align-items:center;gap:6px}
+  .viz-legend i{width:12px;height:12px;border-radius:3px;display:inline-block;border:1.5px solid transparent}
+
+  /* PERBANDINGAN TABLE */
+  .cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+  .cmp-table th{background:var(--blue-dark);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:12px}
+  .cmp-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+  .cmp-table tr:nth-child(even) td{background:var(--gray-100)}
+  [data-theme="dark"] .cmp-table tr:nth-child(even) td{background:#1E293B}
+
+  /* ACCORDION */
+  .acc-item{border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:8px;overflow:hidden}
+  .acc-head{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;background:var(--surface);transition:background var(--transition)}
+  .acc-head:hover{background:var(--gray-100)}
+  [data-theme="dark"] .acc-head:hover{background:#334155}
+  .acc-arrow{font-size:12px;transition:transform var(--transition);color:var(--text-muted)}
+  .acc-body{display:none;padding:16px;border-top:1px solid var(--border)}
+  .acc-item.open .acc-body{display:block}
+  .acc-item.open .acc-arrow{transform:rotate(180deg)}
+
+  /* BRIDGE BOX (jembatan P12→P13) */
+  .bridge-box{background:linear-gradient(135deg,var(--green-light),var(--blue-light));border:1.5px solid var(--green-mid);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:16px;display:flex;gap:14px;align-items:flex-start}
+  [data-theme="dark"] .bridge-box{background:linear-gradient(135deg,#1a3020,#1e3a5f)}
+
+  .footer{text-align:center;font-size:12px;color:var(--text-muted);padding:30px 0 10px}
+
+  @media(max-width:600px){
+    .hero{padding:24px 20px}.nav-links{display:none}
+    .page{padding:16px 12px 50px}
+    .ls-box,.bs-box{width:40px;height:40px}.ls-box-val,.bs-box-val{font-size:13px}
+    .cmp-table{font-size:12px}.cmp-table th,.cmp-table td{padding:8px 10px}
+  }
+  @media print{#topnav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="topnav">
+  <div class="nav-inner">
+    <div class="nav-logo">Pertemuan 13<span>Pemrograman Dasar — Searching</span></div>
+    <div class="nav-links">
+      <a href="#sec-konsep">Konsep</a>
+      <a href="#sec-linear">Linear Search</a>
+      <a href="#sec-binary">Binary Search</a>
+      <a href="#sec-banding">Perbandingan</a>
+      <a href="#sec-ui">UI Tkinter</a>
+      <a href="#sec-latihan">Studi Kasus</a>
+    </div>
+    <button class="btn-icon" onclick="toggleTheme()" title="Ganti tema" id="themeBtn">🌙</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">PERTEMUAN 13</div>
+  <h1>Mencari Data Secara Efisien — Linear &amp; Binary Search</h1>
+  <p>Setelah bisa mengurutkan data di P12, sekarang kita belajar cara mencari data dengan dua pendekatan berbeda — dari yang paling sederhana sampai yang paling cepat.</p>
+  <div class="hero-meta">
+    <div class="hero-stat"><div class="hero-stat-val">2</div><div class="hero-stat-lbl">Algoritma Searching</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">O(log n)</div><div class="hero-stat-lbl">Kecepatan Binary Search</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">1</div><div class="hero-stat-lbl">Studi Kasus Akhir</div></div>
+  </div>
+</header>
+
+<main class="page">
+
+<!-- ═══════════════════════════════════════════════════
+     01 — KONSEP DASAR
+═══════════════════════════════════════════════════ -->
+<section id="sec-konsep">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">01 — KONSEP DASAR</div><div class="sec-line"></div></div>
+  <div class="sec-title">Apa itu Pencarian Data (Searching)?</div>
+  <div class="sec-desc">Mencari adalah salah satu operasi paling sering dilakukan pada data. Memahami cara kerjanya penting agar program kamu bisa menemukan data dengan cepat dan efisien.</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--blue-light)">🔍</div>
+      <div><div class="card-title">Definisi Sederhana</div><div class="card-sub">Menemukan posisi sebuah nilai dalam kumpulan data</div></div>
+    </div>
+    <p style="font-size:14px;line-height:1.85;margin-bottom:12px"><strong>Searching (pencarian)</strong> adalah proses menemukan apakah sebuah nilai ada di dalam kumpulan data, dan jika ada — di posisi (indeks) mana nilai tersebut berada.</p>
+    <div class="info-box info">
+      <span class="info-icon">💡</span>
+      <div>Contoh sehari-hari: mencari nama mahasiswa di daftar absensi, mencari nomor kontak di phonebook, atau mencari produk di toko online menggunakan kolom pencarian.</div>
+    </div>
+  </div>
+
+  <!-- Jembatan dari P12 -->
+  <div class="bridge-box">
+    <span style="font-size:24px;flex-shrink:0">🔗</span>
+    <div>
+      <div style="font-weight:700;font-size:14px;margin-bottom:4px">Koneksi dengan Pertemuan 12 — Sorting</div>
+      <p style="font-size:13px;line-height:1.8">Di P12 kita sudah belajar <strong>mengurutkan data</strong> (Bubble Sort &amp; Selection Sort). Ternyata, data yang sudah terurut bisa <strong>dicari jauh lebih cepat</strong>! Inilah alasan kenapa sorting dan searching sering dipelajari berdampingan — keduanya saling melengkapi. Kita akan lihat buktinya di bagian Binary Search nanti.</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--blue-light)">📌</div>
+        <div><div class="card-title">Dua Algoritma yang Kita Bahas</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+        <div style="padding:12px;border-radius:var(--radius-md);background:var(--blue-light);border-left:3px solid var(--blue-mid)">
+          <div style="font-weight:700;font-size:13.5px;margin-bottom:3px"><span class="chip chip-blue">Linear Search</span></div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Memeriksa data satu per satu dari awal sampai ketemu atau habis. Bisa dipakai pada data acak maupun terurut.</div>
+        </div>
+        <div style="padding:12px;border-radius:var(--radius-md);background:var(--green-light);border-left:3px solid var(--green-mid)">
+          <div style="font-weight:700;font-size:13.5px;margin-bottom:3px"><span class="chip chip-green">Binary Search</span></div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Memotong area pencarian menjadi separuh setiap langkah. Jauh lebih cepat, tapi <strong>hanya bisa pada data yang sudah terurut</strong>.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--amber-light)">⚡</div>
+        <div><div class="card-title">Gambaran Perbedaan Kecepatan</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Bayangkan kamu mencari angka <strong>512</strong> di antara 1.000 angka yang sudah terurut:</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="chip chip-blue">Linear</span>
+          <div style="flex:1;background:var(--gray-200);border-radius:20px;height:20px;overflow:hidden">
+            <div style="width:51%;height:100%;background:var(--blue-mid);border-radius:20px;display:flex;align-items:center;padding-left:8px;color:#fff;font-size:11px;font-weight:700">≤ 512 langkah</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="chip chip-green">Binary</span>
+          <div style="flex:1;background:var(--gray-200);border-radius:20px;height:20px;overflow:hidden">
+            <div style="width:4%;height:100%;background:var(--green-mid);border-radius:20px;min-width:70px;display:flex;align-items:center;padding-left:8px;color:#fff;font-size:11px;font-weight:700">≤ 10 langkah</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Binary Search butuh paling banyak log₂(1000) ≈ 10 langkah!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     02 — LINEAR SEARCH
+═══════════════════════════════════════════════════ -->
+<section id="sec-linear">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">02 — ALGORITMA #1</div><div class="sec-line"></div></div>
+  <div class="sec-title">🔎 Linear Search (Pencarian Linier)</div>
+  <div class="sec-desc">Cara paling sederhana: periksa setiap elemen satu per satu dari kiri ke kanan sampai ditemukan atau semua elemen sudah diperiksa.</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--blue-light)">🧠</div>
+      <div><div class="card-title">Cara Kerja Linear Search</div><div class="card-sub">Seperti mencari kunci di antara banyak kunci, satu per satu</div></div>
+    </div>
+    <div class="steps">
+      <div class="step-item">
+        <div class="step-dot">1</div>
+        <div>
+          <div class="step-title">Mulai dari elemen pertama (indeks 0)</div>
+          <div class="step-desc">Bandingkan elemen tersebut dengan nilai yang dicari (target).</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">2</div>
+        <div>
+          <div class="step-title">Jika cocok → selesai, kembalikan indeksnya</div>
+          <div class="step-desc">Data ditemukan pada posisi tersebut.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">3</div>
+        <div>
+          <div class="step-title">Jika tidak cocok → lanjut ke elemen berikutnya</div>
+          <div class="step-desc">Geser satu posisi ke kanan, bandingkan lagi.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot red">✗</div>
+        <div>
+          <div class="step-title">Jika sudah sampai akhir dan tidak ketemu → kembalikan -1</div>
+          <div class="step-desc">Nilai -1 adalah konvensi umum untuk menandakan "tidak ditemukan".</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUALIZER LINEAR SEARCH -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--green-light)">▶️</div>
+      <div><div class="card-title">Visualisasi Langkah demi Langkah — Linear Search</div><div class="card-sub">Masukkan angka yang ingin dicari, lalu jalankan langkah per langkah</div></div>
+    </div>
+    <div class="viz-wrap">
+      <div class="search-input-row">
+        <label for="lsTarget">Cari angka:</label>
+        <input type="number" id="lsTarget" value="37" min="1" max="99"/>
+        <button class="viz-btn secondary" onclick="lsGenerateNew()">🔀 Data Baru</button>
+      </div>
+      <div class="viz-controls">
+        <button class="viz-btn" id="lsNextBtn" onclick="lsStep()">⏭ Langkah Berikutnya</button>
+        <button class="viz-btn secondary" id="lsPlayBtn" onclick="lsAutoPlay()">▶ Putar Otomatis</button>
+        <button class="viz-btn secondary" onclick="lsReset()">↺ Ulang Pencarian</button>
+        <div class="viz-speed">
+          <label for="lsSpeed">Kecepatan</label>
+          <select id="lsSpeed"><option value="900">Lambat</option><option value="500" selected>Normal</option><option value="200">Cepat</option></select>
+        </div>
+      </div>
+      <div class="viz-status" id="lsStatus">Masukkan angka yang dicari lalu klik "Langkah Berikutnya".</div>
+      <div class="ls-boxes" id="lsBoxes"></div>
+      <div class="viz-legend">
+        <span><i style="background:var(--surface);border-color:var(--border)"></i>Belum diperiksa</span>
+        <span><i style="background:var(--amber-light);border-color:var(--amber-mid)"></i>Sedang diperiksa</span>
+        <span><i style="background:var(--gray-100);border-color:var(--gray-300);opacity:.6"></i>Sudah dilewati</span>
+        <span><i style="background:var(--green-light);border-color:var(--green-mid)"></i>Ditemukan ✓</span>
+        <span><i style="background:var(--red-light);border-color:var(--red-mid)"></i>Tidak ditemukan ✗</span>
+      </div>
+      <div class="viz-stats">
+        <div>Langkah diperiksa: <b id="lsSteps">0</b></div>
+        <div>Total elemen: <b id="lsTotal">0</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KODE LINEAR SEARCH -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--amber-light)">🐍</div>
+      <div><div class="card-title">Kode Python — Linear Search</div><div class="card-sub">Salin ke Thonny, jalankan dengan F5</div></div>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">PYTHON — linear_search.py</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+      <div class="code-body"><span class="cm"># linear_search.py
+# Mencari nilai target dalam sebuah list menggunakan Linear Search</span>
+
+<span class="kw">def</span> <span class="fn">linear_search</span>(data, target):
+    <span class="cm"># periksa setiap elemen satu per satu</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)):
+        <span class="fn">print</span>(<span class="str">f"  Langkah {i+1}: periksa indeks {i} → nilai {data[i]}"</span>)
+        <span class="kw">if</span> data[i] == target:
+            <span class="kw">return</span> i    <span class="cm"># kembalikan indeks jika ditemukan</span>
+    <span class="kw">return</span> -<span class="num">1</span>      <span class="cm"># kembalikan -1 jika tidak ditemukan</span>
+
+
+<span class="cm"># --- Program utama ---</span>
+data  = [<span class="num">15</span>, <span class="num">42</span>, <span class="num">8</span>, <span class="num">37</span>, <span class="num">91</span>, <span class="num">26</span>, <span class="num">55</span>, <span class="num">73</span>]
+target = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Angka yang dicari: "</span>))
+
+<span class="fn">print</span>(<span class="str">f"\nMencari {target} di: {data}"</span>)
+hasil = <span class="fn">linear_search</span>(data, target)
+
+<span class="kw">if</span> hasil != -<span class="num">1</span>:
+    <span class="fn">print</span>(<span class="str">f"\n✅ Ditemukan! {target} ada di indeks {hasil}"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"\n❌ Tidak ditemukan. {target} tidak ada dalam data."</span>)</div>
+    </div>
+    <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Simpan sebagai <code>linear_search.py</code> lalu tekan <strong>F5</strong>. Coba masukkan angka yang ada (misal 37) dan yang tidak ada (misal 99). Perhatikan berapa banyak langkah yang diperlukan!</div>
+    <div class="info-box info">
+      <span class="info-icon">🔍</span>
+      <div><strong>Kompleksitas waktu:</strong> <code>O(n)</code> — semakin banyak data, semakin banyak langkah yang dibutuhkan secara linear. Kasus terbaik: target ada di indeks 0 (1 langkah). Kasus terburuk: target tidak ada atau ada di akhir (n langkah).</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     03 — BINARY SEARCH
+═══════════════════════════════════════════════════ -->
+<section id="sec-binary">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">03 — ALGORITMA #2</div><div class="sec-line"></div></div>
+  <div class="sec-title">⚡ Binary Search (Pencarian Biner)</div>
+  <div class="sec-desc">Seperti mencari kata di kamus — kamu buka halaman tengah, putuskan apakah kata yang dicari ada di separuh kiri atau kanan, lalu ulangi. Setiap langkah membuang separuh kemungkinan.</div>
+
+  <div class="info-box warning">
+    <span class="info-icon">⚠️</span>
+    <div><strong>Syarat mutlak:</strong> Binary Search <em>hanya bisa digunakan pada data yang sudah terurut!</em> Inilah mengapa kita belajar Sorting di P12 — tanpa data yang terurut, Binary Search tidak bisa bekerja dengan benar. Pada visualisasi di bawah, data akan diurutkan terlebih dahulu secara otomatis.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--blue-light)">🧠</div>
+      <div><div class="card-title">Cara Kerja Binary Search</div><div class="card-sub">Tiga pointer: low (kiri), high (kanan), mid (tengah)</div></div>
+    </div>
+    <div class="steps">
+      <div class="step-item">
+        <div class="step-dot">1</div>
+        <div>
+          <div class="step-title">Tentukan batas kiri (low = 0) dan kanan (high = n-1)</div>
+          <div class="step-desc">Area pencarian awal adalah seluruh list.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">2</div>
+        <div>
+          <div class="step-title">Hitung posisi tengah: mid = (low + high) // 2</div>
+          <div class="step-desc">Elemen di posisi mid adalah kandidat pertama yang diperiksa.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">3</div>
+        <div>
+          <div class="step-title">Bandingkan data[mid] dengan target</div>
+          <div class="step-desc">
+            Ada 3 kemungkinan:<br>
+            • <strong>data[mid] == target</strong> → ditemukan! Selesai.<br>
+            • <strong>data[mid] &lt; target</strong> → target pasti di separuh KANAN → geser low = mid + 1<br>
+            • <strong>data[mid] &gt; target</strong> → target pasti di separuh KIRI → geser high = mid - 1
+          </div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">4</div>
+        <div>
+          <div class="step-title">Ulangi dari langkah 2 dengan area pencarian yang sudah menyempit</div>
+          <div class="step-desc">Setiap iterasi membuang setengah dari area yang tersisa.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot red">✗</div>
+        <div>
+          <div class="step-title">Berhenti jika low &gt; high → data tidak ditemukan</div>
+          <div class="step-desc">Area pencarian sudah habis, nilai tidak ada dalam list.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUALIZER BINARY SEARCH -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--green-light)">▶️</div>
+      <div><div class="card-title">Visualisasi Langkah demi Langkah — Binary Search</div><div class="card-sub">Data otomatis diurutkan terlebih dahulu. Amati bagaimana area pencarian menyempit setiap langkah.</div></div>
+    </div>
+    <div class="viz-wrap">
+      <div class="search-input-row">
+        <label for="bsTarget">Cari angka:</label>
+        <input type="number" id="bsTarget" value="37" min="1" max="99"/>
+        <button class="viz-btn secondary" onclick="bsGenerateNew()">🔀 Data Baru</button>
+      </div>
+      <div class="viz-controls">
+        <button class="viz-btn" id="bsNextBtn" onclick="bsStep()">⏭ Langkah Berikutnya</button>
+        <button class="viz-btn secondary" id="bsPlayBtn" onclick="bsAutoPlay()">▶ Putar Otomatis</button>
+        <button class="viz-btn secondary" onclick="bsReset()">↺ Ulang Pencarian</button>
+        <div class="viz-speed">
+          <label for="bsSpeed">Kecepatan</label>
+          <select id="bsSpeed"><option value="900">Lambat</option><option value="500" selected>Normal</option><option value="200">Cepat</option></select>
+        </div>
+      </div>
+      <div class="viz-status" id="bsStatus">Masukkan angka yang dicari lalu klik "Langkah Berikutnya".</div>
+      <div class="bs-wrap">
+        <div class="bs-boxes" id="bsBoxes"></div>
+        <div class="bs-labels" id="bsLabels"></div>
+      </div>
+      <div class="viz-legend">
+        <span><i style="background:var(--blue-pale);border-color:var(--blue-mid)"></i>Area aktif pencarian</span>
+        <span><i style="background:var(--purple-light);border-color:var(--purple-mid)"></i>Mid — sedang diperiksa</span>
+        <span><i style="opacity:.35;background:var(--gray-100);border-color:var(--gray-300)"></i>Area dieliminasi</span>
+        <span><i style="background:var(--green-light);border-color:var(--green-mid)"></i>Ditemukan ✓</span>
+        <span><i style="background:var(--red-light);border-color:var(--red-mid)"></i>Tidak ditemukan ✗</span>
+      </div>
+      <div class="viz-stats">
+        <div>Iterasi: <b id="bsSteps">0</b></div>
+        <div>Area pencarian tersisa: <b id="bsRange">—</b></div>
+        <div>low=<b id="bsLow">—</b> | mid=<b id="bsMid">—</b> | high=<b id="bsHigh">—</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KODE BINARY SEARCH -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--amber-light)">🐍</div>
+      <div><div class="card-title">Kode Python — Binary Search</div><div class="card-sub">Salin ke Thonny, jalankan dengan F5</div></div>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">PYTHON — binary_search.py</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+      <div class="code-body"><span class="cm"># binary_search.py
+# Mencari nilai target menggunakan Binary Search
+# SYARAT: data harus sudah terurut dari kecil ke besar!</span>
+
+<span class="kw">def</span> <span class="fn">binary_search</span>(data, target):
+    low  = <span class="num">0</span>
+    high = <span class="fn">len</span>(data) - <span class="num">1</span>
+    iterasi = <span class="num">0</span>
+
+    <span class="kw">while</span> low <= high:
+        iterasi += <span class="num">1</span>
+        mid = (low + high) // <span class="num">2</span>
+        <span class="fn">print</span>(<span class="str">f"  Iterasi {iterasi}: low={low} mid={mid} high={high} → cek data[{mid}]={data[mid]}"</span>)
+
+        <span class="kw">if</span> data[mid] == target:
+            <span class="kw">return</span> mid, iterasi        <span class="cm"># ditemukan</span>
+        <span class="kw">elif</span> data[mid] &lt; target:
+            low = mid + <span class="num">1</span>              <span class="cm"># target di separuh kanan</span>
+        <span class="kw">else</span>:
+            high = mid - <span class="num">1</span>             <span class="cm"># target di separuh kiri</span>
+
+    <span class="kw">return</span> -<span class="num">1</span>, iterasi              <span class="cm"># tidak ditemukan</span>
+
+
+<span class="cm"># --- Program utama ---</span>
+data_asli = [<span class="num">42</span>, <span class="num">8</span>, <span class="num">91</span>, <span class="num">15</span>, <span class="num">37</span>, <span class="num">26</span>, <span class="num">55</span>, <span class="num">73</span>]
+
+<span class="cm"># WAJIB diurutkan dulu sebelum Binary Search!</span>
+data_urut = <span class="fn">sorted</span>(data_asli)
+<span class="fn">print</span>(<span class="str">f"Data asli  : {data_asli}"</span>)
+<span class="fn">print</span>(<span class="str">f"Data terurut: {data_urut}\n"</span>)
+
+target = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Angka yang dicari: "</span>))
+<span class="fn">print</span>(<span class="str">f"\nMencari {target} di data terurut:"</span>)
+
+hasil, iterasi = <span class="fn">binary_search</span>(data_urut, target)
+
+<span class="kw">if</span> hasil != -<span class="num">1</span>:
+    <span class="fn">print</span>(<span class="str">f"\n✅ Ditemukan! {target} ada di indeks {hasil} (setelah diurutkan)"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"\n❌ Tidak ditemukan."</span>)
+<span class="fn">print</span>(<span class="str">f"   Total iterasi: {iterasi}"</span>)</div>
+    </div>
+    <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Simpan sebagai <code>binary_search.py</code> lalu tekan <strong>F5</strong>. Perhatikan berapa sedikit iterasi yang dibutuhkan dibanding Linear Search untuk data yang sama!</div>
+    <div class="info-box success">
+      <span class="info-icon">✅</span>
+      <div><strong>Fungsi <code>sorted()</code> bawaan Python</strong> memudahkan kita mengurutkan data tanpa harus menulis ulang Bubble Sort. Hasilnya sama — data terurut ascending — siap dipakai oleh Binary Search.</div>
+    </div>
+    <div class="info-box info">
+      <span class="info-icon">🔍</span>
+      <div><strong>Kompleksitas waktu:</strong> <code>O(log n)</code> — setiap langkah memotong area pencarian menjadi setengah. Untuk 1.000 data: maksimal 10 langkah. Untuk 1.000.000 data: maksimal 20 langkah!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     04 — PERBANDINGAN
+═══════════════════════════════════════════════════ -->
+<section id="sec-banding">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">04 — PERBANDINGAN</div><div class="sec-line"></div></div>
+  <div class="sec-title">Linear Search vs Binary Search — Kapan Pakai yang Mana?</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--blue-light)">⚖️</div>
+      <div><div class="card-title">Tabel Perbandingan Lengkap</div></div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="cmp-table">
+        <tr><th>Aspek</th><th>Linear Search</th><th>Binary Search</th></tr>
+        <tr><td><strong>Cara kerja</strong></td><td>Periksa satu per satu dari awal</td><td>Potong area pencarian jadi dua setiap langkah</td></tr>
+        <tr><td><strong>Syarat data</strong></td><td>Tidak ada syarat — data acak pun bisa</td><td>Data <strong>wajib</strong> sudah terurut</td></tr>
+        <tr><td><strong>Kompleksitas</strong></td><td>O(n) — berbanding lurus jumlah data</td><td>O(log n) — jauh lebih cepat</td></tr>
+        <tr><td><strong>Kasus terbaik</strong></td><td>O(1) — target ada di indeks 0</td><td>O(1) — target tepat di posisi mid</td></tr>
+        <tr><td><strong>Kasus terburuk</strong></td><td>O(n) — target di akhir atau tidak ada</td><td>O(log n) — target tidak ada</td></tr>
+        <tr><td><strong>1.000 data</strong></td><td>Maks. 1.000 langkah</td><td>Maks. 10 langkah</td></tr>
+        <tr><td><strong>1.000.000 data</strong></td><td>Maks. 1.000.000 langkah</td><td>Maks. 20 langkah</td></tr>
+        <tr><td><strong>Kelebihan</strong></td><td>Sederhana, bekerja pada semua jenis data</td><td>Sangat cepat untuk data besar yang terurut</td></tr>
+        <tr><td><strong>Kekurangan</strong></td><td>Lambat untuk data besar</td><td>Harus sorting dulu (ada biaya waktu untuk sorting)</td></tr>
+        <tr><td><strong>Gunakan saat</strong></td><td>Data kecil, atau data tidak terurut dan hanya dicari sekali</td><td>Data besar, data sudah terurut, atau pencarian dilakukan berulang kali</td></tr>
+      </table>
+    </div>
+    <div class="info-box warning">
+      <span class="info-icon">📌</span>
+      <div><strong>Kesimpulan penting:</strong> Jika kamu hanya mencari <em>sekali</em> dalam data kecil yang belum terurut, Linear Search cukup. Tapi jika pencarian dilakukan <em>berkali-kali</em> pada data besar, lebih hemat untuk mengurutkan datanya sekali di awal, lalu gunakan Binary Search setiap kali mencari.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     05 — UI TKINTER
+═══════════════════════════════════════════════════ -->
+<section id="sec-ui">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">05 — PENERAPAN UI</div><div class="sec-line"></div></div>
+  <div class="sec-title">Menerapkan Searching di UI Tkinter</div>
+  <div class="sec-desc">Melanjutkan dari materi UI sebelumnya — sekarang kita buat aplikasi pencarian sederhana dengan tampilan grafis menggunakan Tkinter.</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--blue-light)">🖼️</div>
+      <div><div class="card-title">Rancangan Aplikasi</div><div class="card-sub">Input data + angka yang dicari → pilih metode → tampilkan hasil & jumlah langkah</div></div>
+    </div>
+    <div class="steps">
+      <div class="step-item">
+        <div class="step-dot">1</div>
+        <div><div class="step-title">Entry untuk input data dan angka yang dicari</div><div class="step-desc">Pengguna mengetik data (dipisah koma) dan angka target.</div></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">2</div>
+        <div><div class="step-title">Dua tombol: "Linear Search" dan "Binary Search"</div><div class="step-desc">Memudahkan perbandingan langsung antara kedua metode.</div></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot green">3</div>
+        <div><div class="step-title">Label hasil menampilkan status, indeks, dan jumlah langkah</div><div class="step-desc">Pengguna bisa langsung melihat perbedaan efisiensi kedua algoritma.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--amber-light)">🐍</div>
+      <div><div class="card-title">Kode Python — UI Tkinter + Linear &amp; Binary Search</div><div class="card-sub">Salin ke Thonny, jalankan dengan F5</div></div>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">PYTHON — ui_searching.py</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+      <div class="code-body"><span class="cm"># ui_searching.py
+# Aplikasi pencarian data dengan tampilan Tkinter
+# Membandingkan Linear Search dan Binary Search secara langsung</span>
+
+<span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> messagebox
+
+
+<span class="kw">def</span> <span class="fn">linear_search</span>(data, target):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)):
+        <span class="kw">if</span> data[i] == target:
+            <span class="kw">return</span> i, i + <span class="num">1</span>     <span class="cm"># (indeks, jumlah_langkah)</span>
+    <span class="kw">return</span> -<span class="num">1</span>, <span class="fn">len</span>(data)
+
+
+<span class="kw">def</span> <span class="fn">binary_search</span>(data, target):
+    low, high, langkah = <span class="num">0</span>, <span class="fn">len</span>(data) - <span class="num">1</span>, <span class="num">0</span>
+    <span class="kw">while</span> low <= high:
+        langkah += <span class="num">1</span>
+        mid = (low + high) // <span class="num">2</span>
+        <span class="kw">if</span> data[mid] == target:
+            <span class="kw">return</span> mid, langkah
+        <span class="kw">elif</span> data[mid] &lt; target:
+            low = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            high = mid - <span class="num">1</span>
+    <span class="kw">return</span> -<span class="num">1</span>, langkah
+
+
+<span class="kw">def</span> <span class="fn">parse_input</span>():
+    <span class="kw">try</span>:
+        data = [<span class="fn">int</span>(x.<span class="fn">strip</span>()) <span class="kw">for</span> x <span class="kw">in</span> entry_data.<span class="fn">get</span>().<span class="fn">split</span>(<span class="str">","</span>)]
+        target = <span class="fn">int</span>(entry_target.<span class="fn">get</span>())
+        <span class="kw">return</span> data, target
+    <span class="kw">except</span> ValueError:
+        messagebox.<span class="fn">showerror</span>(<span class="str">"Input salah"</span>, <span class="str">"Pastikan data berupa angka dipisah koma dan target berupa angka."</span>)
+        <span class="kw">return</span> <span class="kw">None</span>, <span class="kw">None</span>
+
+
+<span class="kw">def</span> <span class="fn">jalankan_linear</span>():
+    data, target = <span class="fn">parse_input</span>()
+    <span class="kw">if</span> data <span class="kw">is</span> <span class="kw">None</span>: <span class="kw">return</span>
+    idx, langkah = <span class="fn">linear_search</span>(data, target)
+    <span class="kw">if</span> idx != -<span class="num">1</span>:
+        label_hasil.<span class="fn">config</span>(fg=<span class="str">"darkgreen"</span>,
+            text=<span class="str">f"✅ LINEAR: {target} ditemukan di indeks {idx} | {langkah} langkah"</span>)
+    <span class="kw">else</span>:
+        label_hasil.<span class="fn">config</span>(fg=<span class="str">"darkred"</span>,
+            text=<span class="str">f"❌ LINEAR: {target} tidak ditemukan | {langkah} langkah"</span>)
+
+
+<span class="kw">def</span> <span class="fn">jalankan_binary</span>():
+    data, target = <span class="fn">parse_input</span>()
+    <span class="kw">if</span> data <span class="kw">is</span> <span class="kw">None</span>: <span class="kw">return</span>
+    data_urut = <span class="fn">sorted</span>(data)
+    label_data_urut.<span class="fn">config</span>(text=<span class="str">f"Data terurut: {data_urut}"</span>)
+    idx, langkah = <span class="fn">binary_search</span>(data_urut, target)
+    <span class="kw">if</span> idx != -<span class="num">1</span>:
+        label_hasil.<span class="fn">config</span>(fg=<span class="str">"darkgreen"</span>,
+            text=<span class="str">f"✅ BINARY: {target} ditemukan di indeks {idx} | {langkah} langkah"</span>)
+    <span class="kw">else</span>:
+        label_hasil.<span class="fn">config</span>(fg=<span class="str">"darkred"</span>,
+            text=<span class="str">f"❌ BINARY: {target} tidak ditemukan | {langkah} langkah"</span>)
+
+
+<span class="cm"># ── Bangun jendela ──</span>
+window = tk.<span class="fn">Tk</span>()
+window.<span class="fn">title</span>(<span class="str">"Aplikasi Pencarian Data"</span>)
+window.<span class="fn">geometry</span>(<span class="str">"500x260"</span>)
+window.<span class="fn">resizable</span>(<span class="kw">False</span>, <span class="kw">False</span>)
+
+tk.<span class="fn">Label</span>(window, text=<span class="str">"Data (pisah koma):"</span>).<span class="fn">pack</span>(pady=(<span class="num">12</span>,<span class="num">2</span>))
+entry_data = tk.<span class="fn">Entry</span>(window, width=<span class="num">50</span>)
+entry_data.<span class="fn">insert</span>(<span class="num">0</span>, <span class="str">"42, 8, 91, 15, 37, 26, 55, 73"</span>)
+entry_data.<span class="fn">pack</span>()
+
+tk.<span class="fn">Label</span>(window, text=<span class="str">"Angka yang dicari:"</span>).<span class="fn">pack</span>(pady=(<span class="num">8</span>,<span class="num">2</span>))
+entry_target = tk.<span class="fn">Entry</span>(window, width=<span class="num">10</span>)
+entry_target.<span class="fn">insert</span>(<span class="num">0</span>, <span class="str">"37"</span>)
+entry_target.<span class="fn">pack</span>()
+
+frame_btn = tk.<span class="fn">Frame</span>(window)
+frame_btn.<span class="fn">pack</span>(pady=<span class="num">10</span>)
+tk.<span class="fn">Button</span>(frame_btn, text=<span class="str">"🔎 Linear Search"</span>, command=jalankan_linear,
+         bg=<span class="str">"#2E75B6"</span>, fg=<span class="str">"white"</span>, padx=<span class="num">10</span>).<span class="fn">pack</span>(side=<span class="str">"left"</span>, padx=<span class="num">6</span>)
+tk.<span class="fn">Button</span>(frame_btn, text=<span class="str">"⚡ Binary Search"</span>, command=jalankan_binary,
+         bg=<span class="str">"#2E7D32"</span>, fg=<span class="str">"white"</span>, padx=<span class="num">10</span>).<span class="fn">pack</span>(side=<span class="str">"left"</span>, padx=<span class="num">6</span>)
+
+label_data_urut = tk.<span class="fn">Label</span>(window, text=<span class="str">"Data terurut: (klik Binary Search dulu)"</span>,
+                             font=(<span class="str">"Courier"</span>, <span class="num">9</span>), fg=<span class="str">"gray"</span>)
+label_data_urut.<span class="fn">pack</span>()
+
+label_hasil = tk.<span class="fn">Label</span>(window, text=<span class="str">"Hasil akan muncul di sini..."</span>,
+                        font=(<span class="str">"Segoe UI"</span>, <span class="num">11</span>, <span class="str">"bold"</span>))
+label_hasil.<span class="fn">pack</span>(pady=<span class="num">8</span>)
+
+window.<span class="fn">mainloop</span>()</div>
+    </div>
+    <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Simpan sebagai <code>ui_searching.py</code> lalu tekan <strong>F5</strong>. Coba klik "Linear Search" lalu "Binary Search" untuk angka yang sama — bandingkan jumlah langkahnya!</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     06 — STUDI KASUS
+═══════════════════════════════════════════════════ -->
+<section id="sec-latihan">
+  <div class="sec-hd"><div class="sec-line"></div><div class="sec-label">06 — STUDI KASUS</div><div class="sec-line"></div></div>
+  <div class="sec-title">Studi Kasus: Pencarian NIM Mahasiswa</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:var(--amber-light)">📋</div>
+      <div><div class="card-title">Soal</div></div>
+    </div>
+    <p style="font-size:14px;line-height:1.85;margin-bottom:14px">Sebuah sistem akademik menyimpan daftar NIM mahasiswa sebagai berikut (dalam urutan acak):</p>
+    <div class="code-wrap" style="margin-bottom:14px">
+      <div class="code-header"><span class="code-lang">DATA</span></div>
+      <div class="code-body">nim_list = [<span class="num">2023045</span>, <span class="num">2023012</span>, <span class="num">2023078</span>, <span class="num">2023031</span>,
+            <span class="num">2023056</span>, <span class="num">2023099</span>, <span class="num">2023023</span>, <span class="num">2023067</span>]</div>
+    </div>
+    <p style="font-size:14px;line-height:1.85;margin-bottom:10px">Buat program Python yang:</p>
+    <div class="steps" style="margin-bottom:8px">
+      <div class="step-item">
+        <div class="step-dot">1</div>
+        <div><div class="step-title">Minta input NIM yang ingin dicari dari pengguna</div></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">2</div>
+        <div><div class="step-title">Cari NIM tersebut menggunakan Linear Search pada data asli (acak)</div><div class="step-desc">Tampilkan berapa langkah yang dibutuhkan.</div></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">3</div>
+        <div><div class="step-title">Urutkan data terlebih dahulu, lalu cari menggunakan Binary Search</div><div class="step-desc">Tampilkan berapa langkah yang dibutuhkan.</div></div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot green">4</div>
+        <div><div class="step-title">Tampilkan perbandingan jumlah langkah kedua metode</div><div class="step-desc">Mana yang lebih sedikit langkahnya?</div></div>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head" onclick="toggleAcc(this)">💡 Petunjuk <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <p style="font-size:13px;line-height:1.8">Gunakan fungsi <code>linear_search(data, target)</code> dan <code>binary_search(data, target)</code> yang sudah kita pelajari — tinggal disalin dan dipakai ulang. Untuk Binary Search, jangan lupa gunakan <code>sorted(nim_list)</code> dulu sebelum mencari. Untuk menampilkan perbandingan, cukup cetak jumlah langkah keduanya berdampingan.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head" onclick="toggleAcc(this)">✅ Contoh Kunci Jawaban <span class="acc-arrow">▼</span></div>
+      <div class="acc-body">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">PYTHON — cari_nim.py</span><button class="code-copy" onclick="copyCode(this)">Salin</button></div>
+          <div class="code-body"><span class="cm"># cari_nim.py</span>
+
+<span class="kw">def</span> <span class="fn">linear_search</span>(data, target):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)):
+        <span class="kw">if</span> data[i] == target:
+            <span class="kw">return</span> i, i + <span class="num">1</span>
+    <span class="kw">return</span> -<span class="num">1</span>, <span class="fn">len</span>(data)
+
+<span class="kw">def</span> <span class="fn">binary_search</span>(data, target):
+    low, high, langkah = <span class="num">0</span>, <span class="fn">len</span>(data) - <span class="num">1</span>, <span class="num">0</span>
+    <span class="kw">while</span> low <= high:
+        langkah += <span class="num">1</span>
+        mid = (low + high) // <span class="num">2</span>
+        <span class="kw">if</span> data[mid] == target:
+            <span class="kw">return</span> mid, langkah
+        <span class="kw">elif</span> data[mid] &lt; target:
+            low = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            high = mid - <span class="num">1</span>
+    <span class="kw">return</span> -<span class="num">1</span>, langkah
+
+
+nim_list = [<span class="num">2023045</span>, <span class="num">2023012</span>, <span class="num">2023078</span>, <span class="num">2023031</span>,
+            <span class="num">2023056</span>, <span class="num">2023099</span>, <span class="num">2023023</span>, <span class="num">2023067</span>]
+nim_urut = <span class="fn">sorted</span>(nim_list)
+
+nim_cari = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Masukkan NIM yang dicari: "</span>))
+
+<span class="cm"># Linear Search</span>
+idx_l, langkah_l = <span class="fn">linear_search</span>(nim_list, nim_cari)
+
+<span class="cm"># Binary Search</span>
+idx_b, langkah_b = <span class="fn">binary_search</span>(nim_urut, nim_cari)
+
+<span class="fn">print</span>(<span class="str">"\n=== HASIL PENCARIAN NIM ==="</span>)
+<span class="kw">if</span> idx_l != -<span class="num">1</span>:
+    <span class="fn">print</span>(<span class="str">f"Linear  : ✅ ditemukan di indeks {idx_l} | {langkah_l} langkah"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"Linear  : ❌ tidak ditemukan | {langkah_l} langkah"</span>)
+
+<span class="kw">if</span> idx_b != -<span class="num">1</span>:
+    <span class="fn">print</span>(<span class="str">f"Binary  : ✅ ditemukan di indeks {idx_b} (data terurut) | {langkah_b} langkah"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"Binary  : ❌ tidak ditemukan | {langkah_b} langkah"</span>)
+
+hemat = langkah_l - langkah_b
+<span class="fn">print</span>(<span class="str">f"\nBinary Search lebih hemat {hemat} langkah dibanding Linear Search."</span>)</div>
+        </div>
+      </div>
+    </div>
+    <div class="thonny-tip">🟢 <strong>Coba di Thonny:</strong> Simpan sebagai <code>cari_nim.py</code>, jalankan dengan <strong>F5</strong>. Coba cari NIM <code>2023067</code> — perhatikan perbedaan jumlah langkahnya!</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Pertemuan 13 — Materi Searching (Linear &amp; Binary Search) — Disusun untuk pembelajaran D3 Manajemen Informatika</p>
+</footer>
+</main>
+
+<script>
+// ─── UTIL ────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = dark ? '🌙' : '☀️';
+  localStorage.setItem('theme_p13', dark ? 'light' : 'dark');
+}
+function loadTheme() {
+  const t = localStorage.getItem('theme_p13') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+}
+function copyCode(btn) {
+  const txt = btn.closest('.code-wrap').querySelector('.code-body').innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    btn.textContent = 'Tersalin!';
+    setTimeout(() => btn.textContent = 'Salin', 1800);
+  });
+}
+function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
+
+function randomArr(size, min, max) {
+  const set = new Set();
+  while (set.size < size) set.add(Math.floor(Math.random() * (max - min + 1)) + min);
+  return [...set];
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadTheme();
+  lsInit();
+  bsInit();
+});
+
+// ════════════════════════════════════════════════════════════
+// LINEAR SEARCH VISUALIZER
+// ════════════════════════════════════════════════════════════
+let lsData = [], lsPtr = 0, lsStepCount = 0, lsDone = false;
+let lsPlaying = false, lsTimer = null;
+
+function lsInit() {
+  lsData = randomArr(10, 10, 99);
+  lsPtr = 0; lsStepCount = 0; lsDone = false; lsPlaying = false;
+  document.getElementById('lsNextBtn').disabled = false;
+  document.getElementById('lsNextBtn').textContent = '⏭ Langkah Berikutnya';
+  document.getElementById('lsPlayBtn').textContent = '▶ Putar Otomatis';
+  document.getElementById('lsStatus').textContent = 'Masukkan angka yang dicari lalu klik "Langkah Berikutnya".';
+  document.getElementById('lsSteps').textContent = '0';
+  document.getElementById('lsTotal').textContent = lsData.length;
+  if (lsTimer) clearTimeout(lsTimer);
+  lsRenderBoxes([]);
+}
+
+function lsGenerateNew() {
+  if (lsTimer) clearTimeout(lsTimer);
+  lsInit();
+}
+
+function lsRenderBoxes(states) {
+  // states: array of classes per index
+  const c = document.getElementById('lsBoxes');
+  c.innerHTML = '';
+  lsData.forEach((val, i) => {
+    const box = document.createElement('div');
+    box.className = 'ls-box ' + (states[i] || '');
+    box.innerHTML = `<span class="ls-box-val">${val}</span><span class="ls-box-idx">[${i}]</span>`;
+    c.appendChild(box);
+  });
+}
+
+function lsReset() {
+  if (lsTimer) clearTimeout(lsTimer);
+  lsPtr = 0; lsStepCount = 0; lsDone = false; lsPlaying = false;
+  document.getElementById('lsNextBtn').disabled = false;
+  document.getElementById('lsNextBtn').textContent = '⏭ Langkah Berikutnya';
+  document.getElementById('lsPlayBtn').textContent = '▶ Putar Otomatis';
+  document.getElementById('lsStatus').textContent = 'Pencarian diulang. Klik "Langkah Berikutnya" untuk mulai.';
+  document.getElementById('lsSteps').textContent = '0';
+  lsRenderBoxes([]);
+}
+
+function lsStep() {
+  if (lsDone) return;
+  const target = parseInt(document.getElementById('lsTarget').value, 10);
+  if (isNaN(target)) { alert('Masukkan angka yang valid!'); return; }
+
+  if (lsPtr >= lsData.length) {
+    // tidak ditemukan
+    lsDone = true;
+    document.getElementById('lsStatus').textContent =
+      `❌ Semua ${lsData.length} elemen sudah diperiksa. ${target} tidak ditemukan dalam data.`;
+    const states = lsData.map(() => 'not-found');
+    lsRenderBoxes(states);
+    document.getElementById('lsNextBtn').disabled = true;
+    lsPlaying = false;
+    document.getElementById('lsPlayBtn').textContent = '▶ Putar Otomatis';
+    return;
+  }
+
+  lsStepCount++;
+  document.getElementById('lsSteps').textContent = lsStepCount;
+
+  const isMatch = lsData[lsPtr] === target;
+  const states = lsData.map((_, i) => {
+    if (i < lsPtr) return 'passed';
+    if (i === lsPtr) return isMatch ? 'found' : 'checking';
+    return '';
+  });
+  lsRenderBoxes(states);
+
+  if (isMatch) {
+    document.getElementById('lsStatus').textContent =
+      `✅ Ditemukan! Nilai ${target} ada di indeks ${lsPtr}. Total: ${lsStepCount} langkah diperiksa.`;
+    lsDone = true;
+    document.getElementById('lsNextBtn').disabled = true;
+    lsPlaying = false;
+    document.getElementById('lsPlayBtn').textContent = '▶ Putar Otomatis';
+  } else {
+    document.getElementById('lsStatus').textContent =
+      `Langkah ${lsStepCount}: Memeriksa indeks ${lsPtr} → nilai ${lsData[lsPtr]} ≠ ${target}. Lanjut ke berikutnya.`;
+    lsPtr++;
+  }
+}
+
+function lsAutoPlay() {
+  const btn = document.getElementById('lsPlayBtn');
+  if (lsPlaying) {
+    lsPlaying = false; btn.textContent = '▶ Putar Otomatis';
+    if (lsTimer) clearTimeout(lsTimer); return;
+  }
+  if (lsDone) return;
+  lsPlaying = true; btn.textContent = '⏸ Pause';
+  const speed = parseInt(document.getElementById('lsSpeed').value, 10);
+  const loop = () => {
+    if (!lsPlaying || lsDone) { lsPlaying = false; btn.textContent = '▶ Putar Otomatis'; return; }
+    lsStep();
+    if (!lsDone) lsTimer = setTimeout(loop, speed);
+    else { lsPlaying = false; btn.textContent = '▶ Putar Otomatis'; }
+  };
+  loop();
+}
+
+// ════════════════════════════════════════════════════════════
+// BINARY SEARCH VISUALIZER
+// ════════════════════════════════════════════════════════════
+let bsData = [], bsLow = 0, bsHigh = 0, bsStepCount = 0, bsDone = false;
+let bsPlaying = false, bsTimer = null;
+
+function bsInit() {
+  const rawData = randomArr(10, 10, 99);
+  bsData = rawData.slice().sort((a, b) => a - b); // urutkan otomatis
+  bsLow = 0; bsHigh = bsData.length - 1;
+  bsStepCount = 0; bsDone = false; bsPlaying = false;
+  document.getElementById('bsNextBtn').disabled = false;
+  document.getElementById('bsNextBtn').textContent = '⏭ Langkah Berikutnya';
+  document.getElementById('bsPlayBtn').textContent = '▶ Putar Otomatis';
+  document.getElementById('bsStatus').textContent =
+    `Data otomatis diurutkan: [${bsData.join(', ')}]. Masukkan angka yang dicari lalu klik "Langkah Berikutnya".`;
+  document.getElementById('bsSteps').textContent = '0';
+  document.getElementById('bsRange').textContent = bsData.length;
+  document.getElementById('bsLow').textContent = '—';
+  document.getElementById('bsMid').textContent = '—';
+  document.getElementById('bsHigh').textContent = '—';
+  if (bsTimer) clearTimeout(bsTimer);
+  bsRender(-1, -1, -1, [], false, false);
+}
+
+function bsGenerateNew() {
+  if (bsTimer) clearTimeout(bsTimer);
+  bsInit();
+}
+
+function bsRender(low, mid, high, states, found, notFound) {
+  const boxC = document.getElementById('bsBoxes');
+  const lblC = document.getElementById('bsLabels');
+  boxC.innerHTML = ''; lblC.innerHTML = '';
+  bsData.forEach((val, i) => {
+    // box
+    const box = document.createElement('div');
+    let cls = '';
+    if (found && i === mid) cls = 'found';
+    else if (notFound) cls = 'not-found';
+    else if (states[i] === 'elim') cls = 'eliminated';
+    else if (i === mid && mid >= 0) cls = 'mid-check';
+    else if (i >= low && i <= high && low >= 0) cls = 'active-range';
+    box.className = 'bs-box ' + cls;
+    box.innerHTML = `<span class="bs-box-val">${val}</span><span class="bs-box-idx">[${i}]</span>`;
+    boxC.appendChild(box);
+    // label
+    const lbl = document.createElement('div');
+    lbl.className = 'bs-lbl';
+    const marks = [];
+    if (i === low && low >= 0 && !found && !notFound) marks.push('<span class="lbl-low">L</span>');
+    if (i === high && high >= 0 && !found && !notFound) marks.push('<span class="lbl-high">H</span>');
+    if (i === mid && mid >= 0 && !found && !notFound) marks.push('<span class="lbl-mid">M</span>');
+    lbl.innerHTML = marks.join('');
+    lblC.appendChild(lbl);
+  });
+}
+
+function bsReset() {
+  if (bsTimer) clearTimeout(bsTimer);
+  bsLow = 0; bsHigh = bsData.length - 1;
+  bsStepCount = 0; bsDone = false; bsPlaying = false;
+  document.getElementById('bsNextBtn').disabled = false;
+  document.getElementById('bsNextBtn').textContent = '⏭ Langkah Berikutnya';
+  document.getElementById('bsPlayBtn').textContent = '▶ Putar Otomatis';
+  document.getElementById('bsStatus').textContent = 'Pencarian diulang. Klik "Langkah Berikutnya" untuk mulai.';
+  document.getElementById('bsSteps').textContent = '0';
+  document.getElementById('bsRange').textContent = bsData.length;
+  document.getElementById('bsLow').textContent = '—';
+  document.getElementById('bsMid').textContent = '—';
+  document.getElementById('bsHigh').textContent = '—';
+  bsRender(-1, -1, -1, [], false, false);
+}
+
+function bsStep() {
+  if (bsDone) return;
+  const target = parseInt(document.getElementById('bsTarget').value, 10);
+  if (isNaN(target)) { alert('Masukkan angka yang valid!'); return; }
+
+  if (bsLow > bsHigh) {
+    bsDone = true;
+    const states = bsData.map(() => 'elim');
+    bsRender(bsLow, -1, bsHigh, states, false, true);
+    document.getElementById('bsStatus').textContent =
+      `❌ low (${bsLow}) > high (${bsHigh}): area pencarian habis. ${target} tidak ditemukan. Total: ${bsStepCount} iterasi.`;
+    document.getElementById('bsNextBtn').disabled = true;
+    bsPlaying = false;
+    document.getElementById('bsPlayBtn').textContent = '▶ Putar Otomatis';
+    return;
+  }
+
+  bsStepCount++;
+  const mid = Math.floor((bsLow + bsHigh) / 2);
+  const range = bsHigh - bsLow + 1;
+  document.getElementById('bsSteps').textContent = bsStepCount;
+  document.getElementById('bsRange').textContent = range;
+  document.getElementById('bsLow').textContent = bsLow;
+  document.getElementById('bsMid').textContent = mid;
+  document.getElementById('bsHigh').textContent = bsHigh;
+
+  // states: elemen di luar [low..high] = elim
+  const states = bsData.map((_, i) => (i < bsLow || i > bsHigh) ? 'elim' : '');
+
+  if (bsData[mid] === target) {
+    bsDone = true;
+    bsRender(bsLow, mid, bsHigh, states, true, false);
+    document.getElementById('bsStatus').textContent =
+      `✅ Ditemukan! data[${mid}] = ${target}. Iterasi ke-${bsStepCount} — hanya ${bsStepCount} langkah dari ${bsData.length} elemen!`;
+    document.getElementById('bsNextBtn').disabled = true;
+    bsPlaying = false;
+    document.getElementById('bsPlayBtn').textContent = '▶ Putar Otomatis';
+  } else if (bsData[mid] < target) {
+    bsRender(bsLow, mid, bsHigh, states, false, false);
+    document.getElementById('bsStatus').textContent =
+      `Iterasi ${bsStepCount}: data[${mid}]=${bsData[mid]} < ${target} → target ada di KANAN. Geser low = ${mid+1}. Area tersisa: ${Math.max(0, bsHigh - mid)} elemen.`;
+    bsLow = mid + 1;
+  } else {
+    bsRender(bsLow, mid, bsHigh, states, false, false);
+    document.getElementById('bsStatus').textContent =
+      `Iterasi ${bsStepCount}: data[${mid}]=${bsData[mid]} > ${target} → target ada di KIRI. Geser high = ${mid-1}. Area tersisa: ${Math.max(0, mid - bsLow)} elemen.`;
+    bsHigh = mid - 1;
+  }
+}
+
+function bsAutoPlay() {
+  const btn = document.getElementById('bsPlayBtn');
+  if (bsPlaying) {
+    bsPlaying = false; btn.textContent = '▶ Putar Otomatis';
+    if (bsTimer) clearTimeout(bsTimer); return;
+  }
+  if (bsDone) return;
+  bsPlaying = true; btn.textContent = '⏸ Pause';
+  const speed = parseInt(document.getElementById('bsSpeed').value, 10);
+  const loop = () => {
+    if (!bsPlaying || bsDone) { bsPlaying = false; btn.textContent = '▶ Putar Otomatis'; return; }
+    bsStep();
+    if (!bsDone) bsTimer = setTimeout(loop, speed);
+    else { bsPlaying = false; btn.textContent = '▶ Putar Otomatis'; }
+  };
+  loop();
+}
+</script>
+</body>
+</html>
