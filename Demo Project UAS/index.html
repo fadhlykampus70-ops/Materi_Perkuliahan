@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loyal Kopi — Kedai Kopi & Kuliner Pekanbaru</title>
+
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <!-- Font Awesome 5 -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVBAR — Pertemuan 14: Navbar Collapse (Responsive)
+       navbar-expand-lg → tombol hamburger aktif di layar kecil
+       ============================================================ -->
+  <nav class="navbar navbar-expand-lg navbar-dark lk-navbar fixed-top">
+    <a class="navbar-brand lk-brand" href="#" data-page="home">
+      <i class="fas fa-coffee mr-2"></i>Loyal Kopi
+    </a>
+
+    <!-- Tombol hamburger — collapse aktif di layar kecil -->
+    <button class="navbar-toggler" type="button"
+      data-toggle="collapse" data-target="#navbarLinks"
+      aria-controls="navbarLinks" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarLinks">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link nav-link-page text-white" data-page="home" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-link-page text-white-50" data-page="menu" href="#">Menu</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-link-page text-white-50" data-page="tentang" href="#">Tentang</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-link-page text-white-50" data-page="kontak" href="#">Kontak</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- /NAVBAR -->
+
+
+  <!-- ============================================================
+       HALAMAN HOME
+       ============================================================ -->
+  <div class="page-view active" id="page-home">
+
+    <!-- CAROUSEL — Pertemuan 12
+         data-ride="carousel" → autoplay otomatis
+         Interval 5000ms dikonfigurasi di main.js (Pertemuan 14) -->
+    <div id="carouselHome" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#carouselHome" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselHome" data-slide-to="1"></li>
+        <li data-target="#carouselHome" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <img src="https://placehold.co/1200x500/3d1c02/f5e6c8?text=Foto+Suasana+Loyal+Kopi"
+            class="d-block w-100 lk-carousel-img" alt="Suasana Loyal Kopi" />
+          <div class="carousel-caption lk-caption">
+            <h1 class="lk-hero-title">Loyal Kopi</h1>
+            <p class="lk-hero-sub">Kopi, Kuliner Nusantara & Suasana yang Nyaman</p>
+            <a href="#" class="btn lk-btn-primary mt-2" data-page="menu">Lihat Menu</a>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x500/5c3317/f5e6c8?text=Foto+Menu+Andalan"
+            class="d-block w-100 lk-carousel-img" alt="Menu Andalan" />
+          <div class="carousel-caption lk-caption">
+            <h2 class="lk-hero-title">Kuliner Minang Otentik</h2>
+            <p class="lk-hero-sub">Ketan Sarikaya, Katupek Gulai, Pisang Goreng & lebih banyak lagi</p>
+            <a href="#" class="btn lk-btn-primary mt-2" data-page="menu">Pesan Sekarang</a>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x500/2b0f00/f5e6c8?text=Foto+Tempat+Duduk"
+            class="d-block w-100 lk-carousel-img" alt="Tempat Nyaman" />
+          <div class="carousel-caption lk-caption">
+            <h2 class="lk-hero-title">Buka Setiap Hari</h2>
+            <p class="lk-hero-sub">07.00 – 23.00 WIB · Jl. SM Amin, Pekanbaru</p>
+            <a href="#" class="btn lk-btn-primary mt-2" data-page="kontak">Temukan Kami</a>
+          </div>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#carouselHome" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      </a>
+      <a class="carousel-control-next" href="#carouselHome" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      </a>
+    </div>
+    <!-- /CAROUSEL -->
+
+    <!-- KEUNGGULAN — Card Grid (Pertemuan 14) -->
+    <section class="lk-section">
+      <div class="container">
+        <h2 class="lk-section-title text-center">Mengapa Loyal Kopi?</h2>
+        <p class="text-center lk-section-sub mb-5">
+          Lebih dari sekadar tempat ngopi — kami hadirkan pengalaman kuliner Nusantara yang hangat
+        </p>
+        <!-- .row → .col-md-4 → .card : grid 3 kolom di desktop, 1 kolom di HP -->
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <div class="card lk-card h-100 text-center">
+              <div class="card-body">
+                <div class="lk-icon-wrap mb-3"><i class="fas fa-mug-hot fa-2x"></i></div>
+                <h5 class="card-title">Kopi Pilihan</h5>
+                <p class="card-text">Kopi, non-kopi, jus, hingga teh talua khas Minang tersedia lengkap untuk menemani hari Anda.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card lk-card h-100 text-center">
+              <div class="card-body">
+                <div class="lk-icon-wrap mb-3"><i class="fas fa-utensils fa-2x"></i></div>
+                <h5 class="card-title">Kuliner Nusantara</h5>
+                <p class="card-text">Dari sarapan hingga makan malam — katupek gulai, ketan sarikaya, pisang santan Bukittinggi, dan masih banyak lagi.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card lk-card h-100 text-center">
+              <div class="card-body">
+                <div class="lk-icon-wrap mb-3"><i class="fas fa-couch fa-2x"></i></div>
+                <h5 class="card-title">Tempat Nyaman</h5>
+                <p class="card-text">Area luas, musholla tersedia, parkiran luas, dan smoking area — cocok untuk santai sendiri maupun kumpul bersama.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO SINGKAT — Row dua kolom -->
+    <section class="lk-section lk-section-alt">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6 mb-4 mb-md-0">
+            <img src="https://placehold.co/560x360/3d1c02/f5e6c8?text=Foto+Interior+Loyal+Kopi"
+              class="img-fluid rounded lk-img-shadow" alt="Interior Loyal Kopi" />
+          </div>
+          <div class="col-md-6">
+            <h2 class="lk-section-title">Tempat Nongkrong Favorit di Pekanbaru</h2>
+            <p>Loyal Kopi hadir sebagai ruang berkumpul yang hangat, menyajikan cita rasa kuliner Minang otentik di jantung kota Pekanbaru. Dari sarapan pagi hingga malam larut, kami selalu siap menyambut Anda.</p>
+            <ul class="list-unstyled lk-info-list">
+              <li><i class="fas fa-clock mr-2 lk-accent"></i> Buka setiap hari, 07.00 – 23.00 WIB</li>
+              <li><i class="fas fa-map-marker-alt mr-2 lk-accent"></i> Jl. SM Amin, Gerbang UNRI, Pekanbaru</li>
+              <li><i class="fas fa-credit-card mr-2 lk-accent"></i> Pembayaran Cash & QRIS</li>
+              <li><i class="fas fa-mosque mr-2 lk-accent"></i> Musholla tersedia</li>
+            </ul>
+            <a href="#" class="btn lk-btn-primary mt-3" data-page="tentang">Selengkapnya</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU HIGHLIGHT — Card + Modal (Pertemuan 12) -->
+    <section class="lk-section">
+      <div class="container">
+        <h2 class="lk-section-title text-center">Menu Unggulan</h2>
+        <p class="text-center lk-section-sub mb-5">Pilihan favorit pelanggan kami</p>
+        <div class="row">
+
+          <!-- Card 1 -->
+          <div class="col-md-4 mb-4">
+            <div class="card lk-card-menu h-100">
+              <img src="https://placehold.co/400x250/5c3317/f5e6c8?text=Ketan+Sarikaya"
+                class="card-img-top" alt="Ketan Sarikaya" />
+              <div class="card-body">
+                <h5 class="card-title">Ketan Sarikaya</h5>
+                <p class="card-text">Ketan pulen khas Minang dengan sarikaya pandan yang lembut dan manis.</p>
+                <button class="btn lk-btn-outline btn-sm"
+                  data-toggle="modal" data-target="#modalMenu1">Lihat Detail</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="col-md-4 mb-4">
+            <div class="card lk-card-menu h-100">
+              <img src="https://placehold.co/400x250/3d1c02/f5e6c8?text=Katupek+Gulai"
+                class="card-img-top" alt="Katupek Gulai" />
+              <div class="card-body">
+                <h5 class="card-title">Katupek Gulai</h5>
+                <p class="card-text">Ketupat dengan kuah gulai Minang yang kaya rempah — menu sarapan terbaik kami.</p>
+                <button class="btn lk-btn-outline btn-sm"
+                  data-toggle="modal" data-target="#modalMenu2">Lihat Detail</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="col-md-4 mb-4">
+            <div class="card lk-card-menu h-100">
+              <img src="https://placehold.co/400x250/2b0f00/f5e6c8?text=Kopi+Andalan"
+                class="card-img-top" alt="Kopi Andalan" />
+              <div class="card-body">
+                <h5 class="card-title">Kopi Andalan</h5>
+                <p class="card-text">Dari kopi hitam pekat hingga kreasi kopi susu — pilih yang paling pas untuk suasana Anda.</p>
+                <button class="btn lk-btn-outline btn-sm"
+                  data-toggle="modal" data-target="#modalMenu3">Lihat Detail</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="text-center mt-2">
+          <a href="#" class="btn lk-btn-primary" data-page="menu">Lihat Semua Menu</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODAL Menu 1 — Pertemuan 12 -->
+    <div class="modal fade" id="modalMenu1" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content lk-modal">
+          <div class="modal-header">
+            <h5 class="modal-title">Ketan Sarikaya</h5>
+            <button type="button" class="close lk-modal-close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <img src="https://placehold.co/460x220/5c3317/f5e6c8?text=Ketan+Sarikaya"
+              class="img-fluid rounded mb-3" alt="Ketan Sarikaya" />
+            <p>Ketan pulen dikukus sempurna, disajikan dengan lapisan sarikaya pandan khas Minang yang lembut dan harum. Cocok sebagai sarapan ringan atau camilan sore hari.</p>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-tag mr-2 lk-accent"></i> Kategori: Makanan Ringan / Sarapan</li>
+              <li><i class="fas fa-fire mr-2 lk-accent"></i> Tersedia setiap hari</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn lk-btn-outline" data-dismiss="modal">Tutup</button>
+            <a href="#" class="btn lk-btn-primary" data-page="kontak" data-dismiss="modal">Tanya Harga</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL Menu 2 — Pertemuan 12 -->
+    <div class="modal fade" id="modalMenu2" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content lk-modal">
+          <div class="modal-header">
+            <h5 class="modal-title">Katupek Gulai</h5>
+            <button type="button" class="close lk-modal-close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <img src="https://placehold.co/460x220/3d1c02/f5e6c8?text=Katupek+Gulai"
+              class="img-fluid rounded mb-3" alt="Katupek Gulai" />
+            <p>Ketupat lembut dengan kuah gulai Minang yang kaya rempah dan santan. Menu sarapan paling diminati — dijamin kenyang dan kuat sampai siang.</p>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-tag mr-2 lk-accent"></i> Kategori: Makanan Berat / Sarapan</li>
+              <li><i class="fas fa-fire mr-2 lk-accent"></i> Tersedia pagi hari</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn lk-btn-outline" data-dismiss="modal">Tutup</button>
+            <a href="#" class="btn lk-btn-primary" data-page="kontak" data-dismiss="modal">Tanya Harga</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL Menu 3 — Pertemuan 12 -->
+    <div class="modal fade" id="modalMenu3" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content lk-modal">
+          <div class="modal-header">
+            <h5 class="modal-title">Kopi Andalan</h5>
+            <button type="button" class="close lk-modal-close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <img src="https://placehold.co/460x220/2b0f00/f5e6c8?text=Kopi+Andalan"
+              class="img-fluid rounded mb-3" alt="Kopi Andalan" />
+            <p>Pilihan kopi kami mencakup kopi hitam klasik, kopi susu, dan berbagai kreasi minuman kopi yang bisa disesuaikan dengan selera Anda.</p>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-tag mr-2 lk-accent"></i> Kategori: Minuman Kopi</li>
+              <li><i class="fas fa-fire mr-2 lk-accent"></i> Tersedia sepanjang hari</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn lk-btn-outline" data-dismiss="modal">Tutup</button>
+            <a href="#" class="btn lk-btn-primary" data-page="kontak" data-dismiss="modal">Tanya Harga</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /HALAMAN HOME -->
+
+
+  <!-- ============================================================
+       HALAMAN MENU
+       ============================================================ -->
+  <div class="page-view" id="page-menu">
+    <div class="lk-page-header">
+      <div class="container">
+        <h1 class="lk-page-title">Menu Kami</h1>
+        <p class="lk-page-sub">Kopi, kuliner Minang, dan pilihan Nusantara lainnya</p>
+      </div>
+    </div>
+
+    <section class="lk-section">
+      <div class="container">
+
+        <!-- TAB — Pertemuan 13
+             data-toggle="tab" di HTML sudah cukup, tidak perlu JS tambahan.
+             Perhatikan class tab-pane fade → transisi otomatis Bootstrap -->
+        <ul class="nav nav-tabs lk-tabs mb-4" id="tabMenu" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="tab-kopi-link"
+              data-toggle="tab" href="#tab-kopi" role="tab">
+              <i class="fas fa-mug-hot mr-1"></i> Kopi & Minuman
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="tab-makanan-link"
+              data-toggle="tab" href="#tab-makanan" role="tab">
+              <i class="fas fa-utensils mr-1"></i> Makanan
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="tab-jajanan-link"
+              data-toggle="tab" href="#tab-jajanan" role="tab">
+              <i class="fas fa-cookie-bite mr-1"></i> Jajanan Pasar
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="tabMenuContent">
+
+          <!-- TAB: Kopi & Minuman -->
+          <div class="tab-pane fade show active" id="tab-kopi" role="tabpanel">
+            <div class="row">
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/3d1c02/f5e6c8?text=Kopi+Hitam"
+                    class="card-img-top" alt="Kopi Hitam" />
+                  <div class="card-body">
+                    <h6 class="card-title">Kopi Hitam</h6>
+                    <p class="card-text small">Kopi robusta pilihan, diseduh langsung.</p>
+                    <!-- TOOLTIP — Pertemuan 13 (diinisialisasi di main.js) -->
+                    <span data-toggle="tooltip" title="Menu terlaris kami!"
+                      class="badge lk-badge">
+                      <i class="fas fa-star"></i> Favorit
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/5c3317/f5e6c8?text=Kopi+Susu"
+                    class="card-img-top" alt="Kopi Susu" />
+                  <div class="card-body">
+                    <h6 class="card-title">Kopi Susu</h6>
+                    <p class="card-text small">Perpaduan kopi robusta dengan susu kental manis.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/2b0f00/f5e6c8?text=Teh+Talua"
+                    class="card-img-top" alt="Teh Talua" />
+                  <div class="card-body">
+                    <h6 class="card-title">Teh Talua</h6>
+                    <p class="card-text small">Minuman khas Minang — teh dengan campuran telur dan jeruk nipis.</p>
+                    <span data-toggle="tooltip" title="Khas Minang, wajib coba!"
+                      class="badge lk-badge">
+                      <i class="fas fa-star"></i> Khas
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/7a4b20/f5e6c8?text=Jus+Buah"
+                    class="card-img-top" alt="Jus Buah" />
+                  <div class="card-body">
+                    <h6 class="card-title">Jus Buah</h6>
+                    <p class="card-text small">Berbagai pilihan jus segar tersedia setiap hari.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: Makanan -->
+          <div class="tab-pane fade" id="tab-makanan" role="tabpanel">
+            <div class="row">
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/3d1c02/f5e6c8?text=Katupek+Gulai"
+                    class="card-img-top" alt="Katupek Gulai" />
+                  <div class="card-body">
+                    <h6 class="card-title">Katupek Gulai</h6>
+                    <p class="card-text small">Ketupat dengan kuah gulai Minang kaya rempah.</p>
+                    <span data-toggle="tooltip" title="Menu sarapan terpopuler!"
+                      class="badge lk-badge">
+                      <i class="fas fa-star"></i> Favorit
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/5c3317/f5e6c8?text=Nasi+Minang"
+                    class="card-img-top" alt="Nasi Minang" />
+                  <div class="card-body">
+                    <h6 class="card-title">Nasi Minang</h6>
+                    <p class="card-text small">Nasi dengan lauk pilihan khas masakan Padang.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/2b0f00/f5e6c8?text=Mie+Goreng"
+                    class="card-img-top" alt="Mie Goreng" />
+                  <div class="card-body">
+                    <h6 class="card-title">Mie Goreng</h6>
+                    <p class="card-text small">Mie goreng spesial dengan bumbu khas dapur Loyal Kopi.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/7a4b20/f5e6c8?text=Nasi+Goreng"
+                    class="card-img-top" alt="Nasi Goreng" />
+                  <div class="card-body">
+                    <h6 class="card-title">Nasi Goreng</h6>
+                    <p class="card-text small">Nasi goreng lezat tersedia untuk makan siang dan malam.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: Jajanan Pasar -->
+          <div class="tab-pane fade" id="tab-jajanan" role="tabpanel">
+            <div class="row">
+              <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/3d1c02/f5e6c8?text=Ketan+Sarikaya"
+                    class="card-img-top" alt="Ketan Sarikaya" />
+                  <div class="card-body">
+                    <h6 class="card-title">Ketan Sarikaya</h6>
+                    <p class="card-text small">Ketan pulen dengan sarikaya pandan khas Minang yang lembut.</p>
+                    <span data-toggle="tooltip" title="Jajanan paling dicari!"
+                      class="badge lk-badge">
+                      <i class="fas fa-star"></i> Favorit
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/5c3317/f5e6c8?text=Pisang+Goreng+Ketan"
+                    class="card-img-top" alt="Pisang Goreng Ketan" />
+                  <div class="card-body">
+                    <h6 class="card-title">Pisang Goreng Ketan</h6>
+                    <p class="card-text small">Pisang goreng dengan balutan ketan gurih dan renyah.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card lk-card-menu h-100">
+                  <img src="https://placehold.co/300x200/2b0f00/f5e6c8?text=Pisang+Santan+Bukittinggi"
+                    class="card-img-top" alt="Pisang Santan Bukittinggi" />
+                  <div class="card-body">
+                    <h6 class="card-title">Pisang Santan Bukittinggi</h6>
+                    <p class="card-text small">Pisang dengan kuah santan khas Bukittinggi yang autentik.</p>
+                    <span data-toggle="tooltip" title="Langsung dari resep Bukittinggi!"
+                      class="badge lk-badge">
+                      <i class="fas fa-star"></i> Khas
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /tab-content -->
+
+        <!-- ACCORDION (Bootstrap Collapse) — Fitur JS Wajib tambahan -->
+        <div class="mt-5">
+          <h4 class="lk-section-title">Informasi Pemesanan</h4>
+          <div id="accordionMenu">
+            <div class="card lk-accordion-card">
+              <div class="card-header lk-accordion-header" id="faq1">
+                <h5 class="mb-0">
+                  <button class="btn btn-link lk-accordion-btn" data-toggle="collapse"
+                    data-target="#collapse1" aria-expanded="true">
+                    Apakah tersedia layanan takeaway? <i class="fas fa-chevron-down float-right"></i>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse1" class="collapse show" data-parent="#accordionMenu">
+                <div class="card-body">
+                  Ya! Semua menu tersedia untuk dibawa pulang (takeaway). Silakan sampaikan langsung kepada kasir saat memesan.
+                </div>
+              </div>
+            </div>
+            <div class="card lk-accordion-card">
+              <div class="card-header lk-accordion-header" id="faq2">
+                <h5 class="mb-0">
+                  <button class="btn btn-link lk-accordion-btn collapsed" data-toggle="collapse"
+                    data-target="#collapse2">
+                    Apa saja metode pembayaran yang diterima? <i class="fas fa-chevron-down float-right"></i>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse2" class="collapse" data-parent="#accordionMenu">
+                <div class="card-body">
+                  Kami menerima pembayaran tunai (cash) dan QRIS. Untuk saat ini belum tersedia pembayaran kartu debit/kredit.
+                </div>
+              </div>
+            </div>
+            <div class="card lk-accordion-card">
+              <div class="card-header lk-accordion-header" id="faq3">
+                <h5 class="mb-0">
+                  <button class="btn btn-link lk-accordion-btn collapsed" data-toggle="collapse"
+                    data-target="#collapse3">
+                    Apakah ada menu untuk sarapan? <i class="fas fa-chevron-down float-right"></i>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse3" class="collapse" data-parent="#accordionMenu">
+                <div class="card-body">
+                  Tentu! Kami buka mulai pukul 07.00 WIB dengan menu sarapan unggulan seperti Katupek Gulai, Ketan Sarikaya, dan berbagai pilihan minuman kopi pagi.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+  <!-- /HALAMAN MENU -->
+
+
+  <!-- ============================================================
+       HALAMAN TENTANG
+       ============================================================ -->
+  <div class="page-view" id="page-tentang">
+    <div class="lk-page-header">
+      <div class="container">
+        <h1 class="lk-page-title">Tentang Loyal Kopi</h1>
+        <p class="lk-page-sub">Cerita di balik secangkir kopi dan kehangatan kuliner Nusantara</p>
+      </div>
+    </div>
+
+    <section class="lk-section">
+      <div class="container">
+        <div class="row align-items-center mb-5">
+          <div class="col-md-6 mb-4 mb-md-0">
+            <h2 class="lk-section-title">Siapa Kami</h2>
+            <p>Loyal Kopi adalah kedai kopi sekaligus warung makan yang menyajikan perpaduan unik antara minuman kopi pilihan dengan kuliner tradisional Minang dan Nusantara.</p>
+            <p>Berlokasi strategis di Jl. SM Amin — masuk ke gerbang UNRI, Pekanbaru — kami hadir sebagai tempat yang nyaman bagi mahasiswa, pekerja, maupun keluarga untuk berkumpul, makan, dan menikmati kopi.</p>
+            <p>Dengan jam buka yang panjang (07.00 – 23.00 WIB setiap hari), Loyal Kopi siap menemani Anda dari sarapan pagi hingga bersantai di malam hari.</p>
+          </div>
+          <div class="col-md-6">
+            <img src="https://placehold.co/540x360/3d1c02/f5e6c8?text=Foto+Depan+Loyal+Kopi"
+              class="img-fluid rounded lk-img-shadow" alt="Loyal Kopi" />
+          </div>
+        </div>
+
+        <!-- FASILITAS — Card Grid (Pertemuan 14) dengan Popover (Pertemuan 13) -->
+        <h3 class="lk-section-title text-center mb-4">Fasilitas Kami</h3>
+        <div class="row text-center">
+          <div class="col-6 col-md-3 mb-4">
+            <div class="lk-facility-card">
+              <!-- POPOVER — Pertemuan 13 (diinisialisasi di main.js) -->
+              <div class="lk-facility-icon"
+                data-toggle="popover"
+                data-trigger="hover"
+                title="Musholla"
+                data-content="Tersedia musholla bersih di dalam area Loyal Kopi untuk kenyamanan ibadah Anda.">
+                <i class="fas fa-mosque fa-2x lk-accent"></i>
+              </div>
+              <p class="mt-2 mb-0 small">Musholla</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3 mb-4">
+            <div class="lk-facility-card">
+              <div class="lk-facility-icon"
+                data-toggle="popover"
+                data-trigger="hover"
+                title="Parkir Luas"
+                data-content="Area parkir luas tersedia gratis untuk kendaraan roda dua maupun roda empat.">
+                <i class="fas fa-parking fa-2x lk-accent"></i>
+              </div>
+              <p class="mt-2 mb-0 small">Parkir Luas</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3 mb-4">
+            <div class="lk-facility-card">
+              <div class="lk-facility-icon"
+                data-toggle="popover"
+                data-trigger="hover"
+                title="Wi-Fi"
+                data-content="Nikmati koneksi internet gratis selama berada di Loyal Kopi.">
+                <i class="fas fa-wifi fa-2x lk-accent"></i>
+              </div>
+              <p class="mt-2 mb-0 small">Wi-Fi</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3 mb-4">
+            <div class="lk-facility-card">
+              <div class="lk-facility-icon"
+                data-toggle="popover"
+                data-trigger="hover"
+                title="Smoking Area"
+                data-content="Area merokok dengan kipas angin tersedia terpisah untuk kenyamanan semua tamu.">
+                <i class="fas fa-smoking fa-2x lk-accent"></i>
+              </div>
+              <p class="mt-2 mb-0 small">Smoking Area</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- JAM OPERASIONAL — Alert info (Pertemuan 13) -->
+        <div class="alert lk-alert-info alert-dismissible fade show mt-4" role="alert">
+          <i class="fas fa-info-circle mr-2"></i>
+          <strong>Jam Operasional:</strong> Loyal Kopi buka setiap hari Senin – Minggu, pukul 07.00 – 23.00 WIB. Tidak ada hari libur!
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LOKASI -->
+    <section class="lk-section lk-section-alt">
+      <div class="container">
+        <h3 class="lk-section-title text-center mb-4">Lokasi Kami</h3>
+        <div class="row align-items-center">
+          <div class="col-md-5 mb-4 mb-md-0">
+            <ul class="list-unstyled lk-info-list">
+              <li><i class="fas fa-map-marker-alt mr-2 lk-accent"></i>
+                Jl. SM Amin, masuk ke gerbang UNRI<br>
+                <small class="ml-4">(Posisi di sebelah kanan)</small></li>
+              <li><i class="fas fa-city mr-2 lk-accent"></i> Pekanbaru, Riau</li>
+              <li><i class="fas fa-clock mr-2 lk-accent"></i> Buka setiap hari, 07.00 – 23.00 WIB</li>
+              <li><i class="fas fa-instagram mr-2 lk-accent"></i>
+                <a href="https://www.instagram.com/loyal.kopi" target="_blank" class="lk-link">@loyal.kopi</a>
+              </li>
+            </ul>
+            <a href="#" class="btn lk-btn-primary mt-3" data-page="kontak">Hubungi Kami</a>
+          </div>
+          <div class="col-md-7">
+            <!-- Google Maps embed — halaman Kontak -->
+            <div class="lk-map-placeholder rounded">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.652!2d101.443!3d0.481!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMCwyOCcxOS4yIk4gMTAxwrAyNic0NC43IkU!5e0!3m2!1sid!2sid!4v1620000000000!5m2!1sid!2sid"
+                width="100%" height="260" style="border:0;" allowfullscreen="" loading="lazy"
+                class="rounded lk-map-embed" title="Lokasi Loyal Kopi"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <!-- /HALAMAN TENTANG -->
+
+
+  <!-- ============================================================
+       HALAMAN KONTAK
+       ============================================================ -->
+  <div class="page-view" id="page-kontak">
+    <div class="lk-page-header">
+      <div class="container">
+        <h1 class="lk-page-title">Kontak</h1>
+        <p class="lk-page-sub">Ada pertanyaan? Kami siap membantu</p>
+      </div>
+    </div>
+
+    <section class="lk-section">
+      <div class="container">
+        <div class="row">
+
+          <!-- FORM KONTAK -->
+          <div class="col-md-7 mb-5 mb-md-0">
+            <h3 class="lk-section-title mb-4">Kirim Pesan</h3>
+
+            <!-- ALERT SUKSES — Pertemuan 13 (dimunculkan via JS setelah submit) -->
+            <div id="alertSukses"
+              class="alert lk-alert-success alert-dismissible fade"
+              role="alert" style="display:none;">
+              <i class="fas fa-check-circle mr-2"></i>
+              <strong>Terkirim!</strong> Pesan Anda telah berhasil dikirim. Kami akan segera merespons.
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+
+            <form id="formKontak">
+              <div class="form-group">
+                <label for="inputNama">Nama Lengkap</label>
+                <input type="text" class="form-control lk-input" id="inputNama"
+                  placeholder="Masukkan nama Anda" required />
+              </div>
+
+              <div class="form-group">
+                <label for="inputEmail">Email</label>
+                <input type="email" class="form-control lk-input" id="inputEmail"
+                  placeholder="email@contoh.com" required />
+              </div>
+
+              <!-- DROPDOWN — Pertemuan 12: teks tombol berubah saat item dipilih -->
+              <div class="form-group">
+                <label>Kategori Pertanyaan</label>
+                <div class="dropdown lk-dropdown">
+                  <button class="btn lk-dropdown-btn dropdown-toggle w-100 text-left"
+                    id="dropdownKategori" data-toggle="dropdown" type="button">
+                    <span id="labelKategori">Pilih kategori...</span>
+                  </button>
+                  <div class="dropdown-menu w-100 lk-dropdown-menu">
+                    <a class="dropdown-item" href="#">Informasi Menu</a>
+                    <a class="dropdown-item" href="#">Reservasi / Pemesanan</a>
+                    <a class="dropdown-item" href="#">Kerja Sama / Event</a>
+                    <a class="dropdown-item" href="#">Lainnya</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputPesan">Pesan</label>
+                <textarea class="form-control lk-input" id="inputPesan"
+                  rows="4" placeholder="Tuliskan pertanyaan atau pesan Anda..." required></textarea>
+              </div>
+
+              <!-- BUTTON LOADING STATE — Pertemuan 13 -->
+              <button type="submit" id="btnKirim" class="btn lk-btn-primary"
+                data-loading-text="<i class='fas fa-spinner fa-spin mr-1'></i> Mengirim...">
+                <i class="fas fa-paper-plane mr-1"></i> Kirim Pesan
+              </button>
+            </form>
+          </div>
+
+          <!-- INFO KONTAK -->
+          <div class="col-md-5">
+            <h3 class="lk-section-title mb-4">Informasi Kontak</h3>
+            <ul class="list-unstyled lk-info-list">
+              <li>
+                <i class="fas fa-map-marker-alt lk-accent mr-2"></i>
+                Jl. SM Amin, Gerbang UNRI<br>
+                <small class="ml-4">Pekanbaru, Riau</small>
+              </li>
+              <li>
+                <i class="fas fa-clock lk-accent mr-2"></i>
+                Buka setiap hari<br>
+                <small class="ml-4">07.00 – 23.00 WIB</small>
+              </li>
+              <li>
+                <i class="fab fa-instagram lk-accent mr-2"></i>
+                <a href="https://www.instagram.com/loyal.kopi" target="_blank" class="lk-link">@loyal.kopi</a>
+              </li>
+              <li>
+                <i class="fas fa-credit-card lk-accent mr-2"></i>
+                Cash & QRIS
+              </li>
+            </ul>
+
+            <!-- Google Maps embed -->
+            <div class="mt-4">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.652!2d101.443!3d0.481!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMCwyOCcxOS4yIk4gMTAxwrAyNic0NC43IkU!5e0!3m2!1sid!2sid!4v1620000000000!5m2!1sid!2sid"
+                width="100%" height="220" style="border:0;" allowfullscreen="" loading="lazy"
+                class="rounded lk-map-embed" title="Lokasi Loyal Kopi"></iframe>
+            </div>
+
+            <!-- Sosial media -->
+            <div class="mt-4">
+              <a href="https://www.instagram.com/loyal.kopi" target="_blank"
+                class="btn lk-btn-ig mr-2">
+                <i class="fab fa-instagram mr-1"></i> Instagram
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- /HALAMAN KONTAK -->
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="lk-footer">
+    <div class="container text-center">
+      <p class="mb-1">
+        <i class="fas fa-coffee mr-1"></i>
+        <strong>Loyal Kopi</strong> &mdash; Kedai Kopi & Kuliner Nusantara
+      </p>
+      <p class="lk-footer-sub mb-0">
+        Jl. SM Amin, Gerbang UNRI, Pekanbaru &middot; Buka setiap hari 07.00 – 23.00 WIB
+      </p>
+      <p class="lk-footer-sub mt-1">
+        &copy; 2026 Loyal Kopi &middot; Website Demo — Mata Kuliah Web Desain 2
+      </p>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       SCRIPTS — urutan wajib: jQuery → Popper → Bootstrap → Custom
+       ============================================================ -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>
